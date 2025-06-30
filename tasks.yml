@@ -615,7 +615,7 @@
   - 86
   - 87
   priority: 3
-  status: in_progress
+  status: done
 - id: 93
   description: Extend WSJF scoring with CLI support and tests
   component: vision
@@ -651,21 +651,21 @@
   dependencies:
   - 83
   priority: 3
-  status: pending
+  status: done
 - id: 98
   description: Implement Node.js gRPC IOService server
   component: microservices
   dependencies:
   - 97
   priority: 3
-  status: pending
+  status: done
 - id: 99
   description: Implement Python gRPC client for IOService
   component: microservices
   dependencies:
   - 97
   priority: 3
-  status: pending
+  status: done
 - id: 100
   description: Add integration tests for Node IOService communication
   component: testing
@@ -673,7 +673,7 @@
   - 98
   - 99
   priority: 3
-  status: pending
+  status: done
 - id: 101
   description: Document Node microservice setup in ARCHITECTURE.md
   component: docs
