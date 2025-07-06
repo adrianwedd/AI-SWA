@@ -4,6 +4,8 @@ from typing import List
 from opentelemetry import metrics, trace
 import logging
 
+from .log_utils import configure_logging
+
 from .task import Task
 
 
@@ -14,6 +16,7 @@ class Orchestrator:
     def __init__(self, planner, executor, reflector, memory, auditor):
         """Store dependencies for later use."""
 
+        configure_logging()
         self.planner = planner
         self.executor = executor
         self.reflector = reflector

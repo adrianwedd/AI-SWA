@@ -11,6 +11,7 @@ import yaml
 
 from .self_auditor import SelfAuditor
 from .observability import MetricsProvider
+from .log_utils import configure_logging
 
 
 class Reflector:
@@ -23,6 +24,7 @@ class Reflector:
         analysis_paths: Optional[List[Path]] = None,
         metrics_provider: Optional["MetricsProvider"] = None,
     ) -> None:
+        configure_logging()
         self.tasks_path = Path(tasks_path)
         self.complexity_threshold = complexity_threshold
         self.analysis_paths = analysis_paths or self._discover_analysis_paths()

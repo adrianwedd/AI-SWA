@@ -11,6 +11,7 @@ from .executor import Executor
 from .reflector import Reflector
 from .self_auditor import SelfAuditor
 from .telemetry import setup_telemetry
+from .log_utils import configure_logging
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -28,6 +29,8 @@ def main(argv=None):
     """Run the orchestrator using arguments from ``argv``."""
     parser = build_parser()
     args = parser.parse_args(argv)
+
+    configure_logging()
 
     setup_telemetry()
 
