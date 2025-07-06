@@ -75,6 +75,7 @@ Planner decides what to build next. The Executor writes files and configures CI/
 - AI-driven plugin marketplace for community-built plugins.
 - Adaptive learning that improves planning heuristics.
 - Cross-language support beyond Python.
+- Detailed [project roadmap](docs/ROADMAP.md) with phased milestones.
 
 ---
 
