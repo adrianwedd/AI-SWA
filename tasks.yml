@@ -1333,6 +1333,7 @@
   acceptance_criteria:
     - Full workflow test passes with broker, worker, and Node service running
     - Failure cases are logged and handled gracefully
+  priority: 2
   status: pending
   assigned_to: null
   epic: Reliability
@@ -1349,6 +1350,7 @@
   acceptance_criteria:
     - "`python -m ai_swa.orchestrator --help` shows CLI options"
     - Start/stop commands function as expected in tests
+  priority: 2
   status: pending
   assigned_to: null
   epic: Usability
@@ -1365,6 +1367,7 @@
   acceptance_criteria:
     - "`/metrics` endpoint available on broker and worker"
     - Metrics include task throughput and duration
+  priority: 2
   status: pending
   assigned_to: null
   epic: Observability Improvements
@@ -1382,6 +1385,7 @@
   acceptance_criteria:
     - Loading tasks fails with clear error when schema violations occur
     - Extended fields round-trip without loss
+  priority: 2
   status: pending
   assigned_to: null
   epic: Schema Evolution
@@ -1398,6 +1402,7 @@
   acceptance_criteria:
     - "`docker-compose up` starts all services and tests can run against them"
     - README contains updated instructions
+  priority: 2
   status: pending
   assigned_to: null
   epic: Developer Experience
