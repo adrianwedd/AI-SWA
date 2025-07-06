@@ -1319,3 +1319,85 @@
   status: pending
   assigned_to: null
   epic: Documentation
+- id: 123
+  task_id: INT-TESTS
+  title: Add integration tests for microservice workflow
+  description: Validate end-to-end task processing across orchestrator, broker, worker, and Node I/O service.
+  area: testing
+  actionable_steps:
+    - Spin up broker, worker, and Node service in test environment
+    - Send tasks through broker API and assert worker completion
+    - Verify outputs via REST/gRPC responses
+  dependencies:
+    - 115
+  acceptance_criteria:
+    - Full workflow test passes with broker, worker, and Node service running
+    - Failure cases are logged and handled gracefully
+  status: pending
+  assigned_to: null
+  epic: Reliability
+- id: 124
+  task_id: ORCH-CLI
+  title: Provide CLI wrapper for Orchestrator
+  description: Add command-line interface with options for starting, stopping, and inspecting the orchestrator loop.
+  area: core
+  actionable_steps:
+    - Implement CLI using argparse or click
+    - Support configuration file path and verbosity flags
+    - Write usage documentation and tests
+  dependencies: []
+  acceptance_criteria:
+    - "`python -m ai_swa.orchestrator --help` shows CLI options"
+    - Start/stop commands function as expected in tests
+  status: pending
+  assigned_to: null
+  epic: Usability
+- id: 125
+  task_id: METRICS-PROM
+  title: Expose Prometheus metrics for broker and worker
+  description: Instrument broker and worker services with metrics endpoints for monitoring.
+  area: observability
+  actionable_steps:
+    - Add Prometheus client library to services
+    - Define metrics for task counts and processing duration
+    - Document how to scrape metrics
+  dependencies: []
+  acceptance_criteria:
+    - "`/metrics` endpoint available on broker and worker"
+    - Metrics include task throughput and duration
+  status: pending
+  assigned_to: null
+  epic: Observability Improvements
+- id: 126
+  task_id: TASK-VALID
+  title: Validate tasks.yml against extended schema
+  description: Ensure that additional fields introduced in new tasks are validated on load.
+  area: core
+  actionable_steps:
+    - Update JSON schema in code to allow extra keys
+    - Modify Memory.load_tasks to run validation
+    - Add tests for invalid and valid schemas
+  dependencies:
+    - 121
+  acceptance_criteria:
+    - Loading tasks fails with clear error when schema violations occur
+    - Extended fields round-trip without loss
+  status: pending
+  assigned_to: null
+  epic: Schema Evolution
+- id: 127
+  task_id: DOCKER-LOCAL
+  title: Provide Docker Compose configuration
+  description: Set up Docker containers for orchestrator, broker, worker, and Node service for easy local deployment.
+  area: infrastructure
+  actionable_steps:
+    - Write Dockerfiles for Python services if missing
+    - Create `docker-compose.yml` orchestrating all services
+    - Document usage in README
+  dependencies: []
+  acceptance_criteria:
+    - "`docker-compose up` starts all services and tests can run against them"
+    - README contains updated instructions
+  status: pending
+  assigned_to: null
+  epic: Developer Experience
