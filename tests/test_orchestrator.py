@@ -268,6 +268,37 @@ class TestOrchestrator(unittest.TestCase):
         self.assertEqual(self.mock_memory.save_tasks.call_count, 1)
         self.mock_memory.save_tasks.assert_called_once_with(initial_tasks, tasks_file)
 
+    def test_run_task_missing_id_attribute(self):
+        tasks_file = "tasks_no_id.yml"
+        task_no_id = Task(id="x", description="Test", component="core", dependencies=[], priority=1, status="pending")
+        if hasattr(task_no_id, 'id'):
+            delattr(task_no_id, 'id')
+
+        self.mock_memory.load_tasks.return_value = [task_no_id]
+        self.mock_reflector.run_cycle.return_value = [task_no_id]
+        self.mock_planner.plan.side_effect = [task_no_id, None]
+
+        with patch('builtins.print') as mock_print:
+            self.orchestrator.run(tasks_file)
+
+        self.mock_executor.execute.assert_called_once_with(task_no_id)
+        self.assertEqual(task_no_id.status, 'done')
+        self.assertEqual(self.mock_memory.save_tasks.call_count, 3)
+        mock_print.assert_any_call("Orchestrator: Task 'N/A' selected for execution.")
+        mock_print.assert_any_call("Orchestrator: Executing task 'N/A'.")
+
+    def test_reflector_returns_invalid_data_raises_error(self):
+        tasks_file = "tasks_invalid.yml"
+        self.mock_memory.load_tasks.return_value = []
+        self.mock_reflector.run_cycle.return_value = ["bad"]
+        self.mock_planner.plan.return_value = None
+
+        with patch('builtins.print'):
+            with self.assertRaises(Exception):
+                self.orchestrator.run(tasks_file)
+
+        self.mock_memory.save_tasks.assert_not_called()
+
     def test_run_updates_tasks_file_after_reflection(self):
         tmp_path = Path(tempfile.mkdtemp())
         tasks_file = tmp_path / "tasks.yml"
