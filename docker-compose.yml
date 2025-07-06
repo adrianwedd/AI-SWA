@@ -1,5 +1,16 @@
 version: '3'
 services:
+  orchestrator:
+    build:
+      context: .
+      dockerfile: orchestrator/Dockerfile
+    volumes:
+      - ./tasks.yml:/app/tasks.yml
+      - ./state.json:/app/state.json
+    depends_on:
+      - broker
+      - worker
+      - io-service
   broker:
     build:
       context: .

@@ -72,6 +72,11 @@ Planner decides what to build next. The Executor writes files and configures CI/
    ```
 5. **Explore the Blueprint** – Open `ARCHITECTURE.md` to see components and dependency rationales.
 6. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
+7. **Run with Docker Compose**
+   ```bash
+   docker-compose up --build
+   ```
+   This starts the orchestrator, broker, worker, and Node I/O service containers.
 
 ### CLI Usage
 
