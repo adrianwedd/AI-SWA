@@ -25,298 +25,473 @@
 #   }
 - id: 1
   description: Implement YAML validation using jsonschema
-  component: bootstrap
   dependencies: []
   priority: 1
   status: done
+  area: bootstrap
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 2
   description: Expand tests in tests/test_bootstrap.py
-  component: testing
   dependencies:
   - 1
   priority: 2
   status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 3
   description: Create AGENTS.md with repository guidelines for Codex
-  component: docs
   dependencies: []
   priority: 3
   status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 4
   description: Ensure tests check for AGENTS.md existence
-  component: testing
   dependencies:
   - 3
   priority: 4
   status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 5
   description: Implement Orchestrator skeleton
-  component: orchestrator
   dependencies: []
   priority: 1
   status: done
+  area: orchestrator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 6
   description: Introduce Memory module
-  component: core
   dependencies:
   - 5
   priority: 2
   status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 7
   description: Provide CLI entrypoint
-  component: cli
   dependencies:
   - 5
   - 6
   priority: 3
   status: done
+  area: cli
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 8
   description: Expand bootstrap error tests
-  component: testing
   dependencies:
   - 2
   priority: 4
   status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 9
   description: Implement SelfAuditor skeleton using radon metrics
-  component: auditor
   dependencies: []
   priority: 2
   status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 12
   description: Add radon dependency to requirements
-  component: auditor
   dependencies:
   - 9
   priority: 2
   status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 13
   description: Implement analyze() in SelfAuditor using radon APIs
-  component: auditor
   dependencies:
   - 12
   priority: 2
   status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 14
   description: Implement audit() generating refactor tasks when thresholds exceeded
-  component: auditor
   dependencies:
   - 13
   priority: 3
   status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 15
   description: Add unit tests for SelfAuditor analyze and audit methods
-  component: testing
   dependencies:
   - 14
   priority: 3
   status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 10
   description: Integrate wily history tracking into SelfAuditor
-  component: auditor
   dependencies:
   - 9
   priority: 3
   status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 11
   description: Orchestrator generates refactor tasks when SelfAuditor thresholds exceeded
-  component: orchestrator
   dependencies:
   - 9
   priority: 2
   status: done
+  area: orchestrator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 16
   description: Document Reflector component and self-improvement loop in ARCHITECTURE.md
-  component: docs
   dependencies:
   - 5
   priority: 2
   status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 17
   description: Add Reflector class skeleton with reflect, analyze, decide, execute
     and validate methods
-  component: reflector
   dependencies:
   - 16
   priority: 2
   status: done
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 18
   description: Implement decision logic in Reflector to update tasks.yml based on
     analysis
-  component: reflector
   dependencies:
   - 17
   priority: 3
   status: done
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 19
   description: Integrate Reflector into Orchestrator run loop
-  component: orchestrator
   dependencies:
   - 17
   priority: 3
   status: done
+  area: orchestrator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 20
   description: Add unit tests for Reflector and its orchestration integration
-  component: testing
   dependencies:
   - 18
   - 19
   priority: 3
   status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 21
   description: Remove duplicate entries and complete missing fields in tasks.yml
-  component: docs
   dependencies: []
   priority: 2
   status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 22
   description: Fix flake8 lint errors across code and tests
-  component: code
   dependencies: []
   priority: 3
   status: done
+  area: code
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 23
   description: Increase test coverage for bootstrap functions
-  component: tests
   dependencies: []
   priority: 3
   status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 24
   description: Add missing module docstrings across core modules
-  component: docs
   dependencies: []
   priority: 2
   status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 25
   description: Set up GitHub Actions workflow to run pytest and pylint
-  component: ci
   dependencies: []
   priority: 2
   status: done
+  area: ci
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 26
   description: Configure flake8 and pre-commit for code style enforcement
-  component: deps
   dependencies: []
   priority: 3
   status: done
+  area: deps
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 27
   description: Pin wily dependency in requirements.txt
-  component: deps
   dependencies: []
   priority: 2
   status: done
+  area: deps
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 28
   description: Implement analyze() in SelfAuditor using radon
-  component: code
   dependencies:
   - 13
   priority: 3
   status: done
+  area: code
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 29
   description: Add tests covering SelfAuditor.analyze and audit
-  component: tests
   dependencies:
   - 28
   priority: 3
   status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 30
   description: Add load_tasks and save_tasks methods to Memory for YAML task persistence
-  component: core
   dependencies: []
   priority: 2
   status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 31
   description: Print 'Orchestrator running' message from CLI main
-  component: cli
   dependencies:
   - 30
   priority: 3
   status: done
+  area: cli
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 32
   description: Ensure CLI integration test passes with new Memory methods
-  component: tests
   dependencies:
   - 31
   priority: 3
   status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 33
   description: Refactor core/reflector.py complexity 24
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 34
   description: Refactor core/bootstrap.py complexity 15
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 35
   description: Refactor core/orchestrator.py complexity 13
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 36
   description: Refactor core/planner.py complexity 35
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 37
   description: Refactor tests/test_executor.py complexity 13
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 38
   description: Refactor tests/test_bootstrap.py complexity 12
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 39
   description: Refactor tests/test_planner.py complexity 23
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 40
   description: Deduplicate tasks 33-53 in tasks.yml
-  component: docs
   dependencies: []
   priority: 1
   status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 41
   description: Add task schema validation to Memory.load_tasks
-  component: core
   dependencies:
   - 30
   priority: 2
   status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 42
   description: Implement conflict detection for duplicate ids in Planner
-  component: core
   dependencies: []
   priority: 3
   status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 43
   description: Add tests for Memory task helpers and Planner conflict detection
-  component: tests
   dependencies:
   - 41
   - 42
   priority: 2
   status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 48
   description: Refactor core/planner.py complexity 41
-  component: core
   dependencies: []
   priority: 3
   status: pending
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 51
   description: Clean up 5 duplicate tasks
-  component: maintenance
   dependencies: []
   priority: 2
   status: done
@@ -348,474 +523,745 @@
         task_ids:
         - 37
         - 46
+  area: maintenance
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 53
   description: Document strategic research roadmap (RB-002)
-  component: docs
   dependencies: []
   priority: 2
   status: pending
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 54
   description: Outline Vision Engine prioritization research
-  component: research
   dependencies:
   - 53
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 55
   description: Outline cross-language architecture research
-  component: research
   dependencies:
   - 53
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 56
   description: Outline metrics and observability research
-  component: research
   dependencies:
   - 53
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 57
   description: Outline plugin governance research
-  component: research
   dependencies:
   - 53
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 58
   description: Outline ethical sentinel policy research
-  component: research
   dependencies:
   - 53
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 59
   description: Outline self-improvement optimization research
-  component: research
   dependencies:
   - 53
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 60
   description: Outline community and ecosystem mapping research
-  component: research
   dependencies:
   - 53
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 61
   description: Implement Experience Replay Buffer for PPO agent
-  component: reflector
   dependencies: []
   priority: 2
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 62
   description: Integrate Elastic Weight Consolidation in training loop
-  component: reflector
   dependencies:
   - 61
   priority: 3
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 63
   description: Build state representation vector using observability data
-  component: reflector
   dependencies: []
   priority: 2
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 64
   description: Implement generative action space via fine-tuned code LLM
-  component: reflector
   dependencies:
   - 63
   priority: 3
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 65
   description: Design composite reward function balancing correctness and performance
-  component: reflector
   dependencies:
   - 63
   priority: 2
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 66
   description: Develop PPO agent with actor-critic architecture
-  component: reflector
   dependencies:
   - 61
   - 63
   - 65
   priority: 2
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 67
   description: Implement Evolutionary Policy Optimization outer loop
-  component: reflector
   dependencies:
   - 66
   priority: 3
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 68
   description: Define gene structure for outer loop agent variation
-  component: reflector
   dependencies:
   - 67
   priority: 3
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 69
   description: Create high-fidelity simulation environment for code changes
-  component: infrastructure
   dependencies: []
   priority: 2
   status: pending
+  area: infrastructure
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 70
   description: Integrate two-speed architecture connecting inner and outer loops
-  component: reflector
   dependencies:
   - 67
   - 69
   priority: 2
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 71
   description: Develop standardized benchmarking suite for agent evaluation
-  component: tests
   dependencies: []
   priority: 3
   status: pending
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 72
   description: Implement continuous improvement dashboard for key metrics
-  component: docs
   dependencies: []
   priority: 3
   status: pending
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 73
   description: Define plugin APIs, isolation model, and threat analysis
-  component: plugins
   dependencies: []
   priority: 3
   status: pending
+  area: plugins
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 74
   description: Document plugin governance requirements and dependency controls
-  component: docs
   dependencies:
   - 73
   priority: 3
   status: pending
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 75
   description: Add SAST, SCA, secret scanning, and compliance checks in CI/CD
-  component: ci
   dependencies: []
   priority: 2
   status: pending
+  area: ci
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 76
   description: Enforce cryptographic signing before plugin marketplace publication
-  component: ci
   dependencies:
   - 75
   priority: 2
   status: pending
+  area: ci
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 77
   description: Build example first-party plugins (e.g., tech debt analyzer)
-  component: plugins
   dependencies:
   - 73
   - 75
   priority: 3
   status: pending
+  area: plugins
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 78
   description: Validate plugin architecture and CI pipeline with first-party plugins
-  component: plugins
   dependencies:
   - 77
   priority: 3
   status: pending
+  area: plugins
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 79
-  description: Instrument all components with OpenTelemetry for metrics, logs, and traces
-  component: observability
+  description: Instrument all components with OpenTelemetry for metrics, logs, and
+    traces
   dependencies: []
   priority: 3
   status: done
+  area: observability
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 80
   description: Store metrics in Prometheus and define Grafana dashboards as code
-  component: observability
   dependencies:
   - 79
   priority: 3
   status: done
+  area: observability
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 81
   description: Feed collected metrics to Reflector as its reward signal
-  component: reflector
   dependencies:
   - 79
   priority: 3
   status: done
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 82
   description: Introduce Rust modules via PyO3 for performance-critical code
-  component: microservices
   dependencies: []
   priority: 3
   status: pending
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 83
   description: Add Node.js services for I/O-bound tasks and coordinate via gRPC
-  component: microservices
   dependencies:
   - 82
   priority: 3
   status: in_progress
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 84
   description: Apply API Gateway and Database-per-Service patterns
-  component: microservices
   dependencies:
   - 82
   - 83
   priority: 3
   status: pending
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 85
-  description: Ensure all microservices integrate with standardized OTel and security tooling
-  component: observability
+  description: Ensure all microservices integrate with standardized OTel and security
+    tooling
   dependencies:
   - 79
   - 82
   - 83
   priority: 3
   status: done
+  area: observability
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 86
   description: Implement Vision Engine prioritization using WSJF heuristics
-  component: vision
   dependencies: []
   priority: 3
   status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 87
-  description: Train RL-based Vision Engine in shadow mode and gradually delegate control
-  component: vision
+  description: Train RL-based Vision Engine in shadow mode and gradually delegate
+    control
   dependencies:
   - 86
   priority: 3
   status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 88
   description: Build fast PPO-aligned Reflector inner loop for continuous improvement
-  component: reflector
   dependencies: []
   priority: 2
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 89
   description: Develop evolutionary outer loop for architectural search
-  component: reflector
   dependencies:
   - 88
   priority: 3
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 90
-  description: Contribute integration guides and sample code to frameworks like LangChain and CrewAI
-  component: docs
+  description: Contribute integration guides and sample code to frameworks like LangChain
+    and CrewAI
   dependencies: []
   priority: 3
   status: pending
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 91
   description: Foster developer community to encourage adoption of AI-SWA
-  component: community
   dependencies:
   - 90
   priority: 3
   status: pending
+  area: community
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 92
   description: Document hybrid Vision Engine design and rollout plan
-  component: docs
   dependencies:
   - 86
   - 87
   priority: 3
   status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 93
   description: Extend WSJF scoring with CLI support and tests
-  component: vision
   dependencies:
   - 86
   priority: 3
   status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 94
   description: Implement RL training pipeline using observability metrics
-  component: vision
   dependencies:
   - 87
   - 85
   priority: 3
   status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 95
   description: Run RL agent in shadow mode and log suggestions
-  component: vision
   dependencies:
   - 94
   priority: 3
   status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 96
   description: Gradually enable RL authority based on performance gains
-  component: vision
   dependencies:
   - 95
   priority: 3
   status: pending
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 97
   description: Define gRPC contract for Node IOService
-  component: microservices
   dependencies:
   - 83
   priority: 3
   status: done
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 98
   description: Implement Node.js gRPC IOService server
-  component: microservices
   dependencies:
   - 97
   priority: 3
   status: done
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 99
   description: Implement Python gRPC client for IOService
-  component: microservices
   dependencies:
   - 97
   priority: 3
   status: done
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 100
   description: Add integration tests for Node IOService communication
-  component: testing
   dependencies:
   - 98
   - 99
   priority: 3
   status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 101
   description: Document Node microservice setup in ARCHITECTURE.md
-  component: docs
   dependencies:
   - 98
   - 99
   priority: 3
   status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 102
   description: Add reflective critique layer to Evaluator
-  component: evaluator
   dependencies: []
   priority: 3
   status: pending
+  area: evaluator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 103
   description: Expand memory reconciliation mechanism
-  component: memory
   dependencies:
   - 102
   priority: 3
   status: pending
+  area: memory
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 104
   description: Sandbox isolation for Tool-Runner
-  component: executor
   dependencies: []
   priority: 3
   status: pending
+  area: executor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 105
   description: Introduce Planner cost budgeting
-  component: planner
   dependencies:
   - 104
   priority: 3
   status: pending
+  area: planner
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 106
   description: Semantic search for Researcher agent
-  component: research
   dependencies: []
   priority: 3
   status: pending
+  area: research
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 107
   description: Observer metrics dashboard
-  component: observability
   dependencies: []
   priority: 3
   status: pending
+  area: observability
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 108
   description: Increase test coverage for the Reflector component
-  component: testing
   dependencies: []
   priority: 2
   status: pending
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 109
   description: Increase test coverage for the Orchestrator component
-  component: testing
   dependencies: []
   priority: 2
   status: pending
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 110
   description: Implement more robust error handling in the Orchestrator
-  component: orchestrator
   dependencies: []
   priority: 2
   status: pending
+  area: orchestrator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 111
   description: Implement authentication and authorization for the broker API
-  component: security
   dependencies: []
   priority: 1
   status: pending
+  area: security
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 112
   description: Consolidate application configuration into a single file
-  component: configuration
   dependencies: []
   priority: 3
   status: pending
+  area: configuration
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 113
   description: Add more detailed logging to the core components
-  component: logging
   dependencies: []
   priority: 3
   status: pending
+  area: logging
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 114
   description: Create a more comprehensive set of unit tests for the Vision Engine
-  component: testing
   dependencies: []
   priority: 2
   status: pending
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 115
   description: Add end-to-end tests for the entire AI-SWA system
-  component: testing
   dependencies: []
   priority: 1
   status: pending
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 116
   description: Implement a more sophisticated security model for the plugin architecture
-  component: security
   dependencies: []
   priority: 1
   status: pending
+  area: security
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 117
   description: Create a more detailed roadmap for the project
-  component: documentation
   dependencies: []
   priority: 2
   status: pending
+  area: documentation
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
 - id: 118
   task_id: OBS-001
   title: Standardize logging configuration
-  description: Implement a centralized logging configuration shared by all Python services
+  description: Implement a centralized logging configuration shared by all Python
+    services
   area: observability
   actionable_steps:
-    - Replace print statements with logging calls in core modules
-    - Create a logging configuration file with formatters and handlers
-    - Update services to load the configuration on startup
+  - Replace print statements with logging calls in core modules
+  - Create a logging configuration file with formatters and handlers
+  - Update services to load the configuration on startup
   dependencies: []
   acceptance_criteria:
-    - Logs from orchestrator, worker, and broker follow the same format
-    - No print statements remain in core modules
+  - Logs from orchestrator, worker, and broker follow the same format
+  - No print statements remain in core modules
   status: pending
   assigned_to: null
   epic: Observability Improvements
 - id: 119
   task_id: WORK-ASYNC
   title: Enable concurrent task execution in worker
-  description: Refactor the worker to process tasks concurrently using asyncio or threading
+  description: Refactor the worker to process tasks concurrently using asyncio or
+    threading
   area: worker
   actionable_steps:
-    - Benchmark current worker throughput
-    - Implement asynchronous fetching and execution loop
-    - Write tests to verify multiple tasks are handled in parallel
+  - Benchmark current worker throughput
+  - Implement asynchronous fetching and execution loop
+  - Write tests to verify multiple tasks are handled in parallel
   dependencies: []
   acceptance_criteria:
-    - Worker can execute at least two tasks concurrently in tests
-    - Existing functionality remains intact
+  - Worker can execute at least two tasks concurrently in tests
+  - Existing functionality remains intact
   status: pending
   assigned_to: null
   epic: Performance Enhancements
@@ -825,45 +1271,46 @@
   description: Provide a simple HTTP endpoint to report service health
   area: services
   actionable_steps:
-    - Expose an express HTTP server alongside gRPC service
-    - Return status information such as uptime
-    - Add basic test verifying health endpoint
+  - Expose an express HTTP server alongside gRPC service
+  - Return status information such as uptime
+  - Add basic test verifying health endpoint
   dependencies: []
   acceptance_criteria:
-    - GET /health returns 200 with JSON status
+  - GET /health returns 200 with JSON status
   status: pending
   assigned_to: null
   epic: Reliability
 - id: 121
   task_id: MEM-EXT
   title: Extend Memory module for expanded task schema
-  description: Update Memory.load_tasks and save_tasks to preserve additional fields beyond the base schema
+  description: Update Memory.load_tasks and save_tasks to preserve additional fields
+    beyond the base schema
   area: core
   actionable_steps:
-    - Modify dataclass Task to store optional metadata dictionary
-    - Adjust JSON schema to allow extra keys
-    - Update tests for new behavior
+  - Modify dataclass Task to store optional metadata dictionary
+  - Adjust JSON schema to allow extra keys
+  - Update tests for new behavior
   dependencies:
-    - 118
+  - 118
   acceptance_criteria:
-    - Additional fields in tasks.yml round-trip without loss
-    - Tests cover backward compatibility
+  - Additional fields in tasks.yml round-trip without loss
+  - Tests cover backward compatibility
   status: pending
   assigned_to: null
   epic: Schema Evolution
 - id: 122
   task_id: DOC-ENV
   title: Document environment variables and configuration
-  description: Provide a dedicated section in README explaining all configuration options
+  description: Provide a dedicated section in README explaining all configuration
+    options
   area: documentation
   actionable_steps:
-    - List required and optional environment variables
-    - Add examples of configuration files
-    - Update architecture docs with configuration flow
+  - List required and optional environment variables
+  - Add examples of configuration files
+  - Update architecture docs with configuration flow
   dependencies: []
   acceptance_criteria:
-    - README contains new Configuration section
+  - README contains new Configuration section
   status: pending
   assigned_to: null
   epic: Documentation
-
