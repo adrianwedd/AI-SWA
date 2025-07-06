@@ -351,6 +351,36 @@ class TestOrchestrator(unittest.TestCase):
         assert data[0]['status'] == 'done'
         assert data[1]['description'] == 'reflector task'
 
+    def test_execute_failure_logs_and_continues(self):
+        task = Task(id="fail", description="", component="core", dependencies=[], priority=1, status="pending")
+        self.mock_memory.load_tasks.return_value = [task]
+        self.mock_reflector.run_cycle.return_value = [task]
+        self.mock_planner.plan.side_effect = [task, None]
+        self.mock_executor.execute.side_effect = RuntimeError("boom")
+        self.orchestrator.logger = MagicMock()
+
+        with patch('builtins.print'):
+            self.orchestrator.run("tasks.yml")
+
+        self.mock_executor.execute.assert_called_once_with(task)
+        self.orchestrator.logger.error.assert_called_once()
+        self.assertEqual(task.status, "pending")
+        self.assertEqual(self.mock_memory.save_tasks.call_count, 3)
+
+    def test_reflect_failure_logs_and_skips_execution(self):
+        task = Task(id="t1", description="", component="core", dependencies=[], priority=1, status="pending")
+        self.mock_memory.load_tasks.return_value = [task]
+        self.mock_reflector.run_cycle.side_effect = Exception("oops")
+        self.mock_planner.plan.return_value = None
+        self.orchestrator.logger = MagicMock()
+
+        with patch('builtins.print'):
+            self.orchestrator.run("tasks.yml")
+
+        self.orchestrator.logger.error.assert_called_once()
+        self.mock_executor.execute.assert_not_called()
+        self.mock_memory.save_tasks.assert_not_called()
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -731,13 +731,13 @@
   component: testing
   dependencies: []
   priority: 2
-  status: pending
+  status: done
 - id: 110
   description: Implement more robust error handling in the Orchestrator
   component: orchestrator
   dependencies: []
   priority: 2
-  status: pending
+  status: done
 - id: 111
   description: Implement authentication and authorization for the broker API
   component: security
