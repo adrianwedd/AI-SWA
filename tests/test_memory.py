@@ -58,3 +58,28 @@ def test_save_tasks_omit_null_command(tmp_path):
     mem.save_tasks(tasks, tasks_file)
     data = yaml.safe_load(tasks_file.read_text())
     assert "command" not in data[0]
+
+
+def test_task_round_trip_with_optional_fields(tmp_path):
+    tasks = [
+        Task(
+            id=1,
+            task_id="T-1",
+            title="Extended",
+            description="test optional",
+            component="core",
+            dependencies=[],
+            priority=1,
+            status="pending",
+            area="core",
+            actionable_steps=["a", "b"],
+            acceptance_criteria=["c"],
+            assigned_to="dev",
+            epic="E1",
+        )
+    ]
+    tasks_file = tmp_path / "tasks.yml"
+    mem = Memory(tmp_path / "state.json")
+    mem.save_tasks(tasks, tasks_file)
+    loaded = mem.load_tasks(tasks_file)
+    assert loaded == tasks

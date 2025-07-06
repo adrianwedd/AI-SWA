@@ -33,6 +33,13 @@ TASK_SCHEMA = {
                 "enum": ["pending", "in_progress", "done"],
             },
             "command": {"type": ["string", "null"]},
+            "task_id": {"type": "string"},
+            "title": {"type": "string"},
+            "area": {"type": "string"},
+            "actionable_steps": {"type": "array", "items": {"type": "string"}},
+            "acceptance_criteria": {"type": "array", "items": {"type": "string"}},
+            "assigned_to": {"type": ["string", "null"]},
+            "epic": {"type": "string"},
         },
     },
 }
