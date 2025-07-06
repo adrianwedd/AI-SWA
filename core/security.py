@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import os
 import json
 from dataclasses import dataclass
 from fastapi import Header, HTTPException, Depends
+from .config import load_config
 
 
 @dataclass
@@ -16,15 +16,15 @@ class User:
     role: str
 
 def verify_api_key(x_api_key: str | None = Header(None)) -> None:
-    """Verify the ``X-API-Key`` header if ``API_KEY`` is configured."""
-    api_key = os.getenv("API_KEY")
+    """Verify the ``X-API-Key`` header if an API key is configured."""
+    api_key = load_config()["security"].get("api_key")
     if api_key and x_api_key != api_key:
         raise HTTPException(status_code=401, detail="Invalid API key")
 
 
 def _parse_tokens() -> dict[str, User]:
     """Return mapping of authentication tokens to ``User`` objects."""
-    env = os.getenv("API_TOKENS")
+    env = load_config()["security"].get("api_tokens")
     if not env:
         return {}
     tokens: dict[str, User] = {}
@@ -74,7 +74,7 @@ def validate_plugin_permissions(perms: list[str]) -> None:
 
 def verify_plugin_signature(manifest: dict, signature: str) -> None:
     """Verify plugin manifest signature if signing key is configured."""
-    key = os.getenv("PLUGIN_SIGNING_KEY")
+    key = load_config()["security"].get("plugin_signing_key")
     if not key:
         return
     import base64

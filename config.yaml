@@ -1,0 +1,10 @@
+broker:
+  db_path: tasks.db
+  metrics_port: 9000
+worker:
+  broker_url: http://broker:8000
+  metrics_port: 9001
+security:
+  api_key: null
+  api_tokens: null
+  plugin_signing_key: null
