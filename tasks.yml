@@ -532,7 +532,7 @@
   description: Document strategic research roadmap (RB-002)
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -1403,6 +1403,6 @@
     - "`docker-compose up` starts all services and tests can run against them"
     - README contains updated instructions
   priority: 2
-  status: pending
+  status: done
   assigned_to: null
   epic: Developer Experience
