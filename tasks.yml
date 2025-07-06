@@ -1351,7 +1351,7 @@
     - "`python -m ai_swa.orchestrator --help` shows CLI options"
     - Start/stop commands function as expected in tests
   priority: 2
-  status: pending
+  status: done
   assigned_to: null
   epic: Usability
 - id: 125
