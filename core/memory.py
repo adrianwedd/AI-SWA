@@ -33,6 +33,7 @@ TASK_SCHEMA = {
             "acceptance_criteria": {"type": "array", "items": {"type": "string"}},
             "assigned_to": {"type": ["string", "null"]},
             "epic": {"type": "string"},
+            "metadata": {"type": "object"},
         },
     },
 }
