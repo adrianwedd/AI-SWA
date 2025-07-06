@@ -13,3 +13,11 @@ class Task:
     priority: int
     status: str
     command: Optional[str] = None
+    # Optional extended metadata
+    task_id: Optional[str] = None
+    title: Optional[str] = None
+    area: Optional[str] = None
+    actionable_steps: Optional[List[str]] = None
+    acceptance_criteria: Optional[List[str]] = None
+    assigned_to: Optional[str] = None
+    epic: Optional[str] = None
