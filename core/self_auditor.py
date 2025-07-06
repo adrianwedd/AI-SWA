@@ -10,6 +10,8 @@ from typing import Dict, List
 from radon.complexity import cc_visit, cc_rank
 from radon.metrics import mi_visit, mi_rank
 
+from .log_utils import configure_logging
+
 
 class SelfAuditor:
     """Evaluate metrics and produce refactor tasks when thresholds are exceeded."""
@@ -20,6 +22,7 @@ class SelfAuditor:
         maintainability_threshold: str = "B",
         use_wily: bool = False,
     ) -> None:
+        configure_logging()
         self.complexity_threshold = complexity_threshold
         self.maintainability_threshold = maintainability_threshold
         self.use_wily = use_wily

@@ -6,17 +6,18 @@ an isolated subprocess. The worker then posts the command's ``stdout``,
 ``stderr`` and ``exit_code`` back to the broker.
 """
 
-import os
 import requests
 import subprocess
 from core.telemetry import setup_telemetry
+from core.config import load_config
 
-BROKER_URL = os.environ.get("BROKER_URL", "http://broker:8000")
-setup_telemetry(service_name="worker", metrics_port=int(os.getenv("METRICS_PORT", "9001")))
+config = load_config()
+BROKER_URL = config["worker"]["broker_url"]
+setup_telemetry(service_name="worker", metrics_port=int(config["worker"]["metrics_port"]))
 
 
 def fetch_tasks():
-    api_key = os.getenv("API_KEY")
+    api_key = config["security"]["api_key"]
     headers = {"X-API-Key": api_key} if api_key else {}
     resp = requests.get(f"{BROKER_URL}/tasks", headers=headers)
     resp.raise_for_status()
@@ -31,7 +32,7 @@ def main():
             result = subprocess.run(
                 command, shell=True, check=False, capture_output=True, text=True
             )
-            api_key = os.getenv("API_KEY")
+            api_key = config["security"]["api_key"]
             headers = {"X-API-Key": api_key} if api_key else {}
             requests.post(
                 f"{BROKER_URL}/tasks/{task['id']}/result",

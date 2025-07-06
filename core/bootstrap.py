@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import yaml
 from jsonschema import validate, ValidationError
 from core.memory import TASK_SCHEMA
+from core.log_utils import configure_logging
 
 
 def load_schema_and_tasks(path: Path):
@@ -77,7 +78,7 @@ def main():
     logfile = Path("logs") / f"bootstrap-{timestamp}.log"
     try:
         logfile.parent.mkdir(exist_ok=True)
-        logging.basicConfig(filename=logfile, level=logging.INFO)
+        configure_logging(logfile=logfile)
     except OSError as exc:
         print(f"[ERROR] {exc}")
         sys.exit(2)

@@ -5,11 +5,14 @@ import logging
 from pathlib import Path
 from typing import Dict, Optional
 
+from .log_utils import configure_logging
+
 
 class MetricsProvider:
     """Simple provider for observability metrics."""
 
     def __init__(self, metrics_path: Optional[Path] = None) -> None:
+        configure_logging()
         self.metrics_path = Path(metrics_path or "metrics.json")
         self.logger = logging.getLogger(__name__)
 

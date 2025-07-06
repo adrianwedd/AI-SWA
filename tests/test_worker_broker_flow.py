@@ -1,34 +1,55 @@
 import os
+import sys
+import time
 import sqlite3
-from importlib import reload
-from types import SimpleNamespace
+import subprocess
+from pathlib import Path
 
-from fastapi.testclient import TestClient
-
-import broker.main as broker_module
-import worker.main as worker_module
+import requests
 
 
-def setup_broker(tmp_path):
-    os.environ["DB_PATH"] = str(tmp_path / "api.db")
-    os.environ["METRICS_PORT"] = "0"
-    broker = reload(broker_module)
-    return TestClient(broker.app)
+def start_broker(tmp_path, port=8001):
+    env = os.environ.copy()
+    env["DB_PATH"] = str(tmp_path / "api.db")
+    env["METRICS_PORT"] = "0"
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    proc = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "uvicorn",
+            "broker.main:app",
+            "--port",
+            str(port),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        env=env,
+    )
+    url = f"http://localhost:{port}/tasks"
+    for _ in range(20):
+        try:
+            requests.get(url, timeout=1)
+            break
+        except requests.RequestException:
+            time.sleep(0.2)
+    return proc, env["DB_PATH"], url[:-6]
 
 
-def run_worker(client, monkeypatch):
-    os.environ["BROKER_URL"] = str(client.base_url)
-    os.environ["METRICS_PORT"] = "0"
-    mod = reload(worker_module)
-
-    def _get(url, *args, **kwargs):
-        return client.get(url.replace(str(client.base_url), ""))
-
-    def _post(url, *args, **kwargs):
-        return client.post(url.replace(str(client.base_url), ""), json=kwargs.get("json"))
-
-    monkeypatch.setattr(mod, "requests", SimpleNamespace(get=_get, post=_post))
-    mod.main()
+def run_worker(base_url):
+    env = os.environ.copy()
+    env["BROKER_URL"] = base_url
+    env["METRICS_PORT"] = "0"
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    result = subprocess.run(
+        [sys.executable, "-m", "worker.main"],
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    return result
 
 
 def fetch_result(db_path, task_id):
@@ -41,23 +62,51 @@ def fetch_result(db_path, task_id):
     return row
 
 
-def test_worker_success_result(tmp_path, monkeypatch):
-    client = setup_broker(tmp_path)
-    resp = client.post("/tasks", json={"description": "demo", "command": "echo hi"})
-    task_id = resp.json()["id"]
-    run_worker(client, monkeypatch)
-    stdout, stderr, code = fetch_result(str(tmp_path / "api.db"), task_id)
-    assert stdout.strip() == "hi"
-    assert stderr == ""
-    assert code == 0
+def task_count(db_path):
+    conn = sqlite3.connect(db_path)
+    count = conn.execute("SELECT COUNT(*) FROM tasks").fetchone()[0]
+    conn.close()
+    return count
 
 
-def test_worker_failure_result(tmp_path, monkeypatch):
-    client = setup_broker(tmp_path)
-    cmd = "sh -c 'echo fail >&2; exit 1'"
-    resp = client.post("/tasks", json={"description": "fail", "command": cmd})
-    task_id = resp.json()["id"]
-    run_worker(client, monkeypatch)
-    stdout, stderr, code = fetch_result(str(tmp_path / "api.db"), task_id)
-    assert code != 0
-    assert "fail" in stderr
+def test_worker_success_result(tmp_path):
+    broker_proc, db_path, base_url = start_broker(tmp_path)
+    try:
+        resp = requests.post(
+            f"{base_url}/tasks",
+            json={"description": "demo", "command": "echo hi"},
+            timeout=5,
+        )
+        task_id = resp.json()["id"]
+        result = run_worker(base_url)
+        assert result.returncode == 0
+        stdout, stderr, code = fetch_result(db_path, task_id)
+        assert stdout.strip() == "hi"
+        assert stderr == ""
+        assert code == 0
+        assert task_count(db_path) == 1
+    finally:
+        broker_proc.terminate()
+        logs, _ = broker_proc.communicate(timeout=5)
+    assert f"POST /tasks/{task_id}/result" in logs
+
+
+def test_worker_failure_result(tmp_path):
+    broker_proc, db_path, base_url = start_broker(tmp_path)
+    try:
+        cmd = "sh -c 'echo fail >&2; exit 1'"
+        resp = requests.post(
+            f"{base_url}/tasks",
+            json={"description": "fail", "command": cmd},
+            timeout=5,
+        )
+        task_id = resp.json()["id"]
+        result = run_worker(base_url)
+        assert result.returncode == 0
+        stdout, stderr, code = fetch_result(db_path, task_id)
+        assert code != 0
+        assert "fail" in stderr
+    finally:
+        broker_proc.terminate()
+        logs, _ = broker_proc.communicate(timeout=5)
+    assert f"POST /tasks/{task_id}/result" in logs

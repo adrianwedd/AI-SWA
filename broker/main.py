@@ -13,18 +13,19 @@ are created on startup: ``tasks`` for task metadata and ``task_results`` for
 worker output.
 """
 
-import os
 import sqlite3
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from core.telemetry import setup_telemetry
-from core.security import verify_api_key
+from core.security import verify_api_key, require_role, User
+from core.config import load_config
 
-DB_PATH = os.environ.get("DB_PATH", "tasks.db")
+config = load_config()
+DB_PATH = config["broker"]["db_path"]
 
 app = FastAPI()
-setup_telemetry(service_name="broker", metrics_port=int(os.getenv("METRICS_PORT", "9000")))
+setup_telemetry(service_name="broker", metrics_port=int(config["broker"]["metrics_port"]))
 FastAPIInstrumentor.instrument_app(app)
 
 
@@ -63,7 +64,11 @@ init_db()
 
 
 @app.post("/tasks", response_model=Task)
-def create_task(task: Task, _: None = Depends(verify_api_key)):
+def create_task(
+    task: Task,
+    _: None = Depends(verify_api_key),
+    __: User = Depends(require_role(["admin"])),
+):
     conn = get_db()
     cur = conn.execute(
         "INSERT INTO tasks (description, status, command) VALUES (?, ?, ?)",
@@ -76,7 +81,10 @@ def create_task(task: Task, _: None = Depends(verify_api_key)):
 
 
 @app.get("/tasks", response_model=list[Task])
-def list_tasks(_: None = Depends(verify_api_key)):
+def list_tasks(
+    _: None = Depends(verify_api_key),
+    __: User = Depends(require_role(["admin", "worker"])),
+):
     conn = get_db()
     cur = conn.execute("SELECT id, description, status, command FROM tasks")
     tasks = [
@@ -93,7 +101,11 @@ def list_tasks(_: None = Depends(verify_api_key)):
 
 
 @app.get("/tasks/{task_id}", response_model=Task)
-def get_task(task_id: int, _: None = Depends(verify_api_key)):
+def get_task(
+    task_id: int,
+    _: None = Depends(verify_api_key),
+    __: User = Depends(require_role(["admin", "worker"])),
+):
     conn = get_db()
     row = conn.execute(
         "SELECT id, description, status, command FROM tasks WHERE id = ?",
@@ -111,7 +123,12 @@ def get_task(task_id: int, _: None = Depends(verify_api_key)):
 
 
 @app.post("/tasks/{task_id}/result")
-def save_result(task_id: int, result: TaskResult, _: None = Depends(verify_api_key)):
+def save_result(
+    task_id: int,
+    result: TaskResult,
+    _: None = Depends(verify_api_key),
+    __: User = Depends(require_role(["worker", "admin"])),
+):
     conn = get_db()
     exists = conn.execute(
         "SELECT 1 FROM tasks WHERE id = ?", (task_id,)

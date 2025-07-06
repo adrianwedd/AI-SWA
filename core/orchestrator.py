@@ -2,6 +2,9 @@
 
 from typing import List
 from opentelemetry import metrics, trace
+import logging
+
+from .log_utils import configure_logging
 
 from .task import Task
 
@@ -13,11 +16,13 @@ class Orchestrator:
     def __init__(self, planner, executor, reflector, memory, auditor):
         """Store dependencies for later use."""
 
+        configure_logging()
         self.planner = planner
         self.executor = executor
         self.reflector = reflector
         self.memory = memory
         self.auditor = auditor
+        self.logger = logging.getLogger(__name__)
         meter = metrics.get_meter_provider().get_meter(__name__)
         self._runs = meter.create_counter(
             "orchestrator_runs_total", description="Number of orchestrator loops"
@@ -35,7 +40,11 @@ class Orchestrator:
 
     # ------------------------------------------------------------------
     def _reflect(self, tasks: List[Task], tasks_file: str) -> List[Task]:
-        reflected = self.reflector.run_cycle([self._task_to_dict(t) for t in tasks])
+        try:
+            reflected = self.reflector.run_cycle([self._task_to_dict(t) for t in tasks])
+        except Exception as exc:  # pragma: no cover - defensive
+            self.logger.error("Reflection failed: %s", exc)
+            return tasks
         if reflected is None:
             return tasks
         if reflected and isinstance(reflected[0], Task):
@@ -55,7 +64,14 @@ class Orchestrator:
             print(f"Warning: Task '{getattr(task, 'id', 'N/A')}' has no 'status' attribute.")
 
         print(f"Orchestrator: Executing task '{getattr(task, 'id', 'N/A')}'.")
-        self.executor.execute(task)
+        try:
+            self.executor.execute(task)
+        except Exception as exc:  # pragma: no cover - executor issues
+            self.logger.error("Execution failed for task %s: %s", getattr(task, 'id', 'N/A'), exc)
+            if hasattr(task, "status"):
+                task.status = "pending"
+                self.memory.save_tasks(tasks, tasks_file)
+            return
 
         if hasattr(task, "status"):
             task.status = "done"
