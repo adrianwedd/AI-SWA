@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import json
 from dataclasses import dataclass
 from fastapi import Header, HTTPException, Depends
 
@@ -60,3 +61,27 @@ def require_role(roles: list[str]):
         return user
 
     return _require
+
+ALLOWED_PLUGIN_PERMISSIONS = {"read_files", "network"}
+
+
+def validate_plugin_permissions(perms: list[str]) -> None:
+    """Ensure all plugin permissions are allowed."""
+    for perm in perms:
+        if perm not in ALLOWED_PLUGIN_PERMISSIONS:
+            raise ValueError(f"Permission '{perm}' not allowed")
+
+
+def verify_plugin_signature(manifest: dict, signature: str) -> None:
+    """Verify plugin manifest signature if signing key is configured."""
+    key = os.getenv("PLUGIN_SIGNING_KEY")
+    if not key:
+        return
+    import base64
+    import hashlib
+    import hmac
+    payload = json.dumps(manifest, sort_keys=True).encode()
+    expected = base64.b64encode(hmac.new(key.encode(), payload, hashlib.sha256).digest()).decode()
+    if not hmac.compare_digest(signature, expected):
+        raise ValueError("Invalid plugin signature")
+
