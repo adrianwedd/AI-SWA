@@ -4,7 +4,7 @@
 #     "type": "array",
 #     "items": {
 #       "type": "object",
-#       "required": ["id","description","component","dependencies","priority","status"],
+#       "required": ["id","description","dependencies","priority","status"],
 #       "properties": {
 #         "id": {"type": "integer"},
 #         "description": {"type": "string"},
@@ -1242,6 +1242,7 @@
   - Create a logging configuration file with formatters and handlers
   - Update services to load the configuration on startup
   dependencies: []
+  priority: 2
   acceptance_criteria:
   - Logs from orchestrator, worker, and broker follow the same format
   - No print statements remain in core modules
@@ -1259,6 +1260,7 @@
   - Implement asynchronous fetching and execution loop
   - Write tests to verify multiple tasks are handled in parallel
   dependencies: []
+  priority: 2
   acceptance_criteria:
   - Worker can execute at least two tasks concurrently in tests
   - Existing functionality remains intact
@@ -1275,6 +1277,7 @@
   - Return status information such as uptime
   - Add basic test verifying health endpoint
   dependencies: []
+  priority: 2
   acceptance_criteria:
   - GET /health returns 200 with JSON status
   status: pending
@@ -1292,6 +1295,7 @@
   - Update tests for new behavior
   dependencies:
   - 118
+  priority: 2
   acceptance_criteria:
   - Additional fields in tasks.yml round-trip without loss
   - Tests cover backward compatibility
@@ -1309,6 +1313,7 @@
   - Add examples of configuration files
   - Update architecture docs with configuration flow
   dependencies: []
+  priority: 2
   acceptance_criteria:
   - README contains new Configuration section
   status: pending
