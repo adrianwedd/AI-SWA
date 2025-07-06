@@ -3,12 +3,12 @@
 from __future__ import annotations
 
 import json
-import os
 from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import List
 
 from .security import validate_plugin_permissions, verify_plugin_signature
+from .config import load_config
 
 
 @dataclass
@@ -36,7 +36,7 @@ def load_manifest(path: Path) -> PluginManifest:
     if manifest.signature:
         verify_plugin_signature(manifest.data_for_signature(), manifest.signature)
     else:
-        if os.getenv("PLUGIN_SIGNING_KEY"):
+        if load_config()["security"].get("plugin_signing_key"):
             raise ValueError("Signature required")
     return manifest
 

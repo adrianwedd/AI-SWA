@@ -13,18 +13,19 @@ are created on startup: ``tasks`` for task metadata and ``task_results`` for
 worker output.
 """
 
-import os
 import sqlite3
 from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from core.telemetry import setup_telemetry
 from core.security import verify_api_key, require_role, User
+from core.config import load_config
 
-DB_PATH = os.environ.get("DB_PATH", "tasks.db")
+config = load_config()
+DB_PATH = config["broker"]["db_path"]
 
 app = FastAPI()
-setup_telemetry(service_name="broker", metrics_port=int(os.getenv("METRICS_PORT", "9000")))
+setup_telemetry(service_name="broker", metrics_port=int(config["broker"]["metrics_port"]))
 FastAPIInstrumentor.instrument_app(app)
 
 
