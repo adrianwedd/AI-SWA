@@ -64,8 +64,21 @@ Planner decides what to build next. The Executor writes files and configures CI/
    ```bash
    python3 run_bootstrap.py
    ```
-4. **Explore the Blueprint** – Open `ARCHITECTURE.md` to see components and dependency rationales.
-5. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
+4. **Start the Orchestrator**
+   ```bash
+   python -m core.cli start
+   # Later stop it
+   python -m core.cli stop
+   ```
+5. **Explore the Blueprint** – Open `ARCHITECTURE.md` to see components and dependency rationales.
+6. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
+
+### CLI Usage
+
+```
+python -m core.cli start --memory state.json
+python -m core.cli stop
+```
 
 ---
 

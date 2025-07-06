@@ -61,3 +61,67 @@ def test_cli_unwritable_memory(tmp_path):
         check=False,
     )
     assert result.returncode != 0
+
+
+def test_cli_start_stop(tmp_path):
+    pid_file = tmp_path / "orch.pid"
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    start = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "core.cli",
+            "start",
+            "--pid-file",
+            str(pid_file),
+            "--memory",
+            str(tmp_path / "state.json"),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    assert start.returncode == 0
+    assert pid_file.exists()
+
+    stop = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "core.cli",
+            "stop",
+            "--pid-file",
+            str(pid_file),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    assert stop.returncode == 0
+    assert not pid_file.exists()
+
+
+def test_cli_stop_missing_pid(tmp_path):
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "core.cli",
+            "stop",
+            "--pid-file",
+            str(tmp_path / "none.pid"),
+        ],
+        cwd=tmp_path,
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+    assert result.returncode != 0
