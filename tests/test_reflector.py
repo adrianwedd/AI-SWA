@@ -66,11 +66,15 @@ def test_load_tasks_failures(tmp_path, caplog):
     refl = Reflector(tasks_path=missing)
     with caplog.at_level(logging.WARNING):
         assert refl._load_tasks() == []
+        assert "not found" in caplog.text
 
     bad = tmp_path / "bad.yml"
     bad.write_text(": - invalid")
     with caplog.at_level(logging.ERROR):
+        caplog.clear()
+        refl.tasks_path = bad
         assert refl._load_tasks() == []
+        assert "Failed to parse tasks file" in caplog.text
 
 
 def test_validate_detects_issues():
