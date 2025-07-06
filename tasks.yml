@@ -731,19 +731,19 @@
   component: testing
   dependencies: []
   priority: 2
-  status: done
+  status: pending
 - id: 110
   description: Implement more robust error handling in the Orchestrator
   component: orchestrator
   dependencies: []
   priority: 2
-  status: done
+  status: pending
 - id: 111
   description: Implement authentication and authorization for the broker API
   component: security
   dependencies: []
   priority: 1
-  status: done
+  status: pending
 - id: 112
   description: Consolidate application configuration into a single file
   component: configuration
@@ -780,3 +780,83 @@
   dependencies: []
   priority: 2
   status: pending
+- id: 118
+  task_id: OBS-001
+  title: Standardize logging configuration
+  description: Implement a centralized logging configuration shared by all Python services
+  area: observability
+  actionable_steps:
+    - Replace print statements with logging calls in core modules
+    - Create a logging configuration file with formatters and handlers
+    - Update services to load the configuration on startup
+  dependencies: []
+  acceptance_criteria:
+    - Logs from orchestrator, worker, and broker follow the same format
+    - No print statements remain in core modules
+  status: pending
+  assigned_to: null
+  epic: Observability Improvements
+- id: 119
+  task_id: WORK-ASYNC
+  title: Enable concurrent task execution in worker
+  description: Refactor the worker to process tasks concurrently using asyncio or threading
+  area: worker
+  actionable_steps:
+    - Benchmark current worker throughput
+    - Implement asynchronous fetching and execution loop
+    - Write tests to verify multiple tasks are handled in parallel
+  dependencies: []
+  acceptance_criteria:
+    - Worker can execute at least two tasks concurrently in tests
+    - Existing functionality remains intact
+  status: pending
+  assigned_to: null
+  epic: Performance Enhancements
+- id: 120
+  task_id: NODE-HC
+  title: Add health check endpoint to Node IO service
+  description: Provide a simple HTTP endpoint to report service health
+  area: services
+  actionable_steps:
+    - Expose an express HTTP server alongside gRPC service
+    - Return status information such as uptime
+    - Add basic test verifying health endpoint
+  dependencies: []
+  acceptance_criteria:
+    - GET /health returns 200 with JSON status
+  status: pending
+  assigned_to: null
+  epic: Reliability
+- id: 121
+  task_id: MEM-EXT
+  title: Extend Memory module for expanded task schema
+  description: Update Memory.load_tasks and save_tasks to preserve additional fields beyond the base schema
+  area: core
+  actionable_steps:
+    - Modify dataclass Task to store optional metadata dictionary
+    - Adjust JSON schema to allow extra keys
+    - Update tests for new behavior
+  dependencies:
+    - 118
+  acceptance_criteria:
+    - Additional fields in tasks.yml round-trip without loss
+    - Tests cover backward compatibility
+  status: pending
+  assigned_to: null
+  epic: Schema Evolution
+- id: 122
+  task_id: DOC-ENV
+  title: Document environment variables and configuration
+  description: Provide a dedicated section in README explaining all configuration options
+  area: documentation
+  actionable_steps:
+    - List required and optional environment variables
+    - Add examples of configuration files
+    - Update architecture docs with configuration flow
+  dependencies: []
+  acceptance_criteria:
+    - README contains new Configuration section
+  status: pending
+  assigned_to: null
+  epic: Documentation
+
