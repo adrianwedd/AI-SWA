@@ -22,26 +22,33 @@ def setup_module(module):
 def test_create_and_get_task(tmp_path):
     os.environ["DB_PATH"] = str(tmp_path / "api.db")
     os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
     broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
     client = TestClient(broker.app)
 
-    resp = client.post("/tasks", json={"description": "demo"})
+    headers = {"Authorization": "Bearer admintoken"}
+    resp = client.post("/tasks", json={"description": "demo"}, headers=headers)
     assert resp.status_code == 200
     data = resp.json()
     assert data["description"] == "demo"
     task_id = data["id"]
 
-    resp = client.get(f"/tasks/{task_id}")
+    resp = client.get(f"/tasks/{task_id}", headers=headers)
     assert resp.status_code == 200
     assert resp.json()["id"] == task_id
+
+    os.environ.pop("API_TOKENS")
 
 
 def test_api_key(tmp_path):
     os.environ["DB_PATH"] = str(tmp_path / "api.db")
     os.environ["METRICS_PORT"] = "0"
     os.environ["API_KEY"] = "secret"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin"
     broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
     client = TestClient(broker.app)
+
+    headers = {"Authorization": "Bearer admintoken"}
 
     resp = client.post("/tasks", json={"description": "demo"})
     assert resp.status_code == 401
@@ -49,10 +56,43 @@ def test_api_key(tmp_path):
     resp = client.post(
         "/tasks",
         json={"description": "demo"},
-        headers={"X-API-Key": "secret"},
+        headers={"X-API-Key": "secret", **headers},
     )
     assert resp.status_code == 200
     os.environ.pop("API_KEY")
+    os.environ.pop("API_TOKENS")
+
+
+def test_invalid_token(tmp_path):
+    os.environ["DB_PATH"] = str(tmp_path / "api.db")
+    os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin"
+    broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
+    client = TestClient(broker.app)
+
+    resp = client.post(
+        "/tasks",
+        json={"description": "demo"},
+        headers={"Authorization": "Bearer bad"},
+    )
+    assert resp.status_code == 401
+    os.environ.pop("API_TOKENS")
+
+
+def test_permission_denied(tmp_path):
+    os.environ["DB_PATH"] = str(tmp_path / "api.db")
+    os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
+    broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
+    client = TestClient(broker.app)
+
+    resp = client.post(
+        "/tasks",
+        json={"description": "demo"},
+        headers={"Authorization": "Bearer workertoken"},
+    )
+    assert resp.status_code == 403
+    os.environ.pop("API_TOKENS")
 
 
 @pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed")
