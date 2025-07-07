@@ -2,7 +2,7 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
-COPY broker ./broker
+COPY core ./core
 COPY config.yaml ./
-EXPOSE 8000
-ENTRYPOINT ["uvicorn", "broker.main:app", "--host", "0.0.0.0", "--port", "8000"]
+COPY tasks.yml ./
+ENTRYPOINT ["python", "-m", "core.cli", "run", "--memory", "state.json"]

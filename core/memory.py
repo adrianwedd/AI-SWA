@@ -14,14 +14,7 @@ TASK_SCHEMA = {
     "type": "array",
     "items": {
         "type": "object",
-        "required": [
-            "id",
-            "description",
-            "component",
-            "dependencies",
-            "priority",
-            "status",
-        ],
+        "required": ["id", "description", "dependencies", "priority", "status"],
         "properties": {
             "id": {"type": "integer"},
             "description": {"type": "string"},
@@ -40,11 +33,10 @@ TASK_SCHEMA = {
             "acceptance_criteria": {"type": "array", "items": {"type": "string"}},
             "assigned_to": {"type": ["string", "null"]},
             "epic": {"type": "string"},
+            "metadata": {"type": "object"},
         },
     },
 }
-
-
 
 
 class Memory:
@@ -83,12 +75,17 @@ class Memory:
             tasks_data = yaml.safe_load(fh) or []
         validate(instance=tasks_data, schema=TASK_SCHEMA)
         fields = set(Task.__dataclass_fields__.keys())
-        tasks = [Task(**{k: v for k, v in item.items() if k in fields}) for item in tasks_data]
+        tasks = [
+            Task(**{k: v for k, v in item.items() if k in fields})
+            for item in tasks_data
+        ]
         return tasks
 
     def save_tasks(self, tasks: List[Task], tasks_file: str) -> None:
         """Write list of :class:`Task` to ``tasks_file`` in YAML format."""
-        tasks_data = [{k: v for k, v in asdict(t).items() if v is not None} for t in tasks]
+        tasks_data = [
+            {k: v for k, v in asdict(t).items() if v is not None} for t in tasks
+        ]
         validate(instance=tasks_data, schema=TASK_SCHEMA)
         path = Path(tasks_file)
         with path.open("w") as fh:
