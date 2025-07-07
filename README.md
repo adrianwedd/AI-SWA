@@ -77,6 +77,9 @@ Planner decides what to build next. The Executor writes files and configures CI/
    docker-compose up --build
    ```
    This starts the orchestrator, broker, worker, and Node I/O service containers.
+   Environment variables like `BROKER_URL`, `DB_PATH` and metrics ports are set
+   in the compose file so you can simply run `docker-compose up` on subsequent
+   launches for local development.
 
 ### CLI Usage
 

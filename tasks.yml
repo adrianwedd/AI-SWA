@@ -1330,6 +1330,7 @@
     - Verify outputs via REST/gRPC responses
   dependencies:
     - 115
+  priority: 2
   acceptance_criteria:
     - Full workflow test passes with broker, worker, and Node service running
     - Failure cases are logged and handled gracefully
@@ -1346,6 +1347,7 @@
     - Support configuration file path and verbosity flags
     - Write usage documentation and tests
   dependencies: []
+  priority: 2
   acceptance_criteria:
     - "`python -m ai_swa.orchestrator --help` shows CLI options"
     - Start/stop commands function as expected in tests
@@ -1362,6 +1364,7 @@
     - Define metrics for task counts and processing duration
     - Document how to scrape metrics
   dependencies: []
+  priority: 2
   acceptance_criteria:
     - "`/metrics` endpoint available on broker and worker"
     - Metrics include task throughput and duration
@@ -1379,6 +1382,7 @@
     - Add tests for invalid and valid schemas
   dependencies:
     - 121
+  priority: 2
   acceptance_criteria:
     - Loading tasks fails with clear error when schema violations occur
     - Extended fields round-trip without loss
@@ -1395,6 +1399,7 @@
     - Create `docker-compose.yml` orchestrating all services
     - Document usage in README
   dependencies: []
+  priority: 2
   acceptance_criteria:
     - "`docker-compose up` starts all services and tests can run against them"
     - README contains updated instructions
