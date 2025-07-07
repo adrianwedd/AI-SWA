@@ -390,4 +390,6 @@ Run the helper script to move finished tasks out of the main list:
 python scripts/archive_tasks.py --tasks tasks.yml --archive tasks_archive.yml
 ```
 This updates `tasks.yml` and appends archived items to `tasks_archive.yml`.
+Run this script on a regular basis (for example weekly) to keep the task list
+concise.
 

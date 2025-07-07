@@ -1,3 +1,11 @@
+
+"""Move completed tasks from ``tasks.yml`` to ``tasks_archive.yml``.
+
+This helper preserves any comment header and appends archived tasks to the
+archive file.  It is intended to keep ``tasks.yml`` concise.  Run periodically
+or whenever tasks accumulate.
+"""
+
 import argparse
 from pathlib import Path
 import yaml
