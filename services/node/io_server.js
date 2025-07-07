@@ -7,8 +7,24 @@ const path = require('path');
 const packageDef = protoLoader.loadSync(path.join(__dirname, '../../proto/io_service.proto'));
 const proto = grpc.loadPackageDefinition(packageDef).aiswa;
 
+const requestCounter = new client.Counter({
+  name: 'io_requests_total',
+  help: 'Total number of RPC requests',
+  labelNames: ['method'],
+});
+
+const latencyHistogram = new client.Histogram({
+  name: 'io_request_duration_seconds',
+  help: 'Duration of RPC requests in seconds',
+  labelNames: ['method'],
+  buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
+});
+
 function ping(call, callback) {
+  const end = latencyHistogram.startTimer({ method: 'Ping' });
+  requestCounter.labels('Ping').inc();
   callback(null, { message: 'pong:' + call.request.message });
+  end();
 }
 
 function startMetricsServer(port) {
