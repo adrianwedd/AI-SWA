@@ -57,10 +57,15 @@ class VisionEngine:
 class RLAgent:
     """Minimal stub of an RL agent for prioritization."""
 
-    def __init__(self, history_path: Optional[Path] = None) -> None:
+    def __init__(
+        self,
+        history_path: Optional[Path] = None,
+        training_path: Optional[Path] = None,
+    ) -> None:
         self.history: List[Dict[str, List[int]]] = []
         self.training_data: List[Dict[str, float]] = []
         self.history_path = Path(history_path) if history_path else None
+        self.training_path = Path(training_path) if training_path else None
         self.authority: float = 0.0
 
     def suggest(self, tasks: List[Task]) -> List[Task]:
@@ -81,6 +86,9 @@ class RLAgent:
     def train(self, metrics: Dict[str, float]) -> None:
         """Collect ``metrics`` for offline training."""
         self.training_data.append(metrics)
+        if self.training_path:
+            with self.training_path.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(metrics) + "\n")
 
     def update_authority(self, performance_gain: float, threshold: float = 0.05) -> None:
         """Increase authority when ``performance_gain`` exceeds ``threshold``."""

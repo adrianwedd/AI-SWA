@@ -818,7 +818,7 @@
   - The RL agent can be trained on historical data from the observability pipeline.
   - In shadow mode, the agent's suggested rankings are logged for analysis.
   priority: 1
-  status: pending
+  status: done
   assigned_to: null
   epic: Vision Engine RL
 - id: 135
