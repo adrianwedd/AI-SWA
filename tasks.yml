@@ -1333,8 +1333,7 @@
   acceptance_criteria:
     - Full workflow test passes with broker, worker, and Node service running
     - Failure cases are logged and handled gracefully
-  priority: 2
-  status: pending
+  status: done
   assigned_to: null
   epic: Reliability
 - id: 124
@@ -1350,7 +1349,6 @@
   acceptance_criteria:
     - "`python -m ai_swa.orchestrator --help` shows CLI options"
     - Start/stop commands function as expected in tests
-  priority: 2
   status: done
   assigned_to: null
   epic: Usability
@@ -1367,8 +1365,7 @@
   acceptance_criteria:
     - "`/metrics` endpoint available on broker and worker"
     - Metrics include task throughput and duration
-  priority: 2
-  status: pending
+  status: done
   assigned_to: null
   epic: Observability Improvements
 - id: 126
@@ -1385,8 +1382,7 @@
   acceptance_criteria:
     - Loading tasks fails with clear error when schema violations occur
     - Extended fields round-trip without loss
-  priority: 2
-  status: pending
+  status: done
   assigned_to: null
   epic: Schema Evolution
 - id: 127
@@ -1402,7 +1398,82 @@
   acceptance_criteria:
     - "`docker-compose up` starts all services and tests can run against them"
     - README contains updated instructions
-  priority: 2
   status: done
   assigned_to: null
   epic: Developer Experience
+
+- id: 128
+  description: Review integration tests for microservice workflow
+  dependencies:
+  - 123
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Ensure tests cover broker, worker and Node service interactions
+  - Document any missing coverage or flaky behavior
+  acceptance_criteria:
+  - All services interact successfully in review environment
+  assigned_to: null
+  epic: Reliability
+
+- id: 129
+  description: Review CLI wrapper for Orchestrator
+  dependencies:
+  - 124
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Verify start and stop commands work as documented
+  - Confirm help text matches README examples
+  acceptance_criteria:
+  - CLI behaves consistently across platforms
+  assigned_to: null
+  epic: Usability
+
+- id: 130
+  description: Review Prometheus metrics endpoints
+  dependencies:
+  - 125
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Check broker and worker expose /metrics
+  - Validate task throughput and duration metrics
+  acceptance_criteria:
+  - Metrics scrape successfully with Prometheus
+  assigned_to: null
+  epic: Observability Improvements
+
+- id: 131
+  description: Review tasks.yml schema validation implementation
+  dependencies:
+  - 126
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Load tasks.yml with Memory module and check for errors
+  - Confirm extended fields are preserved on save
+  acceptance_criteria:
+  - Schema validation passes in unit tests
+  assigned_to: null
+  epic: Schema Evolution
+
+- id: 132
+  description: Review Docker Compose configuration for local deployment
+  dependencies:
+  - 127
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Run docker-compose up and verify all services start
+  - Document any setup issues in README
+  acceptance_criteria:
+  - Local deployment instructions work for new contributors
+  assigned_to: null
+  epic: Developer Experience
+
