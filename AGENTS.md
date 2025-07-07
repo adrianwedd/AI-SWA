@@ -69,6 +69,8 @@ To introduce a new agent to the system, the following process must be followed:
 
 - Follow the Iterative Development Protocol described in `README.md`.
 - Keep `tasks.yml` up to date, marking tasks as `done` once implemented.
+- Periodically run `python scripts/archive_tasks.py` to move completed tasks to
+  `tasks_archive.yml`.
 
 ### Commit Messages
 
