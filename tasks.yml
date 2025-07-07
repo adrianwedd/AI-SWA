@@ -883,7 +883,7 @@
     health data.
   - The Reflector can identify if code complexity is trending up or down over time.
   priority: 2
-  status: pending
+  status: done
   assigned_to: null
   epic: Reflector Outer Loop
 
@@ -944,3 +944,17 @@
   - docs/reviews/task_136_sentinel.md summarizes results
   assigned_to: null
   epic: Governance
+- id: 142
+  description: Review Reflector metrics integration for task 137
+  dependencies:
+  - 137
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Execute a reflection cycle with metrics.json data
+  - Confirm decisions include improvements based on coverage and dependencies
+  acceptance_criteria:
+  - docs/reviews/task_137_reflector_review.md summarizes results
+  assigned_to: null
+  epic: Reflector Outer Loop

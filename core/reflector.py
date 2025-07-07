@@ -234,19 +234,53 @@ class Reflector:
 
     # ------------------------------------------------------------------
     def _analyze_system_health(self) -> Dict:
-        return {
+        metrics = self.metrics_provider.collect() if self.metrics_provider else {}
+
+        health = {
             "architectural_issues": [],
-            "test_coverage": "unknown",
-            "dependency_health": "unknown",
-            "documentation_coverage": "unknown",
+            "test_coverage": metrics.get("coverage", "unknown"),
+            "dependency_health": metrics.get("dependency_health", "unknown"),
+            "documentation_coverage": metrics.get("docs_coverage", "unknown"),
         }
+
+        if isinstance(health["test_coverage"], (int, float)) and health["test_coverage"] < 80:
+            health["architectural_issues"].append("low_test_coverage")
+
+        if health["dependency_health"] == "outdated":
+            health["architectural_issues"].append("outdated_dependencies")
+
+        return health
 
     # ------------------------------------------------------------------
     def _analyze_evolution_trends(self) -> Dict:
+        metrics = self.metrics_provider.collect() if self.metrics_provider else {}
+
+        history = metrics.get("complexity_history", [])
+        complexity_trend = "stable"
+        if isinstance(history, list) and len(history) >= 2:
+            if history[-1] > history[0]:
+                complexity_trend = "up"
+            elif history[-1] < history[0]:
+                complexity_trend = "down"
+
+        completed = metrics.get("completed_tasks", [])
+        task_completion_rate: Optional[float] = "unknown"
+        if isinstance(completed, list) and len(completed) >= 2:
+            diffs = [completed[i + 1] - completed[i] for i in range(len(completed) - 1)]
+            if diffs:
+                task_completion_rate = sum(diffs) / len(diffs)
+
+        features = metrics.get("features_delivered", [])
+        feature_velocity: Optional[float] = "unknown"
+        if isinstance(features, list) and len(features) >= 2:
+            diffs = [features[i + 1] - features[i] for i in range(len(features) - 1)]
+            if diffs:
+                feature_velocity = sum(diffs) / len(diffs)
+
         return {
-            "complexity_trend": "stable",
-            "task_completion_rate": "unknown",
-            "feature_velocity": "unknown",
+            "complexity_trend": complexity_trend,
+            "task_completion_rate": task_completion_rate,
+            "feature_velocity": feature_velocity,
         }
 
     # ------------------------------------------------------------------
@@ -321,7 +355,10 @@ class Reflector:
 
     # ------------------------------------------------------------------
     def _decide_architectural_improvements(self, system_health: Dict, current_tasks: List[Dict]) -> List[Dict]:
-        return []
+        decisions: List[Dict] = []
+        for issue in system_health.get("architectural_issues", []):
+            decisions.append({"type": "architectural_issue", "reason": issue})
+        return decisions
 
     # ------------------------------------------------------------------
     def _decide_technical_debt_priorities(self, analysis: Dict, task_analysis: Dict) -> List[Dict]:
@@ -351,6 +388,17 @@ class Reflector:
                     "suggestion": "task_prioritization_review",
                 }
             )
+
+        coverage = analysis.get("system_health", {}).get("test_coverage")
+        if isinstance(coverage, (int, float)) and coverage < 80:
+            decisions.append(
+                {
+                    "type": "process_improvement",
+                    "reason": "Low test coverage",
+                    "suggestion": "increase_test_coverage",
+                }
+            )
+
         return decisions
 
     # ------------------------------------------------------------------
