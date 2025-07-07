@@ -364,3 +364,11 @@ working through the tasks in `tasks.yml` using an iterative cycle.
 3. Tests pass with coverage for new features.
 4. Tasks marked complete in `tasks.yml`.
 
+### Archiving Completed Tasks
+Run the helper script to move finished tasks out of the main list:
+
+```bash
+python scripts/archive_tasks.py --tasks tasks.yml --archive tasks_archive.yml
+```
+This updates `tasks.yml` and appends archived items to `tasks_archive.yml`.
+

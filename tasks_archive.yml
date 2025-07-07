@@ -1,0 +1,693 @@
+- id: 1
+  description: Implement YAML validation using jsonschema
+  dependencies: []
+  priority: 1
+  status: done
+  area: bootstrap
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 2
+  description: Expand tests in tests/test_bootstrap.py
+  dependencies:
+  - 1
+  priority: 2
+  status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 3
+  description: Create AGENTS.md with repository guidelines for Codex
+  dependencies: []
+  priority: 3
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 4
+  description: Ensure tests check for AGENTS.md existence
+  dependencies:
+  - 3
+  priority: 4
+  status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 5
+  description: Implement Orchestrator skeleton
+  dependencies: []
+  priority: 1
+  status: done
+  area: orchestrator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 6
+  description: Introduce Memory module
+  dependencies:
+  - 5
+  priority: 2
+  status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 7
+  description: Provide CLI entrypoint
+  dependencies:
+  - 5
+  - 6
+  priority: 3
+  status: done
+  area: cli
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 8
+  description: Expand bootstrap error tests
+  dependencies:
+  - 2
+  priority: 4
+  status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 9
+  description: Implement SelfAuditor skeleton using radon metrics
+  dependencies: []
+  priority: 2
+  status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 12
+  description: Add radon dependency to requirements
+  dependencies:
+  - 9
+  priority: 2
+  status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 13
+  description: Implement analyze() in SelfAuditor using radon APIs
+  dependencies:
+  - 12
+  priority: 2
+  status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 14
+  description: Implement audit() generating refactor tasks when thresholds exceeded
+  dependencies:
+  - 13
+  priority: 3
+  status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 15
+  description: Add unit tests for SelfAuditor analyze and audit methods
+  dependencies:
+  - 14
+  priority: 3
+  status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 10
+  description: Integrate wily history tracking into SelfAuditor
+  dependencies:
+  - 9
+  priority: 3
+  status: done
+  area: auditor
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 11
+  description: Orchestrator generates refactor tasks when SelfAuditor thresholds exceeded
+  dependencies:
+  - 9
+  priority: 2
+  status: done
+  area: orchestrator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 16
+  description: Document Reflector component and self-improvement loop in ARCHITECTURE.md
+  dependencies:
+  - 5
+  priority: 2
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 17
+  description: Add Reflector class skeleton with reflect, analyze, decide, execute
+    and validate methods
+  dependencies:
+  - 16
+  priority: 2
+  status: done
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 18
+  description: Implement decision logic in Reflector to update tasks.yml based on
+    analysis
+  dependencies:
+  - 17
+  priority: 3
+  status: done
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 19
+  description: Integrate Reflector into Orchestrator run loop
+  dependencies:
+  - 17
+  priority: 3
+  status: done
+  area: orchestrator
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 20
+  description: Add unit tests for Reflector and its orchestration integration
+  dependencies:
+  - 18
+  - 19
+  priority: 3
+  status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 21
+  description: Remove duplicate entries and complete missing fields in tasks.yml
+  dependencies: []
+  priority: 2
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 22
+  description: Fix flake8 lint errors across code and tests
+  dependencies: []
+  priority: 3
+  status: done
+  area: code
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 23
+  description: Increase test coverage for bootstrap functions
+  dependencies: []
+  priority: 3
+  status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 24
+  description: Add missing module docstrings across core modules
+  dependencies: []
+  priority: 2
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 25
+  description: Set up GitHub Actions workflow to run pytest and pylint
+  dependencies: []
+  priority: 2
+  status: done
+  area: ci
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 26
+  description: Configure flake8 and pre-commit for code style enforcement
+  dependencies: []
+  priority: 3
+  status: done
+  area: deps
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 27
+  description: Pin wily dependency in requirements.txt
+  dependencies: []
+  priority: 2
+  status: done
+  area: deps
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 28
+  description: Implement analyze() in SelfAuditor using radon
+  dependencies:
+  - 13
+  priority: 3
+  status: done
+  area: code
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 29
+  description: Add tests covering SelfAuditor.analyze and audit
+  dependencies:
+  - 28
+  priority: 3
+  status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 30
+  description: Add load_tasks and save_tasks methods to Memory for YAML task persistence
+  dependencies: []
+  priority: 2
+  status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 31
+  description: Print 'Orchestrator running' message from CLI main
+  dependencies:
+  - 30
+  priority: 3
+  status: done
+  area: cli
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 32
+  description: Ensure CLI integration test passes with new Memory methods
+  dependencies:
+  - 31
+  priority: 3
+  status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 40
+  description: Deduplicate tasks 33-53 in tasks.yml
+  dependencies: []
+  priority: 1
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 41
+  description: Add task schema validation to Memory.load_tasks
+  dependencies:
+  - 30
+  priority: 2
+  status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 42
+  description: Implement conflict detection for duplicate ids in Planner
+  dependencies: []
+  priority: 3
+  status: done
+  area: core
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 43
+  description: Add tests for Memory task helpers and Planner conflict detection
+  dependencies:
+  - 41
+  - 42
+  priority: 2
+  status: done
+  area: tests
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 51
+  description: Clean up 5 duplicate tasks
+  dependencies: []
+  priority: 2
+  status: done
+  metadata:
+    type: technical_debt
+    generated_by: Reflector
+    decision_type: task_cleanup
+    details:
+      type: task_cleanup
+      reason: Duplicate tasks detected
+      duplicates:
+      - description: Refactor core/reflector.py complexity 24
+        task_ids:
+        - 33
+        - 50
+      - description: Refactor core/bootstrap.py complexity 15
+        task_ids:
+        - 34
+        - 47
+      - description: Refactor core/orchestrator.py complexity 13
+        task_ids:
+        - 35
+        - 49
+      - description: Refactor tests/test_bootstrap.py complexity 12
+        task_ids:
+        - 38
+        - 44
+      - description: Refactor tests/test_executor.py complexity 13
+        task_ids:
+        - 37
+        - 46
+  area: maintenance
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 53
+  description: Document strategic research roadmap (RB-002)
+  dependencies: []
+  priority: 2
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 79
+  description: Instrument all components with OpenTelemetry for metrics, logs, and
+    traces
+  dependencies: []
+  priority: 3
+  status: done
+  area: observability
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 80
+  description: Store metrics in Prometheus and define Grafana dashboards as code
+  dependencies:
+  - 79
+  priority: 3
+  status: done
+  area: observability
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 81
+  description: Feed collected metrics to Reflector as its reward signal
+  dependencies:
+  - 79
+  priority: 3
+  status: done
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 85
+  description: Ensure all microservices integrate with standardized OTel and security
+    tooling
+  dependencies:
+  - 79
+  - 82
+  - 83
+  priority: 3
+  status: done
+  area: observability
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 86
+  description: Implement Vision Engine prioritization using WSJF heuristics
+  dependencies: []
+  priority: 3
+  status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 87
+  description: Train RL-based Vision Engine in shadow mode and gradually delegate
+    control
+  dependencies:
+  - 86
+  priority: 3
+  status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 92
+  description: Document hybrid Vision Engine design and rollout plan
+  dependencies:
+  - 86
+  - 87
+  priority: 3
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 93
+  description: Extend WSJF scoring with CLI support and tests
+  dependencies:
+  - 86
+  priority: 3
+  status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 94
+  description: Implement RL training pipeline using observability metrics
+  dependencies:
+  - 87
+  - 85
+  priority: 3
+  status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 95
+  description: Run RL agent in shadow mode and log suggestions
+  dependencies:
+  - 94
+  priority: 3
+  status: done
+  area: vision
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 97
+  description: Define gRPC contract for Node IOService
+  dependencies:
+  - 83
+  priority: 3
+  status: done
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 98
+  description: Implement Node.js gRPC IOService server
+  dependencies:
+  - 97
+  priority: 3
+  status: done
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 99
+  description: Implement Python gRPC client for IOService
+  dependencies:
+  - 97
+  priority: 3
+  status: done
+  area: microservices
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 100
+  description: Add integration tests for Node IOService communication
+  dependencies:
+  - 98
+  - 99
+  priority: 3
+  status: done
+  area: testing
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 101
+  description: Document Node microservice setup in ARCHITECTURE.md
+  dependencies:
+  - 98
+  - 99
+  priority: 3
+  status: done
+  area: docs
+  actionable_steps: []
+  acceptance_criteria: []
+  assigned_to: null
+  epic: Legacy
+- id: 123
+  task_id: INT-TESTS
+  title: Add integration tests for microservice workflow
+  description: Validate end-to-end task processing across orchestrator, broker, worker,
+    and Node I/O service.
+  area: testing
+  actionable_steps:
+  - Spin up broker, worker, and Node service in test environment
+  - Send tasks through broker API and assert worker completion
+  - Verify outputs via REST/gRPC responses
+  dependencies:
+  - 115
+  acceptance_criteria:
+  - Full workflow test passes with broker, worker, and Node service running
+  - Failure cases are logged and handled gracefully
+  status: done
+  assigned_to: null
+  epic: Reliability
+- id: 124
+  task_id: ORCH-CLI
+  title: Provide CLI wrapper for Orchestrator
+  description: Add command-line interface with options for starting, stopping, and
+    inspecting the orchestrator loop.
+  area: core
+  actionable_steps:
+  - Implement CLI using argparse or click
+  - Support configuration file path and verbosity flags
+  - Write usage documentation and tests
+  dependencies: []
+  acceptance_criteria:
+  - '`python -m ai_swa.orchestrator --help` shows CLI options'
+  - Start/stop commands function as expected in tests
+  status: done
+  assigned_to: null
+  epic: Usability
+- id: 125
+  task_id: METRICS-PROM
+  title: Expose Prometheus metrics for broker and worker
+  description: Instrument broker and worker services with metrics endpoints for monitoring.
+  area: observability
+  actionable_steps:
+  - Add Prometheus client library to services
+  - Define metrics for task counts and processing duration
+  - Document how to scrape metrics
+  dependencies: []
+  acceptance_criteria:
+  - '`/metrics` endpoint available on broker and worker'
+  - Metrics include task throughput and duration
+  status: done
+  assigned_to: null
+  epic: Observability Improvements
+- id: 126
+  task_id: TASK-VALID
+  title: Validate tasks.yml against extended schema
+  description: Ensure that additional fields introduced in new tasks are validated
+    on load.
+  area: core
+  actionable_steps:
+  - Update JSON schema in code to allow extra keys
+  - Modify Memory.load_tasks to run validation
+  - Add tests for invalid and valid schemas
+  dependencies:
+  - 121
+  acceptance_criteria:
+  - Loading tasks fails with clear error when schema violations occur
+  - Extended fields round-trip without loss
+  status: done
+  assigned_to: null
+  epic: Schema Evolution
+- id: 127
+  task_id: DOCKER-LOCAL
+  title: Provide Docker Compose configuration
+  description: Set up Docker containers for orchestrator, broker, worker, and Node
+    service for easy local deployment.
+  area: infrastructure
+  actionable_steps:
+  - Write Dockerfiles for Python services if missing
+  - Create `docker-compose.yml` orchestrating all services
+  - Document usage in README
+  dependencies: []
+  acceptance_criteria:
+  - '`docker-compose up` starts all services and tests can run against them'
+  - README contains updated instructions
+  status: done
+  assigned_to: null
+  epic: Developer Experience
