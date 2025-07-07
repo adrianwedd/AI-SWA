@@ -57,7 +57,7 @@ def main(argv=None):
     parser = build_parser()
     args = parser.parse_args(argv)
     memory = Memory(Path(args.memory))
-    orchestrator = Orchestrator(None, None, None, memory)
+    orchestrator = Orchestrator(None, None, None, memory, None)
     orchestrator.run()
 ```
 

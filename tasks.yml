@@ -930,3 +930,17 @@
   - Report identifies any missing or failing certification stages
   assigned_to: null
   epic: Ecosystem
+- id: 141
+  description: Review Ethical Sentinel policy enforcement for task 136
+  dependencies:
+  - 136
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Run orchestrator with a policy blocking a sample task
+  - Confirm task does not execute and is logged as blocked
+  acceptance_criteria:
+  - docs/reviews/task_136_sentinel.md summarizes results
+  assigned_to: null
+  epic: Governance
