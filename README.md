@@ -109,6 +109,13 @@ configuration file:
 | `API_TOKENS` | Comma separated tokens mapping to `username:role` | *(unset)* |
 | `PLUGIN_SIGNING_KEY` | HMAC key used to verify plugin manifests | *(unset)* |
 
+### Plugin Manifests
+
+Each plugin contains a `manifest.json` file validated against
+`plugins/manifest_schema.json`. The manifest must define `id`, `name`,
+`version`, and a list of `permissions`. A `signature` field is optional
+and is verified when `PLUGIN_SIGNING_KEY` is set.
+
 ## 📈 Observability
 
 All services expose Prometheus-compatible metrics. The Node I/O service uses

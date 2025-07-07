@@ -5,6 +5,7 @@ import hashlib
 import hmac
 import pytest
 from pathlib import Path
+from jsonschema.exceptions import ValidationError
 
 from core.plugins import load_manifest, PluginManifest
 
@@ -58,3 +59,12 @@ def test_reject_invalid_signature(tmp_path):
     with pytest.raises(ValueError):
         load_manifest(manifest_path)
     os.environ.pop("PLUGIN_SIGNING_KEY")
+
+
+def test_schema_validation_error(tmp_path):
+    """Manifest missing required fields should raise ValidationError."""
+    data = {"id": "demo"}
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps(data))
+    with pytest.raises(ValidationError):
+        load_manifest(manifest_path)
