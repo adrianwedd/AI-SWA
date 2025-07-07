@@ -334,3 +334,20 @@ performance gains exceed a threshold, allowing gradual delegation.
 State such as tasks and logs are stored on disk. Tasks are kept in `tasks.yml` and
 logs are written to the `logs/` directory. Future components may store structured
 state in JSON files or use lightweight databases like SQLite.
+
+## Plugins
+Plugins extend the core system with optional capabilities. Each plugin lives in
+its own directory under `plugins/` and contains a `manifest.json` describing the
+plugin and its required permissions. Manifests are loaded with
+`core.plugins.load_manifest` which validates them against
+`plugins/manifest_schema.json` and checks permissions via
+`core.security.validate_plugin_permissions`. When the environment variable
+`PLUGIN_SIGNING_KEY` is configured, signatures declared in the manifest are
+verified with `core.security.verify_plugin_signature` to prevent tampering.
+
+The helper `discover_plugins` walks the plugin directory to load all manifests.
+At runtime the orchestrator can import a plugin module and call its `run()`
+function. Future revisions will execute plugins inside a sandbox container as
+described in tasks **135** and **143–146**. These tasks outline the automated
+certification pipeline—static analysis, dependency scans, sandboxed tests and
+cryptographic signing—that must be completed before a plugin is allowed to run.
