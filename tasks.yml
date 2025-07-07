@@ -1330,7 +1330,6 @@
     - Verify outputs via REST/gRPC responses
   dependencies:
     - 115
-  priority: 2
   acceptance_criteria:
     - Full workflow test passes with broker, worker, and Node service running
     - Failure cases are logged and handled gracefully
@@ -1347,7 +1346,6 @@
     - Support configuration file path and verbosity flags
     - Write usage documentation and tests
   dependencies: []
-  priority: 2
   acceptance_criteria:
     - "`python -m ai_swa.orchestrator --help` shows CLI options"
     - Start/stop commands function as expected in tests
@@ -1364,7 +1362,6 @@
     - Define metrics for task counts and processing duration
     - Document how to scrape metrics
   dependencies: []
-  priority: 2
   acceptance_criteria:
     - "`/metrics` endpoint available on broker and worker"
     - Metrics include task throughput and duration
@@ -1382,7 +1379,6 @@
     - Add tests for invalid and valid schemas
   dependencies:
     - 121
-  priority: 2
   acceptance_criteria:
     - Loading tasks fails with clear error when schema violations occur
     - Extended fields round-trip without loss
@@ -1399,7 +1395,6 @@
     - Create `docker-compose.yml` orchestrating all services
     - Document usage in README
   dependencies: []
-  priority: 2
   acceptance_criteria:
     - "`docker-compose up` starts all services and tests can run against them"
     - README contains updated instructions
@@ -1481,4 +1476,106 @@
   - Local deployment instructions work for new contributors
   assigned_to: null
   epic: Developer Experience
+
+- id: 133
+  task_id: WORK-002
+  title: Implement Scalable Worker Queue
+  description: Refactor the worker to use a scalable queueing system instead of fetching all tasks
+  area: microservices
+  actionable_steps:
+  - Research suitable queueing technologies (e.g., RabbitMQ, Redis Queues).
+  - Refactor broker API to support a task queue (e.g., GET /tasks/next).
+  - Update worker logic to pull single tasks from the queue.
+  dependencies:
+  - 83
+  acceptance_criteria:
+  - Multiple workers can run concurrently without processing the same task.
+  - Broker ensures tasks are distributed atomically.
+  priority: 2
+  status: pending
+  assigned_to: null
+  epic: Reliability
+
+- id: 134
+  task_id: VIS-001
+  title: Build and Integrate RL Prioritization Agent
+  description: Implement the Reinforcement Learning agent for the Vision Engine
+  area: vision
+  actionable_steps:
+  - Implement the PPO agent architecture as described in research docs.
+  - Develop the composite reward function using metrics from the observability pipeline.
+  - Integrate the agent into the VisionEngine to refine WSJF scores.
+  - Run the agent in shadow mode initially, logging its decisions.
+  dependencies:
+  - 96
+  - 81
+  acceptance_criteria:
+  - The RL agent can be trained on historical data from the observability pipeline.
+  - In shadow mode, the agent's suggested rankings are logged for analysis.
+  priority: 1
+  status: pending
+  assigned_to: null
+  epic: Vision Engine RL
+
+- id: 135
+  task_id: SEC-001
+  title: Implement Automated Plugin Vetting and Signing
+  description: Build the automated Plugin Certification Pipeline
+  area: security
+  actionable_steps:
+  - Integrate SCA tools (e.g., Snyk) into the CI pipeline for dependency and license scanning.
+  - Integrate SAST tools (e.g., Semgrep) for static code analysis.
+  - Add a sandboxed environment to the pipeline for dynamic behavioral testing of plugins.
+  - Implement the dual-signing process where the pipeline cryptographically signs certified plugins.
+  dependencies:
+  - 76
+  - 78
+  acceptance_criteria:
+  - A submitted plugin automatically triggers the multi-stage scanning pipeline.
+  - Plugins with security vulnerabilities or license violations fail the build.
+  - Successfully vetted plugins are automatically signed by the marketplace key.
+  priority: 1
+  status: pending
+  assigned_to: null
+  epic: Ecosystem
+
+- id: 136
+  task_id: ETH-001
+  title: Develop Ethical Sentinel Agent
+  description: Implement the Ethical Sentinel agent and its policy framework
+  area: governance
+  actionable_steps:
+  - Create the core Ethical Sentinel agent class.
+  - Implement the policy template as a machine-readable schema (e.g., JSON Schema).
+  - Develop logic for the Sentinel to load policies and check agent actions against them.
+  - Integrate the Sentinel as a pre-execution check in the Orchestrator.
+  dependencies:
+  - 15
+  acceptance_criteria:
+  - The Sentinel can block an action that violates a defined policy.
+  - Policy violations are logged to a dedicated audit stream.
+  priority: 2
+  status: pending
+  assigned_to: null
+  epic: Governance
+
+- id: 137
+  task_id: REF-002
+  title: Implement Real System Health and Trend Analysis in Reflector
+  description: Flesh out the Reflector's analysis capabilities
+  area: reflector
+  actionable_steps:
+  - Replace placeholder logic in _analyze_system_health with real checks.
+  - Implement _analyze_evolution_trends by consuming historical data from the observability pipeline.
+  - Connect the results of these analyses to the decision-making engine.
+  dependencies:
+  - 33
+  - 81
+  acceptance_criteria:
+  - The Reflector can generate insights based on actual test coverage and dependency health data.
+  - The Reflector can identify if code complexity is trending up or down over time.
+  priority: 2
+  status: pending
+  assigned_to: null
+  epic: Reflector Outer Loop
 
