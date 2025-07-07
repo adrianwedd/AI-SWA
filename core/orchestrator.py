@@ -4,6 +4,7 @@ from typing import List
 from .sentinel import EthicalSentinel
 from opentelemetry import metrics, trace
 import logging
+import subprocess
 
 from .log_utils import configure_logging
 
@@ -44,8 +45,9 @@ class Orchestrator:
     def _reflect(self, tasks: List[Task], tasks_file: str) -> List[Task]:
         try:
             reflected = self.reflector.run_cycle([self._task_to_dict(t) for t in tasks])
-        except Exception as exc:  # pragma: no cover - defensive
-            self.logger.error("Reflection failed: %s", exc)
+        except (ValueError, RuntimeError, FileNotFoundError) as exc:
+            # Only handle known reflection issues
+            self.logger.exception("Reflection failed: %s", exc)
             return tasks
         if reflected is None:
             return tasks
@@ -73,13 +75,18 @@ class Orchestrator:
         print(f"Orchestrator: Executing task '{getattr(task, 'id', 'N/A')}'.")
         try:
             self.executor.execute(task)
-        except Exception as exc:  # pragma: no cover - executor issues
-            self.logger.error("Execution failed for task %s: %s", getattr(task, 'id', 'N/A'), exc)
+        except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
+            # Known execution failures are logged and task reverted to pending
+            self.logger.exception(
+                "Execution failed for task %s: %s",
+                getattr(task, "id", "N/A"),
+                exc,
+            )
             if hasattr(task, "status"):
                 task.status = "pending"
                 self.memory.save_tasks(tasks, tasks_file)
             return
-
+        
         if hasattr(task, "status"):
             task.status = "done"
             self.memory.save_tasks(tasks, tasks_file)

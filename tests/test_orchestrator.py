@@ -363,23 +363,44 @@ class TestOrchestrator(unittest.TestCase):
             self.orchestrator.run("tasks.yml")
 
         self.mock_executor.execute.assert_called_once_with(task)
-        self.orchestrator.logger.error.assert_called_once()
+        self.orchestrator.logger.exception.assert_called_once()
         self.assertEqual(task.status, "pending")
         self.assertEqual(self.mock_memory.save_tasks.call_count, 3)
 
     def test_reflect_failure_logs_and_skips_execution(self):
         task = Task(id="t1", description="", component="core", dependencies=[], priority=1, status="pending")
         self.mock_memory.load_tasks.return_value = [task]
-        self.mock_reflector.run_cycle.side_effect = Exception("oops")
+        self.mock_reflector.run_cycle.side_effect = ValueError("oops")
         self.mock_planner.plan.return_value = None
         self.orchestrator.logger = MagicMock()
 
         with patch('builtins.print'):
             self.orchestrator.run("tasks.yml")
 
-        self.orchestrator.logger.error.assert_called_once()
+        self.orchestrator.logger.exception.assert_called_once()
         self.mock_executor.execute.assert_not_called()
         self.mock_memory.save_tasks.assert_not_called()
+
+    def test_execute_unexpected_error_propagates(self):
+        task = Task(id="boom", description="", component="core", dependencies=[], priority=1, status="pending")
+        self.mock_memory.load_tasks.return_value = [task]
+        self.mock_reflector.run_cycle.return_value = [task]
+        self.mock_planner.plan.side_effect = [task, None]
+        self.mock_executor.execute.side_effect = KeyError("fail")
+
+        with patch('builtins.print'):
+            with self.assertRaises(KeyError):
+                self.orchestrator.run("tasks.yml")
+        self.assertEqual(task.status, "in_progress")
+
+    def test_reflect_unexpected_error_propagates(self):
+        self.mock_memory.load_tasks.return_value = []
+        self.mock_reflector.run_cycle.side_effect = KeyError("bad")
+        self.orchestrator.logger = MagicMock()
+
+        with patch('builtins.print'):
+            with self.assertRaises(KeyError):
+                self.orchestrator.run("tasks.yml")
 
 
 if __name__ == '__main__':
