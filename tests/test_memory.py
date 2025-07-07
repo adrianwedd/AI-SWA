@@ -83,3 +83,47 @@ def test_task_round_trip_with_optional_fields(tmp_path):
     mem.save_tasks(tasks, tasks_file)
     loaded = mem.load_tasks(tasks_file)
     assert loaded == tasks
+
+
+def test_load_tasks_with_metadata(tmp_path):
+    tasks_data = [
+        {
+            "id": 1,
+            "description": "meta",
+            "dependencies": [],
+            "priority": 1,
+            "status": "pending",
+            "metadata": {"foo": "bar"},
+        }
+    ]
+    tasks_file = tmp_path / "tasks.yml"
+    tasks_file.write_text(yaml.safe_dump(tasks_data))
+    mem = Memory(tmp_path / "state.json")
+    tasks = mem.load_tasks(tasks_file)
+    assert tasks == [
+        Task(
+            id=1,
+            description="meta",
+            dependencies=[],
+            priority=1,
+            status="pending",
+        )
+    ]
+
+
+def test_invalid_metadata_fails(tmp_path):
+    tasks_data = [
+        {
+            "id": 1,
+            "description": "bad",
+            "dependencies": [],
+            "priority": 1,
+            "status": "pending",
+            "metadata": "not-a-dict",
+        }
+    ]
+    tasks_file = tmp_path / "tasks.yml"
+    tasks_file.write_text(yaml.safe_dump(tasks_data))
+    mem = Memory(tmp_path / "state.json")
+    with pytest.raises(ValidationError):
+        mem.load_tasks(tasks_file)

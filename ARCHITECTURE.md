@@ -305,7 +305,10 @@ ensure a language-agnostic contract. The ``IOService`` exposes a simple
 ``Ping`` RPC defined in ``proto/io_service.proto``. The Node server lives
 under ``services/node`` and is started independently. A small Python
 client in ``core.io_client`` allows the orchestrator or other modules to
-invoke this service when needed.
+invoke this service when needed. The Node process also runs a small Express
+server on the metrics port (default ``9100``) exposing ``/metrics`` for
+Prometheus scraping and ``/health`` which returns ``{"status": "ok"}`` for
+basic health checks.
 
 ### Vision Engine
 Ranks epics using Weighted Shortest Job First (WSJF) scores. An optional

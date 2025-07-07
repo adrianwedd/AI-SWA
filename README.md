@@ -64,8 +64,65 @@ Planner decides what to build next. The Executor writes files and configures CI/
    ```bash
    python3 run_bootstrap.py
    ```
-4. **Explore the Blueprint** – Open `ARCHITECTURE.md` to see components and dependency rationales.
-5. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
+4. **Start the Orchestrator**
+   ```bash
+   python -m ai_swa.orchestrator --config config.yaml start
+   # Check status
+   python -m ai_swa.orchestrator status
+   # Later stop it
+   python -m ai_swa.orchestrator stop
+   ```
+5. **Explore the Blueprint** – Open `ARCHITECTURE.md` to see components and dependency rationales.
+6. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
+7. **Run with Docker Compose**
+   ```bash
+   docker-compose up --build
+   ```
+   This starts the orchestrator, broker, worker, and Node I/O service containers.
+   Environment variables like `BROKER_URL`, `DB_PATH` and metrics ports are set
+   in the compose file so you can simply run `docker-compose up` on subsequent
+   launches for local development. The Node service also exposes `GET /health`
+   on its metrics port (default `9100`) for container health checks.
+
+### CLI Usage
+
+```
+python -m ai_swa.orchestrator --config config.yaml start
+python -m ai_swa.orchestrator status
+python -m ai_swa.orchestrator stop
+```
+
+## Configuration
+
+AI-SWA loads settings from `config.yaml` by default. Set `CONFIG_FILE` to use a
+different file. Environment variables listed below override values from the
+configuration file:
+
+| Variable | Description | Default |
+| --- | --- | --- |
+| `DB_PATH` | Path to the broker SQLite database | `tasks.db` |
+| `BROKER_URL` | Broker service URL used by the worker and orchestrator | `http://broker:8000` |
+| `BROKER_METRICS_PORT` | Port exposing broker Prometheus metrics | `9000` |
+| `WORKER_METRICS_PORT` | Port exposing worker Prometheus metrics | `9001` |
+| `METRICS_PORT` | Set both broker and worker metrics ports at once | *(unset)* |
+| `API_KEY` | Shared API key required for API access | *(unset)* |
+| `API_TOKENS` | Comma separated tokens mapping to `username:role` | *(unset)* |
+| `PLUGIN_SIGNING_KEY` | HMAC key used to verify plugin manifests | *(unset)* |
+
+### Example usage
+
+Run the services directly with overrides:
+
+```bash
+DB_PATH=/tmp/tasks.db BROKER_URL=http://localhost:8000 \
+    python -m ai_swa.orchestrator --config config.yaml start
+```
+
+When using Docker Compose these variables can be supplied on the command line:
+
+```bash
+BROKER_URL=http://localhost:8000 DB_PATH=./tasks.db docker-compose up
+```
 
 ---
 

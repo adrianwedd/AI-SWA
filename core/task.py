@@ -8,10 +8,10 @@ class Task:
 
     id: int
     description: str
-    component: str
     dependencies: List[int]
     priority: int
     status: str
+    component: Optional[str] = None
     command: Optional[str] = None
     # Optional extended metadata
     task_id: Optional[str] = None
