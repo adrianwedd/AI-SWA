@@ -8,7 +8,7 @@ def test_cli_runs(tmp_path):
     cmd = [
         sys.executable,
         "-m",
-        "core.cli",
+        "ai_swa.orchestrator",
         "--memory",
         str(tmp_path / "state.json"),
     ]
@@ -30,7 +30,7 @@ def test_cli_help(tmp_path):
     env = os.environ.copy()
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
     result = subprocess.run(
-        [sys.executable, "-m", "core.cli", "--help"],
+        [sys.executable, "-m", "ai_swa.orchestrator", "--help"],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -50,7 +50,7 @@ def test_cli_unwritable_memory(tmp_path):
         [
             sys.executable,
             "-m",
-            "core.cli",
+            "ai_swa.orchestrator",
             "--memory",
             str(memory_dir),
         ],
@@ -71,7 +71,7 @@ def test_cli_start_stop(tmp_path):
         [
             sys.executable,
             "-m",
-            "core.cli",
+            "ai_swa.orchestrator",
             "start",
             "--pid-file",
             str(pid_file),
@@ -91,7 +91,7 @@ def test_cli_start_stop(tmp_path):
         [
             sys.executable,
             "-m",
-            "core.cli",
+            "ai_swa.orchestrator",
             "stop",
             "--pid-file",
             str(pid_file),
@@ -113,7 +113,7 @@ def test_cli_stop_missing_pid(tmp_path):
         [
             sys.executable,
             "-m",
-            "core.cli",
+            "ai_swa.orchestrator",
             "stop",
             "--pid-file",
             str(tmp_path / "none.pid"),
