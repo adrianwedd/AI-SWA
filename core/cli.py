@@ -8,6 +8,8 @@ from pathlib import Path
 
 from .orchestrator import Orchestrator
 from .memory import Memory
+from dataclasses import asdict
+import yaml
 from .planner import Planner
 from .executor import Executor
 from .reflector import Reflector
@@ -52,6 +54,13 @@ def build_parser() -> argparse.ArgumentParser:
         "--pid-file",
         default="orchestrator.pid",
         help="File containing orchestrator PID",
+    )
+
+    list_cmd = subparsers.add_parser("list", help="List tasks from tasks.yml")
+    list_cmd.add_argument(
+        "--tasks",
+        default="tasks.yml",
+        help="Path to tasks.yml",
     )
 
     # Internal command used by "start"; not exposed in docs
@@ -141,6 +150,13 @@ def main(argv=None) -> int:
             pid_path.unlink(missing_ok=True)
             return 1
         print(f"Orchestrator running with PID {pid}")
+        return 0
+
+    if args.command == "list":
+        memory = Memory(Path("state.json"))
+        tasks = memory.load_tasks(args.tasks)
+        data = [asdict(t) for t in tasks]
+        yaml.safe_dump(data, sys.stdout, sort_keys=False)
         return 0
 
     if args.command == "_run":
