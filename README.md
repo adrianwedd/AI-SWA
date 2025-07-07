@@ -66,7 +66,9 @@ Planner decides what to build next. The Executor writes files and configures CI/
    ```
 4. **Start the Orchestrator**
    ```bash
-   python -m ai_swa.orchestrator start
+   python -m ai_swa.orchestrator --config config.yaml start
+   # Check status
+   python -m ai_swa.orchestrator status
    # Later stop it
    python -m ai_swa.orchestrator stop
    ```
@@ -84,7 +86,8 @@ Planner decides what to build next. The Executor writes files and configures CI/
 ### CLI Usage
 
 ```
-python -m ai_swa.orchestrator start --memory state.json
+python -m ai_swa.orchestrator --config config.yaml start
+python -m ai_swa.orchestrator status
 python -m ai_swa.orchestrator stop
 ```
 
