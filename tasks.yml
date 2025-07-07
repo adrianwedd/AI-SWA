@@ -916,3 +916,17 @@
   - Findings documented in docs/research/RL_vs_WSJF_Test_Report.md
   assigned_to: null
   epic: Vision Engine RL
+- id: 140
+  description: Review CI for SEC-001 plugin certification pipeline
+  dependencies:
+  - 135
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Audit CI logs to verify SCA, SAST, sandbox tests, and signing steps
+  - Document findings in docs/reviews/task_135_ci_audit.md
+  acceptance_criteria:
+  - Report identifies any missing or failing certification stages
+  assigned_to: null
+  epic: Ecosystem
