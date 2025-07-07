@@ -109,6 +109,25 @@ configuration file:
 | `API_TOKENS` | Comma separated tokens mapping to `username:role` | *(unset)* |
 | `PLUGIN_SIGNING_KEY` | HMAC key used to verify plugin manifests | *(unset)* |
 
+## 📈 Observability
+
+All services expose Prometheus-compatible metrics. The Node I/O service uses
+`prom-client` to call `collectDefaultMetrics()` and serves them at `/metrics`
+(default port `9100`). The broker and worker export metrics on ports `9000` and
+`9001` respectively. Configure Prometheus to scrape these endpoints:
+
+```yaml
+scrape_configs:
+  - job_name: ai_swa
+    static_configs:
+      - targets:
+          - 'localhost:9000'
+          - 'localhost:9001'
+          - 'localhost:9100'
+```
+
+Use the appropriate hostnames if running under Docker Compose or Kubernetes.
+
 ### Example usage
 
 Run the services directly with overrides:
