@@ -1,9 +1,7 @@
-FROM node:20-alpine
+FROM node:18-alpine
 WORKDIR /app
 COPY package*.json ./
 RUN npm install --omit=dev
-COPY . .
-COPY config.yaml ./
+COPY io_server.js ./
 EXPOSE 50051
-EXPOSE 9100
 CMD ["node", "io_server.js"]

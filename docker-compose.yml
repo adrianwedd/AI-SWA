@@ -40,9 +40,7 @@ services:
     ports:
       - "9001:9001"
   io-service:
-    build:
-      context: .
-      dockerfile: services/node/Dockerfile
+    build: ./services/node
     environment:
       PORT: "50051"
       METRICS_PORT: "9100"
