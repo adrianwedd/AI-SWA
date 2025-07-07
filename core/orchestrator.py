@@ -62,9 +62,11 @@ class Orchestrator:
     # ------------------------------------------------------------------
     def _execute_task(self, task: Task, tasks: List[Task], tasks_file: str) -> None:
         if self.sentinel and not self.sentinel.allows(getattr(task, "id", "")):
-            print(
+            message = (
                 f"Orchestrator: Task '{getattr(task, 'id', 'N/A')}' blocked by Ethical Sentinel."
             )
+            print(message)
+            self.logger.info(message)
             return
         if hasattr(task, "status"):
             task.status = "in_progress"
