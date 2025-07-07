@@ -1314,3 +1314,262 @@
   status: pending
   assigned_to: null
   epic: Documentation
+- id: 123
+  task_id: INT-TESTS
+  title: Add integration tests for microservice workflow
+  description: Validate end-to-end task processing across orchestrator, broker, worker, and Node I/O service.
+  area: testing
+  actionable_steps:
+    - Spin up broker, worker, and Node service in test environment
+    - Send tasks through broker API and assert worker completion
+    - Verify outputs via REST/gRPC responses
+  dependencies:
+    - 115
+  acceptance_criteria:
+    - Full workflow test passes with broker, worker, and Node service running
+    - Failure cases are logged and handled gracefully
+  status: done
+  assigned_to: null
+  epic: Reliability
+- id: 124
+  task_id: ORCH-CLI
+  title: Provide CLI wrapper for Orchestrator
+  description: Add command-line interface with options for starting, stopping, and inspecting the orchestrator loop.
+  area: core
+  actionable_steps:
+    - Implement CLI using argparse or click
+    - Support configuration file path and verbosity flags
+    - Write usage documentation and tests
+  dependencies: []
+  acceptance_criteria:
+    - "`python -m ai_swa.orchestrator --help` shows CLI options"
+    - Start/stop commands function as expected in tests
+  status: done
+  assigned_to: null
+  epic: Usability
+- id: 125
+  task_id: METRICS-PROM
+  title: Expose Prometheus metrics for broker and worker
+  description: Instrument broker and worker services with metrics endpoints for monitoring.
+  area: observability
+  actionable_steps:
+    - Add Prometheus client library to services
+    - Define metrics for task counts and processing duration
+    - Document how to scrape metrics
+  dependencies: []
+  acceptance_criteria:
+    - "`/metrics` endpoint available on broker and worker"
+    - Metrics include task throughput and duration
+  status: done
+  assigned_to: null
+  epic: Observability Improvements
+- id: 126
+  task_id: TASK-VALID
+  title: Validate tasks.yml against extended schema
+  description: Ensure that additional fields introduced in new tasks are validated on load.
+  area: core
+  actionable_steps:
+    - Update JSON schema in code to allow extra keys
+    - Modify Memory.load_tasks to run validation
+    - Add tests for invalid and valid schemas
+  dependencies:
+    - 121
+  acceptance_criteria:
+    - Loading tasks fails with clear error when schema violations occur
+    - Extended fields round-trip without loss
+  status: done
+  assigned_to: null
+  epic: Schema Evolution
+- id: 127
+  task_id: DOCKER-LOCAL
+  title: Provide Docker Compose configuration
+  description: Set up Docker containers for orchestrator, broker, worker, and Node service for easy local deployment.
+  area: infrastructure
+  actionable_steps:
+    - Write Dockerfiles for Python services if missing
+    - Create `docker-compose.yml` orchestrating all services
+    - Document usage in README
+  dependencies: []
+  acceptance_criteria:
+    - "`docker-compose up` starts all services and tests can run against them"
+    - README contains updated instructions
+  status: done
+  assigned_to: null
+  epic: Developer Experience
+
+- id: 128
+  description: Review integration tests for microservice workflow
+  dependencies:
+  - 123
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Ensure tests cover broker, worker and Node service interactions
+  - Document any missing coverage or flaky behavior
+  acceptance_criteria:
+  - All services interact successfully in review environment
+  assigned_to: null
+  epic: Reliability
+
+- id: 129
+  description: Review CLI wrapper for Orchestrator
+  dependencies:
+  - 124
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Verify start and stop commands work as documented
+  - Confirm help text matches README examples
+  acceptance_criteria:
+  - CLI behaves consistently across platforms
+  assigned_to: null
+  epic: Usability
+
+- id: 130
+  description: Review Prometheus metrics endpoints
+  dependencies:
+  - 125
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Check broker and worker expose /metrics
+  - Validate task throughput and duration metrics
+  acceptance_criteria:
+  - Metrics scrape successfully with Prometheus
+  assigned_to: null
+  epic: Observability Improvements
+
+- id: 131
+  description: Review tasks.yml schema validation implementation
+  dependencies:
+  - 126
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Load tasks.yml with Memory module and check for errors
+  - Confirm extended fields are preserved on save
+  acceptance_criteria:
+  - Schema validation passes in unit tests
+  assigned_to: null
+  epic: Schema Evolution
+
+- id: 132
+  description: Review Docker Compose configuration for local deployment
+  dependencies:
+  - 127
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Run docker-compose up and verify all services start
+  - Document any setup issues in README
+  acceptance_criteria:
+  - Local deployment instructions work for new contributors
+  assigned_to: null
+  epic: Developer Experience
+
+- id: 133
+  task_id: WORK-002
+  title: Implement Scalable Worker Queue
+  description: Refactor the worker to use a scalable queueing system instead of fetching all tasks
+  area: microservices
+  actionable_steps:
+  - Research suitable queueing technologies (e.g., RabbitMQ, Redis Queues).
+  - Refactor broker API to support a task queue (e.g., GET /tasks/next).
+  - Update worker logic to pull single tasks from the queue.
+  dependencies:
+  - 83
+  acceptance_criteria:
+  - Multiple workers can run concurrently without processing the same task.
+  - Broker ensures tasks are distributed atomically.
+  priority: 2
+  status: pending
+  assigned_to: null
+  epic: Reliability
+
+- id: 134
+  task_id: VIS-001
+  title: Build and Integrate RL Prioritization Agent
+  description: Implement the Reinforcement Learning agent for the Vision Engine
+  area: vision
+  actionable_steps:
+  - Implement the PPO agent architecture as described in research docs.
+  - Develop the composite reward function using metrics from the observability pipeline.
+  - Integrate the agent into the VisionEngine to refine WSJF scores.
+  - Run the agent in shadow mode initially, logging its decisions.
+  dependencies:
+  - 96
+  - 81
+  acceptance_criteria:
+  - The RL agent can be trained on historical data from the observability pipeline.
+  - In shadow mode, the agent's suggested rankings are logged for analysis.
+  priority: 1
+  status: pending
+  assigned_to: null
+  epic: Vision Engine RL
+
+- id: 135
+  task_id: SEC-001
+  title: Implement Automated Plugin Vetting and Signing
+  description: Build the automated Plugin Certification Pipeline
+  area: security
+  actionable_steps:
+  - Integrate SCA tools (e.g., Snyk) into the CI pipeline for dependency and license scanning.
+  - Integrate SAST tools (e.g., Semgrep) for static code analysis.
+  - Add a sandboxed environment to the pipeline for dynamic behavioral testing of plugins.
+  - Implement the dual-signing process where the pipeline cryptographically signs certified plugins.
+  dependencies:
+  - 76
+  - 78
+  acceptance_criteria:
+  - A submitted plugin automatically triggers the multi-stage scanning pipeline.
+  - Plugins with security vulnerabilities or license violations fail the build.
+  - Successfully vetted plugins are automatically signed by the marketplace key.
+  priority: 1
+  status: pending
+  assigned_to: null
+  epic: Ecosystem
+
+- id: 136
+  task_id: ETH-001
+  title: Develop Ethical Sentinel Agent
+  description: Implement the Ethical Sentinel agent and its policy framework
+  area: governance
+  actionable_steps:
+  - Create the core Ethical Sentinel agent class.
+  - Implement the policy template as a machine-readable schema (e.g., JSON Schema).
+  - Develop logic for the Sentinel to load policies and check agent actions against them.
+  - Integrate the Sentinel as a pre-execution check in the Orchestrator.
+  dependencies:
+  - 15
+  acceptance_criteria:
+  - The Sentinel can block an action that violates a defined policy.
+  - Policy violations are logged to a dedicated audit stream.
+  priority: 2
+  status: pending
+  assigned_to: null
+  epic: Governance
+
+- id: 137
+  task_id: REF-002
+  title: Implement Real System Health and Trend Analysis in Reflector
+  description: Flesh out the Reflector's analysis capabilities
+  area: reflector
+  actionable_steps:
+  - Replace placeholder logic in _analyze_system_health with real checks.
+  - Implement _analyze_evolution_trends by consuming historical data from the observability pipeline.
+  - Connect the results of these analyses to the decision-making engine.
+  dependencies:
+  - 33
+  - 81
+  acceptance_criteria:
+  - The Reflector can generate insights based on actual test coverage and dependency health data.
+  - The Reflector can identify if code complexity is trending up or down over time.
+  priority: 2
+  status: pending
+  assigned_to: null
+  epic: Reflector Outer Loop
