@@ -4,6 +4,9 @@ broker:
 worker:
   broker_url: http://broker:8000
   metrics_port: 9001
+node:
+  host: localhost
+  port: 50051
 security:
   api_key: null
   api_tokens: null
