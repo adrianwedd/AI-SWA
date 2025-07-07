@@ -886,3 +886,19 @@
   status: pending
   assigned_to: null
   epic: Reflector Outer Loop
+
+- id: 138
+  description: Review broker queue endpoint and worker concurrency
+  dependencies:
+  - 133
+  priority: 3
+  status: pending
+  area: review
+  actionable_steps:
+  - Check broker exposes queue-based endpoint such as GET /tasks/next
+  - Run multiple workers concurrently and ensure tasks are not duplicated
+  acceptance_criteria:
+  - Broker delivers one task at a time via queue endpoint
+  - No duplicate processing occurs with multiple workers
+  assigned_to: null
+  epic: Reliability
