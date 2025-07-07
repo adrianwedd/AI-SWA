@@ -11,7 +11,8 @@ from core.io_client import ping
 @pytest.fixture(scope="module")
 def node_server():
     service_dir = Path("services/node")
-    if not (service_dir / "node_modules" / "prom-client").exists():
+    node_modules = service_dir / "node_modules"
+    if not (node_modules / "prom-client").exists() or not (node_modules / "express").exists():
         subprocess.run(["npm", "install"], cwd=service_dir, check=True)
     proc = subprocess.Popen(["node", str(service_dir / "io_server.js")])
     for _ in range(20):

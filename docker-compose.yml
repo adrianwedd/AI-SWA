@@ -46,6 +46,11 @@ services:
     environment:
       PORT: "50051"
       METRICS_PORT: "9100"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9100/health"]
+      interval: 5s
+      timeout: 2s
+      retries: 3
     ports:
       - "50051:50051"
       - "9100:9100"
