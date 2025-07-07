@@ -1,7 +1,7 @@
 const grpc = require('@grpc/grpc-js');
 const protoLoader = require('@grpc/proto-loader');
 const client = require('prom-client');
-const http = require('http');
+const express = require('express');
 const path = require('path');
 const fs = require('fs');
 const yaml = require('js-yaml');
@@ -42,21 +42,19 @@ function ping(call, callback) {
   end();
 }
 
-function startMetricsServer(port) {
+function startHttpServer(port) {
   client.collectDefaultMetrics();
-  http
-    .createServer(async (req, res) => {
-      if (req.url === '/metrics') {
-        res.setHeader('Content-Type', client.register.contentType);
-        res.end(await client.register.metrics());
-      } else {
-        res.statusCode = 404;
-        res.end();
-      }
-    })
-    .listen(port, () => {
-      console.log(`Metrics server running on ${port}`);
-    });
+  const app = express();
+  app.get('/metrics', async (_req, res) => {
+    res.set('Content-Type', client.register.contentType);
+    res.end(await client.register.metrics());
+  });
+  app.get('/health', (_req, res) => {
+    res.json({ status: 'ok' });
+  });
+  app.listen(port, () => {
+    console.log(`HTTP server running on ${port}`);
+  });
 }
 
 function main() {
@@ -69,7 +67,7 @@ function main() {
     server.start();
     console.log(`IOService running on ${port}`);
   });
-  startMetricsServer(metricsPort);
+  startHttpServer(metricsPort);
 }
 
 if (require.main === module) {

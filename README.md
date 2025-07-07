@@ -81,7 +81,8 @@ Planner decides what to build next. The Executor writes files and configures CI/
    This starts the orchestrator, broker, worker, and Node I/O service containers.
    Environment variables like `BROKER_URL`, `DB_PATH` and metrics ports are set
    in the compose file so you can simply run `docker-compose up` on subsequent
-   launches for local development.
+   launches for local development. The Node service also exposes `GET /health`
+   on its metrics port (default `9100`) for container health checks.
 
 ### CLI Usage
 
