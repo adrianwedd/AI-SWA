@@ -3,6 +3,21 @@ const protoLoader = require('@grpc/proto-loader');
 const client = require('prom-client');
 const http = require('http');
 const path = require('path');
+const fs = require('fs');
+const yaml = require('js-yaml');
+
+function loadConfig() {
+  const cfgPath = process.env.CONFIG_FILE || path.join(__dirname, '../../config.yaml');
+  try {
+    const data = fs.readFileSync(cfgPath, 'utf8');
+    return yaml.load(data) || {};
+  } catch (err) {
+    console.warn(`Failed to load config: ${err}`);
+    return {};
+  }
+}
+
+const config = loadConfig();
 
 const packageDef = protoLoader.loadSync(path.join(__dirname, '../../proto/io_service.proto'));
 const proto = grpc.loadPackageDefinition(packageDef).aiswa;
@@ -48,7 +63,8 @@ function main() {
   const server = new grpc.Server();
   server.addService(proto.IOService.service, { Ping: ping });
   const port = process.env.PORT || '50051';
-  const metricsPort = process.env.METRICS_PORT || '9100';
+  const metricsPort = process.env.METRICS_PORT ||
+    (config.worker && config.worker.metrics_port) || '9100';
   server.bindAsync('0.0.0.0:' + port, grpc.ServerCredentials.createInsecure(), () => {
     server.start();
     console.log(`IOService running on ${port}`);
