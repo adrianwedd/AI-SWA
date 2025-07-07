@@ -958,3 +958,65 @@
   - docs/reviews/task_137_reflector_review.md summarizes results
   assigned_to: null
   epic: Reflector Outer Loop
+- id: 143
+  description: Integrate SCA scan with pip-audit in CI pipeline
+  dependencies:
+  - 135
+  priority: 2
+  status: pending
+  area: ci
+  actionable_steps:
+  - Install pip-audit during CI setup
+  - Add a step running 'pip-audit --output-format github'
+  - Fail the build if vulnerabilities of medium severity or higher are found
+  acceptance_criteria:
+  - CI pipeline fails when pip-audit reports unresolved vulnerabilities
+  assigned_to: null
+  epic: Ecosystem
+- id: 144
+  description: Integrate Bandit SAST scan into CI
+  dependencies:
+  - 135
+  priority: 2
+  status: pending
+  area: ci
+  actionable_steps:
+  - Install bandit in CI
+  - Run 'bandit -r core plugins -x tests'
+  - Upload bandit report as an artifact
+  - Fail the job if issues with severity high are detected
+  acceptance_criteria:
+  - CI fails when Bandit detects high-severity findings
+  assigned_to: null
+  epic: Ecosystem
+- id: 145
+  description: Add sandboxed plugin test stage using Docker
+  dependencies:
+  - 135
+  priority: 2
+  status: pending
+  area: ci
+  actionable_steps:
+  - Create a Docker image limiting network and file system access
+  - Run plugin unit tests inside this sandbox container
+  - Ensure test failures abort the pipeline
+  acceptance_criteria:
+  - Plugins execute in a restricted container during CI
+  assigned_to: null
+  epic: Ecosystem
+- id: 146
+  description: Sign vetted plugins using cosign in CI
+  dependencies:
+  - 135
+  - 76
+  priority: 2
+  status: pending
+  area: ci
+  actionable_steps:
+  - Install cosign in the workflow
+  - Sign plugin artifacts after successful scans and tests
+  - Upload signature files as build artifacts
+  acceptance_criteria:
+  - Plugin archive and its signature are present in CI artifacts
+  assigned_to: null
+  epic: Ecosystem
