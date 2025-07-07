@@ -7,8 +7,14 @@ from dataclasses import dataclass, asdict
 from pathlib import Path
 from typing import List
 
+from jsonschema import validate
+
 from .security import validate_plugin_permissions, verify_plugin_signature
 from .config import load_config
+
+SCHEMA_PATH = Path(__file__).resolve().parents[1] / "plugins" / "manifest_schema.json"
+with open(SCHEMA_PATH, "r") as f:
+    MANIFEST_SCHEMA = json.load(f)
 
 
 @dataclass
@@ -31,6 +37,7 @@ def load_manifest(path: Path) -> PluginManifest:
     """Load and validate a plugin manifest from ``path``."""
     with open(path, "r") as f:
         data = json.load(f)
+    validate(instance=data, schema=MANIFEST_SCHEMA)
     manifest = PluginManifest(**data)
     validate_plugin_permissions(manifest.permissions)
     if manifest.signature:
