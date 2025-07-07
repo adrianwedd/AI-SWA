@@ -167,3 +167,34 @@ def test_run_cycle_uses_metrics_provider(tmp_path):
     refl.run_cycle(tasks)
     assert provider.called
 
+
+def test_metrics_influence_decisions(tmp_path):
+    tasks_file = tmp_path / "tasks.yml"
+    tasks_file.write_text(
+        "- id: 1\n"
+        "  description: base\n"
+        "  component: core\n"
+        "  dependencies: []\n"
+        "  priority: 1\n"
+        "  status: pending\n"
+    )
+    code_file = tmp_path / "code.py"
+    code_file.write_text("def foo():\n    return 1\n")
+    metrics_file = tmp_path / "metrics.json"
+    metrics_file.write_text(
+        '{"coverage": 70, "dependency_health": "outdated", "complexity_history": [10, 20]}'
+    )
+
+    provider = MetricsProvider(metrics_file)
+    refl = Reflector(
+        tasks_path=tasks_file,
+        analysis_paths=[code_file],
+        metrics_provider=provider,
+    )
+
+    tasks = yaml.safe_load(tasks_file.read_text())
+    analysis = refl.analyze()
+    decisions = refl.decide(analysis, tasks)
+    assert any(d.get("reason") == "Low test coverage" for d in decisions["process_improvements"])
+    assert any(d.get("reason") == "outdated_dependencies" for d in decisions["architectural_improvements"])
+
