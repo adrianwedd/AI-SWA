@@ -30,9 +30,13 @@ def test_ping(node_server):
 
 
 def test_metrics_endpoint(node_server):
+    ping("metrics")
     try:
         response = requests.get("http://localhost:9100/metrics", timeout=5)
     except requests.RequestException:
         pytest.skip("metrics endpoint unavailable")
     assert response.status_code == 200
-    assert "process_cpu_user_seconds_total" in response.text
+    body = response.text
+    assert "process_cpu_user_seconds_total" in body
+    assert "io_requests_total" in body
+    assert "io_request_duration_seconds" in body
