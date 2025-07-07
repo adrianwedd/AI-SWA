@@ -1,6 +1,7 @@
 """High-level coordinator for planner, executor and auditor."""
 
 from typing import List
+from .sentinel import EthicalSentinel
 from opentelemetry import metrics, trace
 import logging
 
@@ -13,7 +14,7 @@ from .task import Task
 class Orchestrator:
     """Coordinate the self-improving loop of planning and execution."""
 
-    def __init__(self, planner, executor, reflector, memory, auditor):
+    def __init__(self, planner, executor, reflector, memory, auditor, sentinel: EthicalSentinel | None = None):
         """Store dependencies for later use."""
 
         configure_logging()
@@ -22,6 +23,7 @@ class Orchestrator:
         self.reflector = reflector
         self.memory = memory
         self.auditor = auditor
+        self.sentinel = sentinel
         self.logger = logging.getLogger(__name__)
         meter = metrics.get_meter_provider().get_meter(__name__)
         self._runs = meter.create_counter(
@@ -57,6 +59,11 @@ class Orchestrator:
 
     # ------------------------------------------------------------------
     def _execute_task(self, task: Task, tasks: List[Task], tasks_file: str) -> None:
+        if self.sentinel and not self.sentinel.allows(getattr(task, "id", "")):
+            print(
+                f"Orchestrator: Task '{getattr(task, 'id', 'N/A')}' blocked by Ethical Sentinel."
+            )
+            return
         if hasattr(task, "status"):
             task.status = "in_progress"
             self.memory.save_tasks(tasks, tasks_file)
