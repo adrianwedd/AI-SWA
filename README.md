@@ -66,9 +66,9 @@ Planner decides what to build next. The Executor writes files and configures CI/
    ```
 4. **Start the Orchestrator**
    ```bash
-   python -m core.cli start
+   python -m ai_swa.orchestrator start
    # Later stop it
-   python -m core.cli stop
+   python -m ai_swa.orchestrator stop
    ```
 5. **Explore the Blueprint** – Open `ARCHITECTURE.md` to see components and dependency rationales.
 6. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
@@ -81,8 +81,8 @@ Planner decides what to build next. The Executor writes files and configures CI/
 ### CLI Usage
 
 ```
-python -m core.cli start --memory state.json
-python -m core.cli stop
+python -m ai_swa.orchestrator start --memory state.json
+python -m ai_swa.orchestrator stop
 ```
 
 ---
