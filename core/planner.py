@@ -1,5 +1,8 @@
 from typing import List, Optional
 from .task import Task
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class Planner:
@@ -48,10 +51,22 @@ class Planner:
             dependencies_met = True
             for dep_id in task.dependencies:
                 # Find the dependent task in the original list
-                dependent_task = next((t for t in tasks if hasattr(t, 'id') and t.id == dep_id), None)
+                dependent_task = next(
+                    (t for t in tasks if hasattr(t, 'id') and t.id == dep_id),
+                    None,
+                )
 
-                # If a dependency is not found or not "done", it's not met
-                if not dependent_task or not hasattr(dependent_task, 'status') or dependent_task.status != "done":
+                if not dependent_task:
+                    logger.warning(
+                        "Task %s skipped: dependency %s not found",
+                        getattr(task, "id", "<unknown>"),
+                        dep_id,
+                    )
+                    dependencies_met = False
+                    break
+
+                # If dependency task exists but is not "done", it's not met
+                if not hasattr(dependent_task, 'status') or dependent_task.status != "done":
                     dependencies_met = False
                     break
 
