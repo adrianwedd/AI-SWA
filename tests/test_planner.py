@@ -178,6 +178,12 @@ class TestPlanner(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.planner.plan(tasks)
 
+    def test_warning_emitted_for_missing_dependency(self):
+        task = self._create_task("main", 5, "pending", ["missing"])
+        with self.assertLogs("core.planner", level="WARNING") as cm:
+            self.planner.plan([task])
+        self.assertTrue(any("missing" in msg for msg in cm.output))
+
 
 if __name__ == '__main__':
     unittest.main()
