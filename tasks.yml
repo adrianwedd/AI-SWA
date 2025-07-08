@@ -47,7 +47,7 @@
   description: Refactor core/orchestrator.py complexity 13
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: core
   actionable_steps: []
   acceptance_criteria: []
