@@ -30,6 +30,9 @@ class Orchestrator:
         self._runs = meter.create_counter(
             "orchestrator_runs_total", description="Number of orchestrator loops"
         )
+        self._tasks_executed = meter.create_counter(
+            "tasks_executed_total", description="Number of executed tasks"
+        )
         self._tracer = trace.get_tracer(__name__)
 
     # ------------------------------------------------------------------
@@ -98,6 +101,7 @@ class Orchestrator:
             )
 
         print(f"Orchestrator: Task '{getattr(task, 'id', 'N/A')}' completed.")
+        self._tasks_executed.add(1, {"task.id": getattr(task, "id", "N/A")})
 
         audit_results = self.auditor.audit([self._task_to_dict(t) for t in tasks])
         if audit_results:
