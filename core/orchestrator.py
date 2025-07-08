@@ -63,54 +63,57 @@ class Orchestrator:
         return tasks
 
     # ------------------------------------------------------------------
-    def _execute_task(self, task: Task, tasks: List[Task], tasks_file: str) -> None:
-        if self.sentinel and not self.sentinel.allows(getattr(task, "id", "")):
-            message = (
-                f"Orchestrator: Task '{getattr(task, 'id', 'N/A')}' blocked by Ethical Sentinel."
-            )
-            self.logger.info(message)
-            return
+    def _save_tasks(self, tasks: List[Task], tasks_file: str) -> None:
+        """Persist tasks to disk."""
+        self.memory.save_tasks(tasks, tasks_file)
+
+    def _set_status(self, task: Task, status: str, tasks: List[Task], tasks_file: str) -> None:
+        """Update task status if possible and persist."""
         if hasattr(task, "status"):
-            task.status = "in_progress"
-            self.memory.save_tasks(tasks, tasks_file)
+            task.status = status
+            self._save_tasks(tasks, tasks_file)
         else:
             self.logger.warning(
                 "Task '%s' has no 'status' attribute.", getattr(task, "id", "N/A")
             )
 
+    def _is_blocked(self, task: Task) -> bool:
+        """Return True if the Ethical Sentinel blocks this task."""
+        if self.sentinel and not self.sentinel.allows(getattr(task, "id", "")):
+            self.logger.info(
+                "Orchestrator: Task '%s' blocked by Ethical Sentinel.",
+                getattr(task, "id", "N/A"),
+            )
+            return True
+        return False
+
+    def _audit_and_extend(self, tasks: List[Task], tasks_file: str) -> None:
+        audit_results = self.auditor.audit([self._task_to_dict(t) for t in tasks])
+        if not audit_results:
+            return
+        fields = set(Task.__dataclass_fields__.keys())
+        new_tasks = [Task(**{k: v for k, v in item.items() if k in fields}) for item in audit_results]
+        tasks.extend(new_tasks)
+        self._save_tasks(tasks, tasks_file)
+
+    def _execute_task(self, task: Task, tasks: List[Task], tasks_file: str) -> None:
+        if self._is_blocked(task):
+            return
+
+        self._set_status(task, "in_progress", tasks, tasks_file)
+
         self.logger.info("Orchestrator: Executing task '%s'.", getattr(task, "id", "N/A"))
         try:
             self.executor.execute(task)
         except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
-            # Known execution failures are logged and task reverted to pending
-            self.logger.exception(
-                "Execution failed for task %s: %s",
-                getattr(task, "id", "N/A"),
-                exc,
-            )
-            if hasattr(task, "status"):
-                task.status = "pending"
-                self.memory.save_tasks(tasks, tasks_file)
+            self.logger.exception("Execution failed for task %s: %s", getattr(task, "id", "N/A"), exc)
+            self._set_status(task, "pending", tasks, tasks_file)
             return
-        
-        if hasattr(task, "status"):
-            task.status = "done"
-            self.memory.save_tasks(tasks, tasks_file)
-        else:
-            self.logger.warning(
-                "Task '%s' has no 'status' attribute to mark as done.",
-                getattr(task, "id", "N/A"),
-            )
 
+        self._set_status(task, "done", tasks, tasks_file)
         self.logger.info("Orchestrator: Task '%s' completed.", getattr(task, "id", "N/A"))
         self._tasks_executed.add(1)
-
-        audit_results = self.auditor.audit([self._task_to_dict(t) for t in tasks])
-        if audit_results:
-            fields = set(Task.__dataclass_fields__.keys())
-            new_tasks = [Task(**{k: v for k, v in item.items() if k in fields}) for item in audit_results]
-            tasks.extend(new_tasks)
-            self.memory.save_tasks(tasks, tasks_file)
+        self._audit_and_extend(tasks, tasks_file)
 
     def run(self, tasks_file: str = "tasks.yml") -> None:
         """Run the orchestration loop."""

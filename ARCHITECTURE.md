@@ -4,6 +4,7 @@
 
 ### Orchestrator
 Coordinates the main control loop for the self-improving system. It initializes with components like `Planner`, `Executor`, `Reflector`, and `Memory`. The `run` method orchestrates the primary workflow: loading tasks from persistence (e.g., `tasks.yml`) using `Memory`, invoking the `Reflector` to analyze the codebase and potentially generate new tasks (which are then saved back via `Memory`), and then entering a loop. In this loop, it uses the `Planner` to decide the next task, marks the task as "in_progress" (saving state), executes it using the `Executor`, and finally marks it as "done" (again, saving state). The loop continues until the `Planner` determines no more actionable tasks are available.
+State management is delegated to helper methods (`_set_status`, `_save_tasks` and `_audit_and_extend`) which handle persistence and auditing. This keeps `_execute_task` concise.
 
 ```python
 class Orchestrator:

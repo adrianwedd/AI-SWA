@@ -36,12 +36,12 @@ def test_policy_loading_and_blocking(tmp_path: Path):
     orch = Orchestrator(planner, executor, reflector, memory, auditor, sentinel=sentinel)
 
     orch.logger = MagicMock()
-    message = "Orchestrator: Task 'block' blocked by Ethical Sentinel."
-
     orch.run("tasks.yml")
 
     assert sentinel.blocked_actions == {"block"}
-    orch.logger.info.assert_any_call(message)
+    orch.logger.info.assert_any_call(
+        "Orchestrator: Task '%s' blocked by Ethical Sentinel.", "block"
+    )
     # Executor should not be called because sentinel blocks the action
     executor.execute.assert_not_called()
     assert "block" in audit.read_text()
