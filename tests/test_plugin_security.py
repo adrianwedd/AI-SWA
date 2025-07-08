@@ -3,6 +3,7 @@ import json
 import base64
 import hashlib
 import hmac
+import zipfile
 import pytest
 from pathlib import Path
 from jsonschema.exceptions import ValidationError
@@ -68,3 +69,18 @@ def test_schema_validation_error(tmp_path):
     manifest_path.write_text(json.dumps(data))
     with pytest.raises(ValidationError):
         load_manifest(manifest_path)
+
+
+def test_package_example_plugin(tmp_path):
+    from scripts.package_plugin import create_plugin_archive
+
+    archive_path = create_plugin_archive(Path("plugins/example_plugin"))
+    assert archive_path.exists()
+    with zipfile.ZipFile(archive_path) as zf:
+        names = zf.namelist()
+
+    assert "manifest.json" in names
+    assert "plugin.py" in names
+    for name in names:
+        assert not name.endswith(".pyc")
+        assert "__pycache__" not in name

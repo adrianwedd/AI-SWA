@@ -1,0 +1,35 @@
+import argparse
+import json
+from pathlib import Path
+import zipfile
+
+
+def create_plugin_archive(plugin_dir: Path) -> Path:
+    """Create a zip archive of ``plugin_dir`` in ``dist/`` and return the path."""
+    plugin_dir = Path(plugin_dir)
+    manifest = json.loads((plugin_dir / "manifest.json").read_text())
+    dist_dir = Path("dist")
+    dist_dir.mkdir(exist_ok=True)
+    archive_name = f"{manifest['id']}-{manifest['version']}.zip"
+    archive_path = dist_dir / archive_name
+    with zipfile.ZipFile(archive_path, "w") as zf:
+        for file in plugin_dir.rglob("*"):
+            if not file.is_file():
+                continue
+            if "__pycache__" in file.parts or file.suffix == ".pyc":
+                continue
+            if file.suffix in {".py", ".json"}:
+                zf.write(file, file.relative_to(plugin_dir))
+    return archive_path
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Package a plugin directory")
+    parser.add_argument("plugin_dir", help="Path to plugin directory")
+    args = parser.parse_args()
+    path = create_plugin_archive(Path(args.plugin_dir))
+    print(f"Created archive at {path}")
+
+
+if __name__ == "__main__":
+    main()

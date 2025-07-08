@@ -11,3 +11,14 @@ The host validates that all requested permissions are allowed and, when a signin
 key is configured via the `PLUGIN_SIGNING_KEY` environment variable, verifies the
 signature. Plugins lacking a valid signature are rejected when signing is
 enabled.
+
+## Packaging Plugins
+
+Use `scripts/package_plugin.py` to bundle a plugin for distribution. Run:
+
+```bash
+python scripts/package_plugin.py plugins/example_plugin
+```
+
+The script creates `dist/<id>-<version>.zip` containing `manifest.json` and all
+Python source files while excluding compiled artifacts.
