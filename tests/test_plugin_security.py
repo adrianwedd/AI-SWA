@@ -116,3 +116,17 @@ def test_package_example_plugin(tmp_path):
     for name in names:
         assert not name.endswith(".pyc")
         assert "__pycache__" not in name
+
+
+def test_package_tech_debt_plugin(tmp_path):
+    """Tech debt analyzer should package correctly."""
+    from scripts.package_plugin import create_plugin_archive
+
+    archive_path = create_plugin_archive(Path("plugins/tech_debt_analyzer"))
+    assert archive_path.exists()
+    with zipfile.ZipFile(archive_path) as zf:
+        names = zf.namelist()
+
+    assert "manifest.json" in names
+    assert "plugin.py" in names
+
