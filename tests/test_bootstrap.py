@@ -1,10 +1,16 @@
 import subprocess
 import sys
+import logging
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-from core.bootstrap import load_schema_and_tasks  # noqa: E402
+from core.bootstrap import (
+    load_schema_and_tasks,
+    create_logfile_path,
+    setup_logging,
+    select_next_task,
+)
 from core.memory import TASK_SCHEMA
 
 
@@ -77,3 +83,31 @@ def test_load_schema_and_tasks_without_header(tmp_path):
     schema, tasks = load_schema_and_tasks(path)
     assert schema == TASK_SCHEMA
     assert tasks[0]["id"] == 1
+
+
+def test_create_logfile_path(tmp_path):
+    logfile = create_logfile_path(tmp_path)
+    assert logfile.parent == tmp_path
+    assert logfile.name.startswith("bootstrap-") and logfile.suffix == ".log"
+
+
+def test_setup_logging_creates_file(tmp_path):
+    logging.getLogger().handlers.clear()
+    logfile = setup_logging(base_dir=tmp_path)
+    logging.info("create")
+    assert logfile.exists()
+
+
+def test_select_next_task():
+    tasks = [
+        {"id": 1, "status": "done"},
+        {"id": 2, "status": "pending", "priority": 2},
+        {"id": 3, "status": "pending", "priority": 1},
+    ]
+    next_task = select_next_task(tasks)
+    assert next_task["id"] == 3
+
+
+def test_select_next_task_none():
+    tasks = [{"id": 1, "status": "done"}]
+    assert select_next_task(tasks) is None
