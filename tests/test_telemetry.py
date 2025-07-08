@@ -1,4 +1,5 @@
 import requests
+import pytest
 from core.telemetry import setup_telemetry
 from core.orchestrator import Orchestrator
 from core.task import Task
@@ -6,50 +7,65 @@ from core.self_auditor import SelfAuditor
 from unittest.mock import MagicMock
 
 
-def test_setup_telemetry() -> None:
+@pytest.fixture
+def telemetry_server():
+    from opentelemetry.metrics import _internal as metrics_internal
+    from opentelemetry import trace as trace_api
+
+    metrics_internal._METER_PROVIDER_SET_ONCE._done = False
+    metrics_internal._METER_PROVIDER = None
+    trace_api._TRACER_PROVIDER_SET_ONCE._done = False
+    trace_api._TRACER_PROVIDER = None
+
     server, _ = setup_telemetry(metrics_port=0)
-    try:
-        response = requests.get(f"http://localhost:{server.server_port}/metrics")
-        assert response.status_code == 200
-    finally:
-        server.shutdown()
+    yield server
+    server.shutdown()
 
 
-def test_tasks_executed_counter() -> None:
-    server, _ = setup_telemetry(metrics_port=0)
-    try:
-        task = Task(id="1", description="d", component="c", dependencies=[], priority=1, status="pending")
+def test_setup_telemetry(telemetry_server) -> None:
+    response = requests.get(
+        f"http://localhost:{telemetry_server.server_port}/metrics"
+    )
+    assert response.status_code == 200
 
-        class DummyPlanner:
-            def __init__(self):
-                self.called = False
 
-            def plan(self, tasks):
-                if not self.called:
-                    self.called = True
-                    return tasks[0]
-                return None
+def test_tasks_executed_metric(telemetry_server, tmp_path):
+    from core.orchestrator import Orchestrator
+    from core.task import Task
+    from unittest.mock import MagicMock
 
-        class DummyExecutor:
-            def execute(self, task):
-                pass
+    task = Task(
+        id="1",
+        description="",
+        component="core",
+        dependencies=[],
+        priority=1,
+        status="pending",
+    )
 
-        class DummyReflector:
-            def run_cycle(self, tasks):
-                return tasks
+    memory = MagicMock()
+    memory.load_tasks.return_value = [task]
+    planner = MagicMock()
+    planner.plan.side_effect = [task, None]
+    reflector = MagicMock()
+    reflector.run_cycle.return_value = [task]
+    executor = MagicMock()
+    auditor = MagicMock()
+    auditor.audit.return_value = []
 
-        memory = MagicMock()
-        memory.load_tasks.return_value = [task]
-        memory.save_tasks.return_value = None
+    orch = Orchestrator(planner, executor, reflector, memory, auditor)
 
-        auditor = MagicMock(spec=SelfAuditor)
-        auditor.audit.return_value = []
+    def fetch_count() -> float:
+        resp = requests.get(
+            f"http://localhost:{telemetry_server.server_port}/metrics"
+        )
+        for line in resp.text.splitlines():
+            if line.startswith("tasks_executed_total"):
+                return float(line.split()[-1])
+        return 0.0
 
-        orch = Orchestrator(DummyPlanner(), DummyExecutor(), DummyReflector(), memory, auditor)
-        orch.run("tasks.yml")
+    orch.run(str(tmp_path / "tasks.yml"))
+    after = fetch_count()
 
-        resp = requests.get(f"http://localhost:{server.server_port}/metrics")
-        lines = [l for l in resp.text.splitlines() if l.startswith("tasks_executed_total")]
-        assert lines and float(lines[0].split()[-1]) >= 1
-    finally:
-        server.shutdown()
+    assert after == 1.0
+
