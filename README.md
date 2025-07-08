@@ -53,7 +53,7 @@ Planner decides what to build next. The Executor writes files and configures CI/
    ```bash
    git clone https://github.com/your-org/ai-swa.git
    cd ai-swa
-   pip install -r requirements.txt
+   pip install -r requirements.lock
    ```
 2. **Install Pre-commit Hooks**
    ```bash
@@ -282,7 +282,7 @@ Your mission is to parse this document, form your plan, and then execute the ins
 
 1.  **Install Dependencies**
     ```bash
-    pip install -r requirements.txt
+    pip install -r requirements.lock
     ```
 
 2.  **Write Robust Bootloader (`core/bootstrap.py`)**

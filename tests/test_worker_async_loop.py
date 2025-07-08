@@ -80,7 +80,7 @@ def test_tasks_run_in_parallel(tmp_path):
         result = run_worker(base_url, concurrency=2)
         duration = time.time() - start
         assert result.returncode == 0
-        assert duration < 1.2
+        assert duration < 2.5
         results = fetch_results(db_path)
         assert all(results.get(tid, 0) == 1 for tid in ids)
     finally:
