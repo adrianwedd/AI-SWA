@@ -140,11 +140,21 @@ class Reflector:
 
     # ------------------------------------------------------------------
     def validate(self, tasks: List[Dict]) -> bool:
+        """Validate the structure and uniqueness of the provided tasks."""
+        self._check_duplicate_ids(tasks)
+        self._check_refactor_collisions(tasks)
+        self._check_required_fields(tasks)
+        return True
+
+    # ------------------------------------------------------------------
+    def _check_duplicate_ids(self, tasks: List[Dict]) -> None:
         task_ids = [task.get("id") for task in tasks if "id" in task]
         if len(task_ids) != len(set(task_ids)):
             dup = [i for i in task_ids if task_ids.count(i) > 1]
             raise ValueError(f"Duplicate task IDs found: {dup}")
 
+    # ------------------------------------------------------------------
+    def _check_refactor_collisions(self, tasks: List[Dict]) -> None:
         refactor_tasks = [t for t in tasks if "refactor" in t.get("description", "").lower()]
         refactor_files: Dict[str, Dict] = {}
         for task in refactor_tasks:
@@ -162,13 +172,13 @@ class Reflector:
                 else:
                     refactor_files[filepath] = task
 
+    # ------------------------------------------------------------------
+    def _check_required_fields(self, tasks: List[Dict]) -> None:
         required = ["id", "description", "component", "dependencies", "priority", "status"]
         for task in tasks:
             missing = [f for f in required if f not in task]
             if missing:
                 raise ValueError(f"Task {task.get('id', 'unknown')} missing fields: {missing}")
-
-        return True
 
     # ------------------------------------------------------------------
     def _discover_analysis_paths(self) -> List[Path]:
@@ -256,32 +266,38 @@ class Reflector:
         metrics = self.metrics_provider.collect() if self.metrics_provider else {}
 
         history = metrics.get("complexity_history", [])
-        complexity_trend = "stable"
-        if isinstance(history, list) and len(history) >= 2:
-            if history[-1] > history[0]:
-                complexity_trend = "up"
-            elif history[-1] < history[0]:
-                complexity_trend = "down"
+        complexity_trend = self._calc_complexity_trend(history)
 
         completed = metrics.get("completed_tasks", [])
-        task_completion_rate: Optional[float] = "unknown"
-        if isinstance(completed, list) and len(completed) >= 2:
-            diffs = [completed[i + 1] - completed[i] for i in range(len(completed) - 1)]
-            if diffs:
-                task_completion_rate = sum(diffs) / len(diffs)
+        task_completion_rate: Optional[float] = self._calc_rate(completed)
 
         features = metrics.get("features_delivered", [])
-        feature_velocity: Optional[float] = "unknown"
-        if isinstance(features, list) and len(features) >= 2:
-            diffs = [features[i + 1] - features[i] for i in range(len(features) - 1)]
-            if diffs:
-                feature_velocity = sum(diffs) / len(diffs)
+        feature_velocity: Optional[float] = self._calc_rate(features)
 
         return {
             "complexity_trend": complexity_trend,
             "task_completion_rate": task_completion_rate,
             "feature_velocity": feature_velocity,
         }
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _calc_complexity_trend(history: List[int]) -> str:
+        if isinstance(history, list) and len(history) >= 2:
+            if history[-1] > history[0]:
+                return "up"
+            if history[-1] < history[0]:
+                return "down"
+        return "stable"
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _calc_rate(values: List[int]) -> Optional[float]:
+        if isinstance(values, list) and len(values) >= 2:
+            diffs = [values[i + 1] - values[i] for i in range(len(values) - 1)]
+            if diffs:
+                return sum(diffs) / len(diffs)
+        return "unknown"
 
     # ------------------------------------------------------------------
     def _generate_strategic_insights(self, analysis: Dict) -> List[str]:
