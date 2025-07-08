@@ -18,7 +18,7 @@ Current CI steps include dependency installation, Docker builds, linting with `p
           - name: Install dependencies
             run: |
               python -m pip install --upgrade pip
-              pip install -r requirements.txt
+              pip install -r requirements.lock
           - name: Build Docker images
             run: docker compose -f docker-compose.yml build
           - name: Install pylint
