@@ -57,6 +57,25 @@ EOF
         run: pip install semgrep==1.62.0
       - name: Run Semgrep
         run: semgrep --config auto --error
+      - name: Run Bandit
+        run: |
+          bandit -r core plugins -x tests -f json -o bandit.json
+      - name: Fail on Bandit high-severity findings
+        run: |
+          python - <<'EOF'
+import json, sys
+with open('bandit.json') as f:
+    data = json.load(f)
+highs = [r for r in data.get('results', []) if r.get('issue_severity') == 'HIGH']
+if highs:
+    print(f"{len(highs)} high-severity issues found")
+    sys.exit(1)
+EOF
+      - name: Upload Bandit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: bandit-report
+          path: bandit.json
       - name: Run plugin tests in sandbox
         run: |
           docker run --rm -v $(pwd):/app:ro --network none -w /app python:3.12-slim \
