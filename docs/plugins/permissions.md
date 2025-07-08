@@ -30,3 +30,10 @@ The file follows `plugins/policy_schema.json` and maps each plugin ID to the
 permissions it may use. When present, the plugin loader rejects any plugin not
 listed or requesting permissions outside its allowed set. Use the
 `PLUGIN_POLICY_FILE` environment variable to specify an alternate policy path.
+
+## Sandbox Testing
+
+All plugins are executed in a minimal Docker sandbox during CI. The sandbox image
+is defined in [`plugins/sandbox/Dockerfile`](../../plugins/sandbox/Dockerfile)
+and mounted read-only with no network access. See
+[`sandbox.md`](sandbox.md) for details.

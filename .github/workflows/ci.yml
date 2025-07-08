@@ -76,10 +76,13 @@ EOF
         with:
           name: bandit-report
           path: bandit.json
+      - name: Build plugin sandbox image
+        run: docker build -t plugin-test-sandbox -f plugins/sandbox/Dockerfile .
       - name: Run plugin tests in sandbox
         run: |
-          docker run --rm -v $(pwd):/app:ro --network none -w /app python:3.12-slim \
-            bash -c "pip install -r requirements.lock && pytest tests/test_plugin_security.py"
+          docker run --rm --network none --read-only --tmpfs /tmp \
+            -v $(pwd):/app:ro -w /app plugin-test-sandbox \
+            tests/test_plugin_security.py
       - name: Run tests
         run: |
           pytest --maxfail=1 --disable-warnings -q
