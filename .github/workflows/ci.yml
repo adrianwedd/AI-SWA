@@ -26,6 +26,33 @@ jobs:
       - name: Run pylint
         run: |
           pylint --exit-zero core tests
+      - name: Install Snyk
+        run: npm install -g snyk
+      - name: Snyk dependency and license scan
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+        run: snyk test --file=requirements.lock
+      - name: Install Semgrep
+        run: pip install semgrep==1.62.0
+      - name: Run Semgrep
+        run: semgrep --config auto --error
+      - name: Run plugin tests in sandbox
+        run: |
+          docker run --rm -v $(pwd):/app:ro --network none -w /app python:3.12-slim \
+            bash -c "pip install -r requirements.lock && pytest tests/test_plugin_security.py"
       - name: Run tests
         run: |
           pytest --maxfail=1 --disable-warnings -q
+      - name: Package example plugin
+        run: python scripts/package_plugin.py plugins/example_plugin
+      - name: Sign plugin artifact
+        env:
+          COSIGN_EXPERIMENTAL: '1'
+          COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+        run: |
+          cosign sign-blob --key ${{ secrets.COSIGN_KEY }} dist/example-0.1.0.zip > dist/example-0.1.0.zip.sig
+      - name: Upload plugin artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: signed-plugin
+          path: dist/example-0.1.0.zip*
