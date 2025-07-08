@@ -87,6 +87,12 @@ Planner decides what to build next. The Executor writes files and configures CI/
    in the compose file so you can simply run `docker-compose up` on subsequent
    launches for local development. The Node service also exposes `GET /health`
    on its metrics port (default `9100`) for container health checks.
+8. **Run End-to-End Tests**
+   ```bash
+   pytest tests/e2e/ --maxfail=1 --disable-warnings -q
+   ```
+   These tests spin up the orchestrator, broker and worker with `docker-compose`,
+   execute a demo task, and assert metrics/logs to ensure the pipeline works.
 
 ### CLI Usage
 
