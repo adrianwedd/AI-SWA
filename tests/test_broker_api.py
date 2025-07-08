@@ -107,6 +107,32 @@ def test_permission_denied(tmp_path):
     os.environ.pop("API_TOKENS")
 
 
+def test_next_endpoint_returns_single_task(tmp_path):
+    os.environ["DB_PATH"] = str(tmp_path / "api.db")
+    os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
+    broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
+    client = TestClient(broker.app)
+
+    admin = {"Authorization": "Bearer admintoken"}
+    worker = {"Authorization": "Bearer workertoken"}
+
+    resp = client.post("/tasks", json={"description": "demo", "command": "echo hi"}, headers=admin)
+    assert resp.status_code == 200
+
+    resp = client.get("/tasks/next", headers=worker)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["description"] == "demo"
+
+    # queue should now be empty
+    resp = client.get("/tasks/next", headers=worker)
+    assert resp.status_code == 200
+    assert resp.json() is None
+
+    os.environ.pop("API_TOKENS")
+
+
 @pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed")
 def test_broker_container(tmp_path):
     root = Path(__file__).resolve().parents[1]

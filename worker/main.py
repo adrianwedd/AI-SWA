@@ -1,9 +1,9 @@
-"""Command-line worker that polls the broker for pending tasks.
+"""Command-line worker that processes tasks from the broker queue.
 
-The script contacts the broker specified by ``BROKER_URL`` and retrieves any
-pending tasks. Each task may provide a shell ``command`` which is executed in
-an isolated subprocess. The worker then posts the command's ``stdout``,
-``stderr`` and ``exit_code`` back to the broker.
+The worker contacts the broker specified by ``BROKER_URL`` and requests the
+next available task via ``/tasks/next``. Each task may provide a shell
+``command`` which is executed asynchronously. Results are posted back using
+``/tasks/{id}/result``.
 """
 
 import logging
@@ -25,10 +25,11 @@ configure_logging()
 logger = logging.getLogger(__name__)
 
 
-def fetch_tasks():
+def fetch_next_task():
+    """Return the next task from the broker or ``None`` if the queue is empty."""
     api_key = config["security"]["api_key"]
     headers = {"X-API-Key": api_key} if api_key else {}
-    resp = requests.get(f"{BROKER_URL}/tasks", headers=headers)
+    resp = requests.get(f"{BROKER_URL}/tasks/next", headers=headers)
     resp.raise_for_status()
     return resp.json()
 
@@ -56,10 +57,16 @@ async def process_task(runner: AsyncRunner, task: dict, sem: asyncio.Semaphore):
 
 async def main_async():
     logger.info("Worker starting")
-    tasks = fetch_tasks()
     runner = AsyncRunner()
     sem = asyncio.Semaphore(CONCURRENCY)
-    await asyncio.gather(*(process_task(runner, t, sem) for t in tasks))
+    pending = []
+    while True:
+        task = fetch_next_task()
+        if not task:
+            break
+        pending.append(asyncio.create_task(process_task(runner, task, sem)))
+    if pending:
+        await asyncio.gather(*pending)
 
 
 def main():

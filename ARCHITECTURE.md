@@ -305,9 +305,11 @@ def create_task(task: Task):
 
 ### Worker
 Workers run inside Docker containers and poll the broker for tasks.
-Each worker fetches the pending tasks via HTTP and executes any
-``command`` attribute inside an isolated sandbox. A minimal Dockerfile
-installs the project requirements and launches ``worker/main.py``.
+Each worker requests the next pending task from the broker's queue using
+``GET /tasks/next``. The returned task provides a shell ``command`` which is
+executed in an isolated sandbox. Results are reported back with
+``POST /tasks/{id}/result``. A minimal Dockerfile installs the project
+requirements and launches ``worker/main.py``.
 
 ### Node.js IOService
 Certain I/O-heavy functionality is offloaded to a lightweight Node.js
