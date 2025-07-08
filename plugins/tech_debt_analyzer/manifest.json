@@ -1,0 +1,6 @@
+{
+  "id": "techdebt",
+  "name": "Tech Debt Analyzer",
+  "version": "0.1.0",
+  "permissions": ["read_files"]
+}

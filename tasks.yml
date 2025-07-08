@@ -356,7 +356,7 @@
   description: Define plugin APIs, isolation model, and threat analysis
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: plugins
   actionable_steps: []
   acceptance_criteria: []
@@ -367,7 +367,7 @@
   dependencies:
   - 73
   priority: 3
-  status: pending
+  status: done
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -377,7 +377,7 @@
   description: Add SAST, SCA, secret scanning, and compliance checks in CI/CD
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps: []
   acceptance_criteria: []
@@ -388,7 +388,7 @@
   dependencies:
   - 75
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps: []
   acceptance_criteria: []
@@ -400,7 +400,7 @@
   - 73
   - 75
   priority: 3
-  status: pending
+  status: done
   area: plugins
   actionable_steps: []
   acceptance_criteria: []
@@ -411,7 +411,7 @@
   dependencies:
   - 77
   priority: 3
-  status: pending
+  status: done
   area: plugins
   actionable_steps: []
   acceptance_criteria: []
@@ -1218,7 +1218,7 @@
   area: community
   actionable_steps:
     - Select a unique, searchable project name to resolve brand ambiguity.
-    - Publish core governance documents: GOVERNANCE.md (adopting a Liberal Contribution model) and a clear CONTRIBUTING.md.
+    - "Publish core governance documents: GOVERNANCE.md (adopting a Liberal Contribution model) and a clear CONTRIBUTING.md."
     - Set up a community health dashboard using CHAOSS metrics, tracking Time to First Response and Contributor Absence Factor.
   dependencies: [91]
   acceptance_criteria:

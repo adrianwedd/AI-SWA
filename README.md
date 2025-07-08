@@ -168,7 +168,9 @@ value defaults to `2` in `config.yaml` and can be overridden by the
 Each plugin contains a `manifest.json` file validated against
 `plugins/manifest_schema.json`. The manifest must define `id`, `name`,
 `version`, and a list of `permissions`. A `signature` field is optional
-and is verified when `PLUGIN_SIGNING_KEY` is set.
+and is verified when `PLUGIN_SIGNING_KEY` is set. See
+[`docs/plugins/api.md`](docs/plugins/api.md) for plugin API details and
+isolation requirements.
 
 ### Security CI Pipeline
 
