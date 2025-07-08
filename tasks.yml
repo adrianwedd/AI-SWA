@@ -336,7 +336,7 @@
   description: Develop standardized benchmarking suite for agent evaluation
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: tests
   actionable_steps: []
   acceptance_criteria: []
@@ -346,7 +346,7 @@
   description: Implement continuous improvement dashboard for key metrics
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: docs
   actionable_steps: []
   acceptance_criteria: []
