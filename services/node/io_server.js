@@ -50,7 +50,7 @@ function startHttpServer(port) {
     res.end(await client.register.metrics());
   });
   app.get('/health', (_req, res) => {
-    res.json({ status: 'ok' });
+    res.json({ status: 'ok', uptime: process.uptime() });
   });
   app.listen(port, () => {
     console.log(`HTTP server running on ${port}`);

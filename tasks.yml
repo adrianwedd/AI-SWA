@@ -673,7 +673,7 @@
   priority: 2
   acceptance_criteria:
   - GET /health returns 200 with JSON status
-  status: pending
+  status: done
   assigned_to: null
   epic: Reliability
 - id: 121

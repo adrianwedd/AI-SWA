@@ -10,4 +10,6 @@ def test_health_endpoint(node_server):
     except requests.RequestException:
         pytest.skip("health endpoint unavailable")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok"}
+    data = response.json()
+    assert data["status"] == "ok"
+    assert "uptime" in data and data["uptime"] >= 0
