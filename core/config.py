@@ -10,7 +10,14 @@ DEFAULT_CONFIG = {
     "broker": {"db_path": "tasks.db", "metrics_port": 9000},
     "worker": {"broker_url": "http://broker:8000", "metrics_port": 9001},
     "node": {"host": "localhost", "port": 50051},
-    "security": {"api_key": None, "api_tokens": None, "plugin_signing_key": None},
+    "security": {
+        "api_key": None,
+        "api_tokens": None,
+        "api_key_env": "API_KEY",
+        "api_tokens_env": "API_TOKENS",
+        "plugin_signing_key": None,
+        "plugin_signing_key_env": "PLUGIN_SIGNING_KEY",
+    },
 }
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config.yaml"
@@ -46,11 +53,23 @@ def load_config(path: str | Path | None = None) -> dict:
         port = int(os.environ["METRICS_PORT"])
         cfg["broker"]["metrics_port"] = port
         cfg["worker"]["metrics_port"] = port
+    sec = cfg["security"]
+
     if "API_KEY" in os.environ:
-        cfg["security"]["api_key"] = os.environ["API_KEY"]
+        sec["api_key"] = os.environ["API_KEY"]
     if "API_TOKENS" in os.environ:
-        cfg["security"]["api_tokens"] = os.environ["API_TOKENS"]
+        sec["api_tokens"] = os.environ["API_TOKENS"]
     if "PLUGIN_SIGNING_KEY" in os.environ:
-        cfg["security"]["plugin_signing_key"] = os.environ["PLUGIN_SIGNING_KEY"]
+        sec["plugin_signing_key"] = os.environ["PLUGIN_SIGNING_KEY"]
+
+    env_name = sec.get("api_key_env")
+    if env_name and env_name in os.environ:
+        sec["api_key"] = os.environ[env_name]
+    env_name = sec.get("api_tokens_env")
+    if env_name and env_name in os.environ:
+        sec["api_tokens"] = os.environ[env_name]
+    env_name = sec.get("plugin_signing_key_env")
+    if env_name and env_name in os.environ:
+        sec["plugin_signing_key"] = os.environ[env_name]
 
     return cfg

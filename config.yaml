@@ -10,4 +10,7 @@ node:
 security:
   api_key: null
   api_tokens: null
+  api_key_env: API_KEY
+  api_tokens_env: API_TOKENS
   plugin_signing_key: null
+  plugin_signing_key_env: PLUGIN_SIGNING_KEY

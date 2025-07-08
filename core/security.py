@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from fastapi import Header, HTTPException, Depends
+from fastapi import Header, HTTPException, Depends, Request
 from .config import load_config
 
 
@@ -55,7 +55,10 @@ def verify_token(authorization: str | None = Header(None)) -> User:
 def require_role(roles: list[str]):
     """FastAPI dependency ensuring the user has one of ``roles``."""
 
-    def _require(user: User = Depends(verify_token)) -> User:
+    def _require(request: Request, authorization: str | None = Header(None)) -> User:
+        user = getattr(request.state, "user", None)
+        if user is None:
+            user = verify_token(authorization)
         if user.role not in roles:
             raise HTTPException(status_code=403, detail="Forbidden")
         return user

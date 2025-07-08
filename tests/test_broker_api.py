@@ -79,6 +79,18 @@ def test_invalid_token(tmp_path):
     os.environ.pop("API_TOKENS")
 
 
+def test_missing_token(tmp_path):
+    os.environ["DB_PATH"] = str(tmp_path / "api.db")
+    os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin"
+    broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
+    client = TestClient(broker.app)
+
+    resp = client.post("/tasks", json={"description": "demo"})
+    assert resp.status_code == 401
+    os.environ.pop("API_TOKENS")
+
+
 def test_permission_denied(tmp_path):
     os.environ["DB_PATH"] = str(tmp_path / "api.db")
     os.environ["METRICS_PORT"] = "0"
