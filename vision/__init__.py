@@ -3,6 +3,12 @@
 from .vision_engine import VisionEngine, RLAgent, wsjf_score
 from .training import RLTrainer
 from .ppo import ReplayBuffer, EWC, StateBuilder, PPOAgent
+from .epo import (
+    Gene,
+    EvolutionaryPolicyOptimizer,
+    SimulationEnvironment,
+    TwoSpeedEngine,
+)
 
 __all__ = [
     "VisionEngine",
@@ -13,4 +19,8 @@ __all__ = [
     "EWC",
     "StateBuilder",
     "PPOAgent",
+    "Gene",
+    "EvolutionaryPolicyOptimizer",
+    "SimulationEnvironment",
+    "TwoSpeedEngine",
 ]
