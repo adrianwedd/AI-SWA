@@ -7,15 +7,20 @@ an isolated subprocess. The worker then posts the command's ``stdout``,
 """
 
 import logging
+import asyncio
 import requests
-import subprocess
 from core.telemetry import setup_telemetry
 from core.config import load_config
 from core.log_utils import configure_logging
+from core.async_runner import AsyncRunner
 
 config = load_config()
 BROKER_URL = config["worker"]["broker_url"]
-setup_telemetry(service_name="worker", metrics_port=int(config["worker"]["metrics_port"]))
+CONCURRENCY = int(config["worker"].get("concurrency", 2))
+setup_telemetry(
+    service_name="worker",
+    metrics_port=int(config["worker"]["metrics_port"]),
+)
 configure_logging()
 logger = logging.getLogger(__name__)
 
@@ -28,28 +33,37 @@ def fetch_tasks():
     return resp.json()
 
 
-def main():
+async def process_task(runner: AsyncRunner, task: dict, sem: asyncio.Semaphore):
+    command = task.get("command")
+    if not command:
+        return
+    async with sem:
+        result = await runner.run(command)
+    logger.info("Executed command for task %s", task["id"])
+    api_key = config["security"]["api_key"]
+    headers = {"X-API-Key": api_key} if api_key else {}
+    requests.post(
+        f"{BROKER_URL}/tasks/{task['id']}/result",
+        json={
+            "stdout": result["stdout"],
+            "stderr": result["stderr"],
+            "exit_code": result["exit_code"],
+        },
+        headers=headers,
+    ).raise_for_status()
+    logger.info("Reported result for task %s", task["id"])
+
+
+async def main_async():
     logger.info("Worker starting")
     tasks = fetch_tasks()
-    for task in tasks:
-        command = task.get("command")
-        if command:
-            result = subprocess.run(
-                command, shell=True, check=False, capture_output=True, text=True
-            )
-            logger.info("Executed command for task %s", task["id"])
-            api_key = config["security"]["api_key"]
-            headers = {"X-API-Key": api_key} if api_key else {}
-            requests.post(
-                f"{BROKER_URL}/tasks/{task['id']}/result",
-                json={
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
-                    "exit_code": result.returncode,
-                },
-                headers=headers,
-            ).raise_for_status()
-            logger.info("Reported result for task %s", task["id"])
+    runner = AsyncRunner()
+    sem = asyncio.Semaphore(CONCURRENCY)
+    await asyncio.gather(*(process_task(runner, t, sem) for t in tasks))
+
+
+def main():
+    asyncio.run(main_async())
 
 
 if __name__ == "__main__":

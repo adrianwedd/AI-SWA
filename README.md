@@ -116,9 +116,14 @@ configuration file:
 | `BROKER_METRICS_PORT` | Port exposing broker Prometheus metrics | `9000` |
 | `WORKER_METRICS_PORT` | Port exposing worker Prometheus metrics | `9001` |
 | `METRICS_PORT` | Set both broker and worker metrics ports at once | *(unset)* |
+| `WORKER_CONCURRENCY` | Number of tasks the worker runs in parallel | `2` |
 | `API_KEY` | Shared API key required for API access | *(unset)* |
 | `API_TOKENS` | Comma separated tokens mapping to `username:role` | *(unset)* |
 | `PLUGIN_SIGNING_KEY` | HMAC key used to verify plugin manifests | *(unset)* |
+
+The worker will execute up to `WORKER_CONCURRENCY` tasks simultaneously. This
+value defaults to `2` in `config.yaml` and can be overridden by the
+`WORKER_CONCURRENCY` environment variable.
 
 ### Plugin Manifests
 

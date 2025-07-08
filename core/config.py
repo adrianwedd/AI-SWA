@@ -8,7 +8,11 @@ import yaml
 
 DEFAULT_CONFIG = {
     "broker": {"db_path": "tasks.db", "metrics_port": 9000},
-    "worker": {"broker_url": "http://broker:8000", "metrics_port": 9001},
+    "worker": {
+        "broker_url": "http://broker:8000",
+        "metrics_port": 9001,
+        "concurrency": 2,
+    },
     "node": {"host": "localhost", "port": 50051},
     "security": {
         "api_key": None,
@@ -47,6 +51,8 @@ def load_config(path: str | Path | None = None) -> dict:
         cfg["broker"]["metrics_port"] = int(os.environ["BROKER_METRICS_PORT"])
     if "WORKER_METRICS_PORT" in os.environ:
         cfg["worker"]["metrics_port"] = int(os.environ["WORKER_METRICS_PORT"])
+    if "WORKER_CONCURRENCY" in os.environ:
+        cfg["worker"]["concurrency"] = int(os.environ["WORKER_CONCURRENCY"])
     if "NODE_HOST" in os.environ:
         cfg["node"]["host"] = os.environ["NODE_HOST"]
     if "NODE_PORT" in os.environ:
