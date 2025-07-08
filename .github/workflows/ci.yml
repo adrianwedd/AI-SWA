@@ -86,6 +86,11 @@ EOF
       - name: Run tests
         run: |
           pytest --maxfail=1 --disable-warnings -q
+      - name: Install cosign
+        run: |
+          curl -L https://github.com/sigstore/cosign/releases/latest/download/cosign-linux-amd64 -o cosign
+          chmod +x cosign
+          sudo mv cosign /usr/local/bin/cosign
       - name: Package example plugin
         run: python scripts/package_plugin.py plugins/example_plugin
       - name: Sign plugin artifact

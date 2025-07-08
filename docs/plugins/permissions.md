@@ -23,6 +23,18 @@ python scripts/package_plugin.py plugins/example_plugin
 The script creates `dist/<id>-<version>.zip` containing `manifest.json` and all
 Python source files while excluding compiled artifacts.
 
+## Signing Plugins
+
+The CI pipeline installs [cosign](https://docs.sigstore.dev/cosign/overview/) and
+signs each packaged plugin. The private key is provided via the `COSIGN_KEY`
+secret, and the signature file (`.sig`) is uploaded alongside the plugin
+archive. You can verify a signature locally using your public key:
+
+```bash
+cosign verify-blob --key cosign.pub dist/example-0.1.0.zip \
+  --signature dist/example-0.1.0.zip.sig
+```
+
 ## Policy Enforcement
 
 Administrators may define `plugins/policy.json` to whitelist approved plugins.
