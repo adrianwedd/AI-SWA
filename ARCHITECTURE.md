@@ -271,6 +271,19 @@ flowchart TD
     O --> R[Orchestrator.run]
 ```
 
+## Configuration Flow
+```mermaid
+flowchart TD
+    Start --> LoadFile[Read config.yaml]
+    LoadFile --> ApplyEnv[Apply environment variables]
+    ApplyEnv --> Ready[Return merged config]
+```
+
+Configuration is loaded with `core.config.load_config()` which merges
+`config.yaml` with any environment overrides. See the
+[README Configuration](README.md#configuration) section for the list of
+available variables.
+
 ### Diff Utility
 Utility functions ``generate_diff`` and ``generate_file_diff`` in
 ``core.diff_utils`` emit unified diffs when file contents change.
