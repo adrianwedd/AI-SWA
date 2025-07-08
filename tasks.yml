@@ -608,7 +608,7 @@
   description: Implement a more sophisticated security model for the plugin architecture
   dependencies: []
   priority: 1
-  status: pending
+  status: done
   area: security
   actionable_steps: []
   acceptance_criteria: []

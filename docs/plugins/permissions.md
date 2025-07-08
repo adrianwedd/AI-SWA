@@ -22,3 +22,11 @@ python scripts/package_plugin.py plugins/example_plugin
 
 The script creates `dist/<id>-<version>.zip` containing `manifest.json` and all
 Python source files while excluding compiled artifacts.
+
+## Policy Enforcement
+
+Administrators may define `plugins/policy.json` to whitelist approved plugins.
+The file follows `plugins/policy_schema.json` and maps each plugin ID to the
+permissions it may use. When present, the plugin loader rejects any plugin not
+listed or requesting permissions outside its allowed set. Use the
+`PLUGIN_POLICY_FILE` environment variable to specify an alternate policy path.
