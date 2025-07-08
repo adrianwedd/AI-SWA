@@ -76,6 +76,7 @@ def test_task_round_trip_with_optional_fields(tmp_path):
             acceptance_criteria=["c"],
             assigned_to="dev",
             epic="E1",
+            metadata={"foo": "bar"},
         )
     ]
     tasks_file = tmp_path / "tasks.yml"
@@ -107,8 +108,32 @@ def test_load_tasks_with_metadata(tmp_path):
             dependencies=[],
             priority=1,
             status="pending",
+            metadata={"foo": "bar"},
         )
     ]
+
+
+def test_round_trip_extra_fields(tmp_path):
+    tasks_data = [
+        {
+            "id": 1,
+            "description": "extra",
+            "dependencies": [],
+            "priority": 1,
+            "status": "pending",
+            "foo": "bar",
+            "nested": {"x": 1},
+        }
+    ]
+    tasks_file = tmp_path / "tasks.yml"
+    tasks_file.write_text(yaml.safe_dump(tasks_data))
+    mem = Memory(tmp_path / "state.json")
+    tasks = mem.load_tasks(tasks_file)
+    assert tasks[0].metadata == {"foo": "bar", "nested": {"x": 1}}
+    mem.save_tasks(tasks, tasks_file)
+    round_tripped = yaml.safe_load(tasks_file.read_text())
+    assert round_tripped[0]["foo"] == "bar"
+    assert round_tripped[0]["nested"] == {"x": 1}
 
 
 def test_invalid_metadata_fails(tmp_path):
