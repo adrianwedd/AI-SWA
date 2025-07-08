@@ -120,6 +120,29 @@ def list_tasks(
     return tasks
 
 
+@app.get("/tasks/next", response_model=Task | None)
+def next_task(__: User = Depends(require_role(["admin", "worker"]))):
+    """Atomically pop the next pending task from the queue."""
+    conn = get_db()
+    conn.isolation_level = None
+    conn.execute("BEGIN IMMEDIATE")
+    row = conn.execute(
+        "SELECT id, description, command FROM tasks WHERE status='pending' ORDER BY id LIMIT 1"
+    ).fetchone()
+    if not row:
+        conn.execute("COMMIT")
+        conn.close()
+        return None
+    task_id = row["id"]
+    conn.execute(
+        "UPDATE tasks SET status='in_progress' WHERE id=? AND status='pending'",
+        (task_id,),
+    )
+    conn.execute("COMMIT")
+    conn.close()
+    return Task(id=task_id, description=row["description"], status="in_progress", command=row["command"])
+
+
 @app.get("/tasks/{task_id}", response_model=Task)
 def get_task(
     task_id: int,
@@ -157,6 +180,10 @@ def save_result(
     conn.execute(
         "INSERT INTO task_results (task_id, stdout, stderr, exit_code) VALUES (?, ?, ?, ?)",
         (task_id, result.stdout, result.stderr, result.exit_code),
+    )
+    conn.execute(
+        "UPDATE tasks SET status='done' WHERE id = ?",
+        (task_id,),
     )
     conn.commit()
     conn.close()
