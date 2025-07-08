@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import subprocess
 import shlex
 from datetime import datetime
@@ -14,6 +15,7 @@ class Executor:
 
     def __init__(self) -> None:
         meter = metrics.get_meter_provider().get_meter(__name__)
+        self.logger = logging.getLogger(__name__)
         self._tasks_executed = meter.create_counter(
             "tasks_executed_total", description="Number of executed tasks"
         )
@@ -37,11 +39,11 @@ class Executor:
         """
 
         if hasattr(task, "description"):
-            print(f"Executing task: {task.description}")
+            self.logger.info("Executing task: %s", task.description)
         elif hasattr(task, "id"):
-            print(f"Executing task ID: {task.id} (No description found)")
+            self.logger.info("Executing task ID: %s (No description found)", task.id)
         else:
-            print("Executing task: (No description or ID found)")
+            self.logger.info("Executing task: (No description or ID found)")
 
         command = getattr(task, "command", None)
         if not command:

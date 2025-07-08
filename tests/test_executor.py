@@ -1,7 +1,7 @@
 import os
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock
 from core.executor import Executor
 from core.task import Task
 
@@ -9,9 +9,9 @@ class TestExecutor(unittest.TestCase):
 
     def setUp(self):
         self.executor = Executor()
+        self.executor.logger = MagicMock()
 
-    @patch('builtins.print')
-    def test_execute_task_with_description(self, mock_print):
+    def test_execute_task_with_description(self):
         task = Task(
             id="t1",
             description="Task One Description",
@@ -21,10 +21,9 @@ class TestExecutor(unittest.TestCase):
             status="pending",
         )
         self.executor.execute(task)
-        mock_print.assert_called_once_with("Executing task: Task One Description")
+        self.executor.logger.info.assert_called_once_with("Executing task: %s", "Task One Description")
 
-    @patch('builtins.print')
-    def test_execute_task_with_id_no_description(self, mock_print):
+    def test_execute_task_with_id_no_description(self):
         task = Task(
             id="t2",
             description="",
@@ -37,10 +36,9 @@ class TestExecutor(unittest.TestCase):
         if hasattr(task, 'description'):
             delattr(task, 'description')
         self.executor.execute(task)
-        mock_print.assert_called_once_with("Executing task ID: t2 (No description found)")
+        self.executor.logger.info.assert_called_once_with("Executing task ID: %s (No description found)", "t2")
 
-    @patch('builtins.print')
-    def test_execute_task_no_description_no_id(self, mock_print):
+    def test_execute_task_no_description_no_id(self):
         task = Task(
             id=0,
             description="",
@@ -55,10 +53,9 @@ class TestExecutor(unittest.TestCase):
         if hasattr(task, 'id'):
             delattr(task, 'id')
         self.executor.execute(task)
-        mock_print.assert_called_once_with("Executing task: (No description or ID found)")
+        self.executor.logger.info.assert_called_once_with("Executing task: (No description or ID found)")
 
-    @patch('builtins.print')
-    def test_execute_task_as_dict_with_description(self, mock_print):
+    def test_execute_task_as_dict_with_description(self):
         # The Executor expects an object with attributes. Using the Task
         # dataclass mimics this interface and keeps the test focused on the
         # print behavior rather than attribute lookups.
@@ -71,10 +68,9 @@ class TestExecutor(unittest.TestCase):
             status="pending",
         )
         self.executor.execute(task)
-        mock_print.assert_called_once_with("Executing task: Dict Task Description")
+        self.executor.logger.info.assert_called_once_with("Executing task: %s", "Dict Task Description")
 
-    @patch('builtins.print')
-    def test_execute_task_as_dict_with_id_no_description(self, mock_print):
+    def test_execute_task_as_dict_with_id_no_description(self):
         task_obj = Task(
             id="d2",
             description="",
@@ -86,10 +82,9 @@ class TestExecutor(unittest.TestCase):
         if hasattr(task_obj, 'description'):
             delattr(task_obj, 'description')
         self.executor.execute(task_obj)
-        mock_print.assert_called_once_with("Executing task ID: d2 (No description found)")
+        self.executor.logger.info.assert_called_once_with("Executing task ID: %s (No description found)", "d2")
 
-    @patch('builtins.print')
-    def test_execute_task_object_with_other_attributes(self, mock_print):
+    def test_execute_task_object_with_other_attributes(self):
         task = Task(
             id="t_other",
             description="Other attributes test",
@@ -99,7 +94,7 @@ class TestExecutor(unittest.TestCase):
             status="pending",
         )
         self.executor.execute(task)
-        mock_print.assert_called_once_with("Executing task: Other attributes test")
+        self.executor.logger.info.assert_called_once_with("Executing task: %s", "Other attributes test")
 
     def test_execute_task_with_command_creates_log(self):
         import tempfile

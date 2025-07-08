@@ -197,7 +197,8 @@ class TestOrchestrator(unittest.TestCase):
         self.mock_reflector.run_cycle.return_value = [] # No new tasks from reflector
         self.mock_planner.plan.return_value = None # Planner finds nothing to do
 
-        with patch('builtins.print') as mock_print:
+        self.orchestrator.logger = MagicMock()
+        with patch('builtins.print'):
             self.orchestrator.run(tasks_file)
 
         self.mock_memory.load_tasks.assert_called_once_with(tasks_file)
@@ -213,7 +214,8 @@ class TestOrchestrator(unittest.TestCase):
         self.mock_reflector.run_cycle.return_value = initial_tasks # Reflector adds no new tasks
         self.mock_planner.plan.return_value = None # Planner immediately says nothing to do
 
-        with patch('builtins.print') as mock_print:
+        self.orchestrator.logger = MagicMock()
+        with patch('builtins.print'):
             self.orchestrator.run(tasks_file)
 
         self.mock_memory.load_tasks.assert_called_once_with(tasks_file)
@@ -278,14 +280,15 @@ class TestOrchestrator(unittest.TestCase):
         self.mock_reflector.run_cycle.return_value = [task_no_id]
         self.mock_planner.plan.side_effect = [task_no_id, None]
 
-        with patch('builtins.print') as mock_print:
+        self.orchestrator.logger = MagicMock()
+        with patch("builtins.print"):
             self.orchestrator.run(tasks_file)
 
         self.mock_executor.execute.assert_called_once_with(task_no_id)
         self.assertEqual(task_no_id.status, 'done')
         self.assertEqual(self.mock_memory.save_tasks.call_count, 3)
-        mock_print.assert_any_call("Orchestrator: Task 'N/A' selected for execution.")
-        mock_print.assert_any_call("Orchestrator: Executing task 'N/A'.")
+        self.orchestrator.logger.info.assert_any_call("Orchestrator: Task '%s' selected for execution.", "N/A")
+        self.orchestrator.logger.info.assert_any_call("Orchestrator: Executing task '%s'.", "N/A")
 
     def test_reflector_returns_invalid_data_raises_error(self):
         tasks_file = "tasks_invalid.yml"

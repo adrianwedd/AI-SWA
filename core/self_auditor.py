@@ -281,9 +281,10 @@ if __name__ == "__main__":  # pragma: no cover - manual testing helper
     auditor = SelfAuditor()
     sample_files = list(Path(".").rglob("*.py"))[:5]
     metrics = auditor.analyze(sample_files)
+    logger = logging.getLogger(__name__)
     for file, data in metrics.items():
-        print(f"\n{file}:")
-        print(f"  Max Complexity: {data['max_complexity']}")
-        print(f"  Needs Refactor: {data['needs_refactor']}")
+        logger.info("%s:", file)
+        logger.info("  Max Complexity: %s", data["max_complexity"])
+        logger.info("  Needs Refactor: %s", data["needs_refactor"])
         if data["complexity_violations"]:
-            print(f"  Violations: {len(data['complexity_violations'])}")
+            logger.info("  Violations: %d", len(data["complexity_violations"]))

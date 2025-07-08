@@ -77,21 +77,20 @@ def _logging_level(verbosity: int) -> int:
 
 def _check_config(path: Path) -> bool:
     if not path.exists():
-        print(f"Config not found: {path}", file=sys.stderr)
+        logging.error("Config not found: %s", path)
         return False
     return True
 
 
-def _run_orchestrator(config: Path, verbosity: int) -> int:
+def _run_orchestrator(config: Path) -> int:
     if not _check_config(config):
         return 1
-    configure_logging(level=_logging_level(verbosity))
     setup_telemetry()
     memory = Memory(Path("state.json"))
     try:
         memory.save(memory.load())
     except Exception as exc:  # pragma: no cover - unexpected I/O errors
-        print(f"Error accessing memory: {exc}", file=sys.stderr)
+        logging.error("Error accessing memory: %s", exc)
         return 1
 
     planner = Planner()
@@ -99,7 +98,7 @@ def _run_orchestrator(config: Path, verbosity: int) -> int:
     reflector = Reflector()
     auditor = SelfAuditor()
     orchestrator = Orchestrator(planner, executor, reflector, memory, auditor)
-    print("Orchestrator running")
+    logging.info("Orchestrator running")
     orchestrator.run()
     return 0
 
@@ -108,6 +107,7 @@ def main(argv=None) -> int:
     """CLI entry point."""
     parser = build_parser()
     args = parser.parse_args(argv)
+    configure_logging(level=_logging_level(args.verbose))
     if not args.command:
         parser.print_help()
         return 1
@@ -120,36 +120,36 @@ def main(argv=None) -> int:
         cmd += ["-v"] * args.verbose
         proc = subprocess.Popen(cmd)
         Path(args.pid_file).write_text(str(proc.pid))
-        print(f"Orchestrator started with PID {proc.pid}")
+        logging.info("Orchestrator started with PID %s", proc.pid)
         return 0
 
     if args.command == "stop":
         pid_path = Path(args.pid_file)
         if not pid_path.exists():
-            print("PID file not found", file=sys.stderr)
+            logging.error("PID file not found")
             return 1
         pid = int(pid_path.read_text())
         try:
             os.kill(pid, signal.SIGTERM)
         except ProcessLookupError:
-            print("Process not running")
+            logging.info("Process not running")
         pid_path.unlink(missing_ok=True)
-        print("Orchestrator stopped")
+        logging.info("Orchestrator stopped")
         return 0
 
     if args.command == "status":
         pid_path = Path(args.pid_file)
         if not pid_path.exists():
-            print("Not running")
+            logging.error("Not running")
             return 1
         pid = int(pid_path.read_text())
         try:
             os.kill(pid, 0)
         except OSError:
-            print("Not running")
+            logging.error("Not running")
             pid_path.unlink(missing_ok=True)
             return 1
-        print(f"Orchestrator running with PID {pid}")
+        logging.info("Orchestrator running with PID %s", pid)
         return 0
 
     if args.command == "list":
@@ -160,7 +160,7 @@ def main(argv=None) -> int:
         return 0
 
     if args.command == "_run":
-        return _run_orchestrator(Path(args.config), args.verbose)
+        return _run_orchestrator(Path(args.config))
 
     parser.print_help()
     return 1

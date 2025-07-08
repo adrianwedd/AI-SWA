@@ -13,6 +13,7 @@ are created on startup: ``tasks`` for task metadata and ``task_results`` for
 worker output.
 """
 
+import logging
 import sqlite3
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse
@@ -22,9 +23,12 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from core.telemetry import setup_telemetry
 from core.security import verify_api_key, verify_token, require_role, User
 from core.config import load_config
+from core.log_utils import configure_logging
 
 config = load_config()
 DB_PATH = config["broker"]["db_path"]
+configure_logging()
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 setup_telemetry(service_name="broker", metrics_port=int(config["broker"]["metrics_port"]))
