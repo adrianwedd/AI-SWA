@@ -19,6 +19,27 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.lock
+      - name: Install pip-audit
+        run: pip install pip-audit==2.9.0
+      - name: Run pip-audit
+        run: |
+          pip-audit -r requirements.lock -f json -o pip-audit.json
+      - name: Fail on vulnerabilities
+        run: |
+          python - <<'EOF'
+import json, sys
+with open('pip-audit.json') as f:
+    data = json.load(f)
+count = sum(len(d.get('vulns', [])) for d in data.get('dependencies', []))
+if count:
+    print(f"{count} vulnerabilities found")
+    sys.exit(1)
+EOF
+      - name: Upload pip-audit report
+        uses: actions/upload-artifact@v3
+        with:
+          name: pip-audit-report
+          path: pip-audit.json
       - name: Build Docker images
         run: docker compose -f docker-compose.yml build
       - name: Install pylint
