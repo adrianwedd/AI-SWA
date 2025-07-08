@@ -14,11 +14,13 @@ worker output.
 """
 
 import sqlite3
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi.responses import JSONResponse
+from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 from core.telemetry import setup_telemetry
-from core.security import verify_api_key, require_role, User
+from core.security import verify_api_key, verify_token, require_role, User
 from core.config import load_config
 
 config = load_config()
@@ -27,6 +29,22 @@ DB_PATH = config["broker"]["db_path"]
 app = FastAPI()
 setup_telemetry(service_name="broker", metrics_port=int(config["broker"]["metrics_port"]))
 FastAPIInstrumentor.instrument_app(app)
+
+
+class AuthMiddleware(BaseHTTPMiddleware):
+    """Validate API key and bearer token for all requests."""
+
+    async def dispatch(self, request: Request, call_next):
+        try:
+            verify_api_key(request.headers.get("X-API-Key"))
+            user = verify_token(request.headers.get("Authorization"))
+            request.state.user = user
+        except HTTPException as exc:
+            return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+        return await call_next(request)
+
+
+app.add_middleware(AuthMiddleware)
 
 
 def get_db():
@@ -66,7 +84,6 @@ init_db()
 @app.post("/tasks", response_model=Task)
 def create_task(
     task: Task,
-    _: None = Depends(verify_api_key),
     __: User = Depends(require_role(["admin"])),
 ):
     conn = get_db()
@@ -82,7 +99,6 @@ def create_task(
 
 @app.get("/tasks", response_model=list[Task])
 def list_tasks(
-    _: None = Depends(verify_api_key),
     __: User = Depends(require_role(["admin", "worker"])),
 ):
     conn = get_db()
@@ -103,7 +119,6 @@ def list_tasks(
 @app.get("/tasks/{task_id}", response_model=Task)
 def get_task(
     task_id: int,
-    _: None = Depends(verify_api_key),
     __: User = Depends(require_role(["admin", "worker"])),
 ):
     conn = get_db()
@@ -126,7 +141,6 @@ def get_task(
 def save_result(
     task_id: int,
     result: TaskResult,
-    _: None = Depends(verify_api_key),
     __: User = Depends(require_role(["worker", "admin"])),
 ):
     conn = get_db()
