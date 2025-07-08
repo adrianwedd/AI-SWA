@@ -293,7 +293,7 @@
   dependencies:
   - 66
   priority: 3
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -304,7 +304,7 @@
   dependencies:
   - 67
   priority: 3
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -314,7 +314,7 @@
   description: Create high-fidelity simulation environment for code changes
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: infrastructure
   actionable_steps: []
   acceptance_criteria: []
@@ -326,7 +326,7 @@
   - 67
   - 69
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
