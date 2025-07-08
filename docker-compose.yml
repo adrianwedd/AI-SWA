@@ -39,6 +39,14 @@ services:
       - broker
     ports:
       - "9001:9001"
+  orchestrator-api:
+    build:
+      context: .
+      dockerfile: orchestrator_api/Dockerfile
+    depends_on:
+      - orchestrator
+    ports:
+      - "8002:8002"
   io-service:
     build: ./services/node
     environment:

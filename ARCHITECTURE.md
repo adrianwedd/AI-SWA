@@ -61,6 +61,17 @@ def main(argv=None):
     orchestrator.run()
 ```
 
+### Orchestrator API
+`services.orchestrator_api` exposes REST endpoints to start, stop and
+check the status of the orchestrator. It simply spawns the CLI
+subprocess using `uvicorn` as a container entrypoint.
+
+```
+POST /start   -> launch orchestrator process
+POST /stop    -> terminate the process
+GET  /status  -> return running PID or false
+```
+
 ### Memory
 Simple persistence helper for storing JSON state on disk. The API exposes
 `load()`/`save()` for generic JSON data and `load_tasks()`/`save_tasks()`
