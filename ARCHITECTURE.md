@@ -318,8 +318,8 @@ under ``services/node`` and is started independently. A small Python
 client in ``core.io_client`` allows the orchestrator or other modules to
 invoke this service when needed. The Node process also runs a small Express
 server on the metrics port (default ``9100``) exposing ``/metrics`` for
-Prometheus scraping and ``/health`` which returns ``{"status": "ok"}`` for
-basic health checks.
+Prometheus scraping and ``/health`` which returns JSON including service
+``uptime`` and ``status`` for basic health checks.
 
 ### Vision Engine
 Ranks epics using Weighted Shortest Job First (WSJF) scores. An optional
