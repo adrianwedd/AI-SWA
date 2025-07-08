@@ -14,6 +14,45 @@ from core.memory import TASK_SCHEMA
 from core.log_utils import configure_logging
 
 
+def create_logfile_path(base_dir: Path = Path("logs")) -> Path:
+    """Return a timestamped logfile path inside ``base_dir``."""
+    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
+    return base_dir / f"bootstrap-{timestamp}.log"
+
+
+def setup_logging(base_dir: Path = Path("logs")) -> Path:
+    """Create logging directory and configure root logger.
+
+    Parameters
+    ----------
+    base_dir:
+        Directory in which the logfile is created.
+
+    Returns
+    -------
+    pathlib.Path
+        Path to the created logfile. Exits with code ``2`` if the
+        directory cannot be created.
+    """
+    logfile = create_logfile_path(base_dir)
+    try:
+        logfile.parent.mkdir(exist_ok=True)
+        configure_logging(logfile=logfile)
+        logfile.touch(exist_ok=True)
+    except OSError as exc:
+        logging.error("[ERROR] %s", exc)
+        sys.exit(2)
+    return logfile
+
+
+def select_next_task(tasks):
+    """Return the highest priority pending task or ``None`` if absent."""
+    pending = [t for t in tasks if t.get("status") == "pending"]
+    if not pending:
+        return None
+    return sorted(pending, key=lambda x: x.get("priority", 5))[0]
+
+
 def load_schema_and_tasks(path: Path):
     """Return JSON schema and task list from ``tasks.yml``.
 
@@ -69,20 +108,8 @@ def load_schema_and_tasks(path: Path):
 
 
 def main():
-    """Bootstrap the system by validating ``tasks.yml``.
-
-    Returns exit codes ``0`` on success, ``1`` for validation errors and ``2``
-    for filesystem issues.
-    """
-    timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-    logfile = Path("logs") / f"bootstrap-{timestamp}.log"
-    try:
-        logfile.parent.mkdir(exist_ok=True)
-        configure_logging(logfile=logfile)
-    except OSError as exc:
-        logging.error("[ERROR] %s", exc)
-        sys.exit(2)
-
+    """Bootstrap the system by validating ``tasks.yml``."""
+    setup_logging()
     schema, tasks = load_schema_and_tasks(Path("tasks.yml"))
 
     try:
@@ -91,12 +118,11 @@ def main():
         logging.error("[ERROR] %s", exc)
         sys.exit(1)
 
-    pending = [t for t in tasks if t.get("status") == "pending"]
-    if not pending:
+    task = select_next_task(tasks)
+    if not task:
         logging.info("No pending tasks found")
         sys.exit(0)
 
-    task = sorted(pending, key=lambda x: x.get("priority", 5))[0]
     logging.info("Next task: %s", task)
     sys.exit(0)
 
