@@ -2,8 +2,7 @@ import subprocess
 import sys
 import logging
 from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
+import pytest
 
 from core.bootstrap import (
     load_schema_and_tasks,
@@ -15,6 +14,7 @@ from core.memory import TASK_SCHEMA
 
 
 def test_artifacts_exist():
+    """Ensure essential repository files are present."""
     required = [
         "ARCHITECTURE.md",
         "tasks.yml",
@@ -26,13 +26,15 @@ def test_artifacts_exist():
 
 
 def test_log_created():
+    """Bootstrap run should have created a log file."""
     logs = list(Path("logs").glob("bootstrap-*.log"))
     assert logs, "No bootstrap log found"
 
 
-def test_missing_tasks_file(tmp_path):
+def test_missing_tasks_file(tmp_path, root_path):
+    """Exit code ``2`` when ``tasks.yml`` is missing."""
     result = subprocess.run(
-        [sys.executable, str(ROOT / "core" / "bootstrap.py")],
+        [sys.executable, str(root_path / "core" / "bootstrap.py")],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -40,10 +42,11 @@ def test_missing_tasks_file(tmp_path):
     assert result.returncode == 2
 
 
-def test_schema_error(tmp_path):
+def test_schema_error(tmp_path, root_path):
+    """Exit code ``1`` on invalid schema header."""
     (tmp_path / "tasks.yml").write_text("# jsonschema:\n# { invalid }")
     result = subprocess.run(
-        [sys.executable, str(ROOT / "core" / "bootstrap.py")],
+        [sys.executable, str(root_path / "core" / "bootstrap.py")],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -52,6 +55,7 @@ def test_schema_error(tmp_path):
 
 
 def test_load_schema_and_tasks(tmp_path):
+    """Parse schema header and tasks from file."""
     content = (
         "# jsonschema:\n"
         "# {\"type\": \"array\"}\n"
@@ -70,6 +74,7 @@ def test_load_schema_and_tasks(tmp_path):
 
 
 def test_load_schema_and_tasks_without_header(tmp_path):
+    """Fallback to default schema when header is absent."""
     content = (
         "- id: 1\n"
         "  description: test\n"
@@ -86,12 +91,14 @@ def test_load_schema_and_tasks_without_header(tmp_path):
 
 
 def test_create_logfile_path(tmp_path):
+    """Generated log path should reside in provided directory."""
     logfile = create_logfile_path(tmp_path)
     assert logfile.parent == tmp_path
     assert logfile.name.startswith("bootstrap-") and logfile.suffix == ".log"
 
 
 def test_setup_logging_creates_file(tmp_path):
+    """Setup should create a logfile on disk."""
     logging.getLogger().handlers.clear()
     logfile = setup_logging(base_dir=tmp_path)
     logging.info("create")
@@ -99,6 +106,7 @@ def test_setup_logging_creates_file(tmp_path):
 
 
 def test_select_next_task():
+    """Return pending task with highest priority."""
     tasks = [
         {"id": 1, "status": "done"},
         {"id": 2, "status": "pending", "priority": 2},
@@ -109,5 +117,6 @@ def test_select_next_task():
 
 
 def test_select_next_task_none():
+    """Return ``None`` when no pending tasks exist."""
     tasks = [{"id": 1, "status": "done"}]
     assert select_next_task(tasks) is None
