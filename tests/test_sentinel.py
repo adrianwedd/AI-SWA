@@ -1,5 +1,5 @@
 import json
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 from pathlib import Path
 from core.sentinel import EthicalSentinel
 from core.orchestrator import Orchestrator
@@ -37,11 +37,9 @@ def test_policy_loading_and_blocking(tmp_path: Path):
     orch.logger = MagicMock()
     message = "Orchestrator: Task 'block' blocked by Ethical Sentinel."
 
-    with patch('builtins.print') as mock_print:
-        orch.run("tasks.yml")
+    orch.run("tasks.yml")
 
     assert sentinel.blocked_actions == {"block"}
-    mock_print.assert_any_call(message)
-    orch.logger.info.assert_called_with(message)
+    orch.logger.info.assert_any_call(message)
     # Executor should not be called because sentinel blocks the action
     executor.execute.assert_not_called()

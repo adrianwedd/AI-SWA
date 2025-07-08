@@ -68,16 +68,17 @@ class Orchestrator:
             message = (
                 f"Orchestrator: Task '{getattr(task, 'id', 'N/A')}' blocked by Ethical Sentinel."
             )
-            print(message)
             self.logger.info(message)
             return
         if hasattr(task, "status"):
             task.status = "in_progress"
             self.memory.save_tasks(tasks, tasks_file)
         else:
-            print(f"Warning: Task '{getattr(task, 'id', 'N/A')}' has no 'status' attribute.")
+            self.logger.warning(
+                "Task '%s' has no 'status' attribute.", getattr(task, "id", "N/A")
+            )
 
-        print(f"Orchestrator: Executing task '{getattr(task, 'id', 'N/A')}'.")
+        self.logger.info("Orchestrator: Executing task '%s'.", getattr(task, "id", "N/A"))
         try:
             self.executor.execute(task)
         except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
@@ -96,11 +97,12 @@ class Orchestrator:
             task.status = "done"
             self.memory.save_tasks(tasks, tasks_file)
         else:
-            print(
-                f"Warning: Task '{getattr(task, 'id', 'N/A')}' has no 'status' attribute to mark as done."
+            self.logger.warning(
+                "Task '%s' has no 'status' attribute to mark as done.",
+                getattr(task, "id", "N/A"),
             )
 
-        print(f"Orchestrator: Task '{getattr(task, 'id', 'N/A')}' completed.")
+        self.logger.info("Orchestrator: Task '%s' completed.", getattr(task, "id", "N/A"))
         self._tasks_executed.add(1)
 
         audit_results = self.auditor.audit([self._task_to_dict(t) for t in tasks])
@@ -120,11 +122,14 @@ class Orchestrator:
             while True:
                 next_task = self.planner.plan(tasks)
                 if next_task is None:
-                    print("Orchestrator: No actionable tasks. Halting.")
+                    self.logger.info("Orchestrator: No actionable tasks. Halting.")
                     break
 
-                print(f"Orchestrator: Task '{getattr(next_task, 'id', 'N/A')}' selected for execution.")
+                self.logger.info(
+                    "Orchestrator: Task '%s' selected for execution.",
+                    getattr(next_task, "id", "N/A"),
+                )
                 self._execute_task(next_task, tasks, tasks_file)
                 self._runs.add(1)
 
-            print("Orchestrator: Run finished.")
+            self.logger.info("Orchestrator: Run finished.")

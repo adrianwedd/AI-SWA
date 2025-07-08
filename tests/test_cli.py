@@ -54,7 +54,7 @@ def test_cli_start_status_stop(tmp_path):
         str(pid_file),
     ], tmp_path, env)
     assert status.returncode == 0
-    assert "running" in status.stdout.lower()
+    assert "running" in status.stderr.lower()
 
     stop = _run([
         sys.executable,

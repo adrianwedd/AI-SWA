@@ -80,7 +80,7 @@ def main():
         logfile.parent.mkdir(exist_ok=True)
         configure_logging(logfile=logfile)
     except OSError as exc:
-        print(f"[ERROR] {exc}")
+        logging.error("[ERROR] %s", exc)
         sys.exit(2)
 
     schema, tasks = load_schema_and_tasks(Path("tasks.yml"))
