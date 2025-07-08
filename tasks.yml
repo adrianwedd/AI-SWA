@@ -842,7 +842,7 @@
   - Plugins with security vulnerabilities or license violations fail the build.
   - Successfully vetted plugins are automatically signed by the marketplace key.
   priority: 1
-  status: pending
+  status: done
   assigned_to: null
   epic: Ecosystem
 - id: 136
@@ -963,7 +963,7 @@
   dependencies:
   - 135
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps:
   - Install pip-audit during CI setup
@@ -978,7 +978,7 @@
   dependencies:
   - 135
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps:
   - Install bandit in CI
@@ -994,7 +994,7 @@
   dependencies:
   - 135
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps:
   - Create a Docker image limiting network and file system access
@@ -1010,7 +1010,7 @@
   - 135
   - 76
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps:
   - Install cosign in the workflow

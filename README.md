@@ -170,6 +170,17 @@ Each plugin contains a `manifest.json` file validated against
 `version`, and a list of `permissions`. A `signature` field is optional
 and is verified when `PLUGIN_SIGNING_KEY` is set.
 
+### Security CI Pipeline
+
+The CI workflow performs automated security checks on every push:
+
+1. Dependencies are scanned for vulnerabilities and license issues using **Snyk**.
+2. **Semgrep** runs static analysis and fails the build on any findings.
+3. Plugin tests execute inside a network isolated Docker container.
+4. Successfully vetted plugins are signed with `cosign` and uploaded as artifacts.
+
+Set `SNYK_TOKEN`, `COSIGN_KEY`, and `COSIGN_PASSWORD` secrets to enable these steps.
+
 ## 📈 Observability
 
 All services expose Prometheus-compatible metrics. The Node I/O service uses
