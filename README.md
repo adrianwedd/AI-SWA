@@ -140,6 +140,10 @@ scrape_configs:
 
 Use the appropriate hostnames if running under Docker Compose or Kubernetes.
 
+The orchestrator exposes a `tasks_executed_total` counter via the same
+Prometheus endpoint. This metric increases each time a task finishes
+execution, allowing dashboards to track overall progress.
+
 ### Example usage
 
 Run the services directly with overrides:
