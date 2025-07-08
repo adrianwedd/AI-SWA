@@ -12,6 +12,14 @@ from jsonschema import validate
 from .security import validate_plugin_permissions, verify_plugin_signature
 from .config import load_config
 
+POLICY_PATH = Path(__file__).resolve().parents[1] / "plugins" / "policy.json"
+POLICY_SCHEMA_PATH = Path(__file__).resolve().parents[1] / "plugins" / "policy_schema.json"
+try:
+    with open(POLICY_SCHEMA_PATH, "r") as f:
+        POLICY_SCHEMA = json.load(f)
+except FileNotFoundError:
+    POLICY_SCHEMA = {"type": "object"}
+
 SCHEMA_PATH = Path(__file__).resolve().parents[1] / "plugins" / "manifest_schema.json"
 with open(SCHEMA_PATH, "r") as f:
     MANIFEST_SCHEMA = json.load(f)
@@ -33,6 +41,34 @@ class PluginManifest:
         return data
 
 
+def load_policy() -> dict:
+    """Load and validate the plugin policy file if present."""
+    cfg = load_config()
+    path = Path(cfg["security"].get("plugin_policy_file", POLICY_PATH))
+    if not path.exists():
+        return {}
+    with open(path, "r") as f:
+        data = json.load(f)
+    validate(instance=data, schema=POLICY_SCHEMA)
+    return data
+
+
+def enforce_policy(manifest: PluginManifest) -> None:
+    """Ensure ``manifest`` complies with the configured policy."""
+    policy = load_policy()
+    if not policy:
+        return
+    plugins = policy.get("plugins", {})
+    allowed = plugins.get(manifest.id)
+    if not allowed:
+        raise ValueError(f"Plugin '{manifest.id}' not permitted by policy")
+    allowed_perms = set(allowed.get("permissions", []))
+    if not set(manifest.permissions).issubset(allowed_perms):
+        raise ValueError(
+            f"Plugin '{manifest.id}' requests disallowed permissions"
+        )
+
+
 def load_manifest(path: Path) -> PluginManifest:
     """Load and validate a plugin manifest from ``path``."""
     with open(path, "r") as f:
@@ -45,6 +81,7 @@ def load_manifest(path: Path) -> PluginManifest:
     else:
         if load_config()["security"].get("plugin_signing_key"):
             raise ValueError("Signature required")
+    enforce_policy(manifest)
     return manifest
 
 

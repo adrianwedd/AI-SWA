@@ -17,6 +17,8 @@ DEFAULT_CONFIG = {
         "api_tokens_env": "API_TOKENS",
         "plugin_signing_key": None,
         "plugin_signing_key_env": "PLUGIN_SIGNING_KEY",
+        "plugin_policy_file": "plugins/policy.json",
+        "plugin_policy_file_env": "PLUGIN_POLICY_FILE",
     },
 }
 
@@ -61,6 +63,8 @@ def load_config(path: str | Path | None = None) -> dict:
         sec["api_tokens"] = os.environ["API_TOKENS"]
     if "PLUGIN_SIGNING_KEY" in os.environ:
         sec["plugin_signing_key"] = os.environ["PLUGIN_SIGNING_KEY"]
+    if "PLUGIN_POLICY_FILE" in os.environ:
+        sec["plugin_policy_file"] = os.environ["PLUGIN_POLICY_FILE"]
 
     env_name = sec.get("api_key_env")
     if env_name and env_name in os.environ:
@@ -71,5 +75,8 @@ def load_config(path: str | Path | None = None) -> dict:
     env_name = sec.get("plugin_signing_key_env")
     if env_name and env_name in os.environ:
         sec["plugin_signing_key"] = os.environ[env_name]
+    env_name = sec.get("plugin_policy_file_env")
+    if env_name and env_name in os.environ:
+        sec["plugin_policy_file"] = os.environ[env_name]
 
     return cfg

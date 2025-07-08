@@ -71,6 +71,38 @@ def test_schema_validation_error(tmp_path):
         load_manifest(manifest_path)
 
 
+def test_policy_rejects_disallowed_permissions(tmp_path, monkeypatch):
+    policy = tmp_path / "policy.json"
+    policy.write_text(json.dumps({"plugins": {"demo": {"permissions": ["read_files"]}}}))
+    monkeypatch.setenv("PLUGIN_POLICY_FILE", str(policy))
+    data = {
+        "id": "demo",
+        "name": "Demo Plugin",
+        "version": "0.1",
+        "permissions": ["network"],
+    }
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps(data))
+    with pytest.raises(ValueError):
+        load_manifest(manifest_path)
+
+
+def test_policy_rejects_unknown_plugin(tmp_path, monkeypatch):
+    policy = tmp_path / "policy.json"
+    policy.write_text(json.dumps({"plugins": {"foo": {"permissions": ["read_files"]}}}))
+    monkeypatch.setenv("PLUGIN_POLICY_FILE", str(policy))
+    data = {
+        "id": "bar",
+        "name": "Bar Plugin",
+        "version": "0.1",
+        "permissions": ["read_files"],
+    }
+    manifest_path = tmp_path / "manifest.json"
+    manifest_path.write_text(json.dumps(data))
+    with pytest.raises(ValueError):
+        load_manifest(manifest_path)
+
+
 def test_package_example_plugin(tmp_path):
     from scripts.package_plugin import create_plugin_archive
 
