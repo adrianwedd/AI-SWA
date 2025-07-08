@@ -1,7 +1,7 @@
 import json
 from unittest.mock import MagicMock
 from pathlib import Path
-from core.sentinel import EthicalSentinel
+from core.sentinel import EthicalSentinel, DEFAULT_SCHEMA_PATH
 from core.orchestrator import Orchestrator
 from core.task import Task
 from core.planner import Planner
@@ -14,7 +14,8 @@ from core.self_auditor import SelfAuditor
 def test_policy_loading_and_blocking(tmp_path: Path):
     policy = tmp_path / "policy.json"
     policy.write_text(json.dumps({"blocked_actions": ["block"]}))
-    sentinel = EthicalSentinel(policy)
+    audit = tmp_path / "audit.log"
+    sentinel = EthicalSentinel(policy, audit_log=audit, policy_schema_path=DEFAULT_SCHEMA_PATH)
 
     task = Task(id="block", description="", component="core", dependencies=[], priority=1, status="pending")
 
@@ -43,3 +44,4 @@ def test_policy_loading_and_blocking(tmp_path: Path):
     orch.logger.info.assert_any_call(message)
     # Executor should not be called because sentinel blocks the action
     executor.execute.assert_not_called()
+    assert "block" in audit.read_text()
