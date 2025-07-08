@@ -23,3 +23,12 @@ The Ethical Sentinel guards against harmful behavior. It assesses new ideas and 
 - Document decision mappings in the Intent Mapper.
 - Prototype a small Creative Synthesizer experiment.
 - Define ethical review criteria for the Ethical Sentinel.
+
+## Research Outlines
+- [Prioritization](research/RB-003_Vision_Engine_Prioritization.md)
+- [Cross-Language Design](research/RB-004_Cross_Language_Design.md)
+- [Metrics & Observability](research/RB-005_Metrics_and_Observability.md)
+- [Plugin Governance](research/RB-006_Governance.md)
+- [Ethical Sentinel](research/RB-007_Ethical_Sentinel.md)
+- [Self-Improvement](research/RB-008_Self_Improvement.md)
+- [Community Mapping](research/RB-009_Community_Ecosystem_Mapping.md)

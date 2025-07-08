@@ -108,10 +108,16 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Summarize literature on WSJF and RL-based prioritization
+  - Capture open questions for hybrid scheduling
+  - Create research/RB-003_Vision_Engine_Prioritization.md with implementation criteria
+  - Link outline from VISION.md
+  acceptance_criteria:
+  - research/RB-003_Vision_Engine_Prioritization.md outlines literature and questions
+  - VISION.md references RB-003
   assigned_to: null
   epic: Legacy
 - id: 55
@@ -119,10 +125,16 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Review microservice patterns for Rust and Node interoperability
+  - Document FFI and message queue strategies
+  - Create research/RB-004_Cross_Language_Design.md with future criteria
+  - Link outline from VISION.md
+  acceptance_criteria:
+  - research/RB-004_Cross_Language_Design.md summarizes approaches
+  - VISION.md references RB-004
   assigned_to: null
   epic: Legacy
 - id: 56
@@ -130,10 +142,16 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Survey OpenTelemetry, Prometheus, Grafana integration
+  - Identify gaps in current metrics collection
+  - Create research/RB-005_Metrics_and_Observability.md with implementation criteria
+  - Link outline from VISION.md
+  acceptance_criteria:
+  - research/RB-005_Metrics_and_Observability.md covers literature and questions
+  - VISION.md references RB-005
   assigned_to: null
   epic: Legacy
 - id: 57
@@ -141,10 +159,16 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Analyze plugin marketplace governance models
+  - Document security and compliance requirements
+  - Create research/RB-006_Governance.md with future criteria
+  - Link outline from VISION.md
+  acceptance_criteria:
+  - research/RB-006_Governance.md lists policies and open issues
+  - VISION.md references RB-006
   assigned_to: null
   epic: Legacy
 - id: 58
@@ -152,10 +176,16 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Review AI ethics frameworks and safety literature
+  - Capture unresolved concerns for autonomous agents
+  - Create research/RB-007_Ethical_Sentinel.md with implementation criteria
+  - Link outline from VISION.md
+  acceptance_criteria:
+  - research/RB-007_Ethical_Sentinel.md summarizes frameworks and questions
+  - VISION.md references RB-007
   assigned_to: null
   epic: Legacy
 - id: 59
@@ -163,10 +193,16 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Examine RL and evolutionary algorithms for autonomous coding
+  - Note challenges with reward shaping and stability
+  - Create research/RB-008_Self_Improvement.md with future criteria
+  - Link outline from VISION.md
+  acceptance_criteria:
+  - research/RB-008_Self_Improvement.md covers literature and questions
+  - VISION.md references RB-008
   assigned_to: null
   epic: Legacy
 - id: 60
@@ -174,10 +210,16 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Survey open-source agent frameworks and commercial platforms
+  - Identify opportunities for partnerships and outreach
+  - Create research/RB-009_Community_Ecosystem_Mapping.md with future criteria
+  - Link outline from VISION.md
+  acceptance_criteria:
+  - research/RB-009_Community_Ecosystem_Mapping.md summarizes platforms and gaps
+  - VISION.md references RB-009
   assigned_to: null
   epic: Legacy
 - id: 61
