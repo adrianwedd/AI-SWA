@@ -107,20 +107,57 @@ python -m ai_swa.orchestrator stop
 ## Configuration
 
 AI-SWA loads settings from `config.yaml` by default. Set `CONFIG_FILE` to use a
-different file. Environment variables listed below override values from the
-configuration file:
+different file. Environment variables override values from the file so you can
+adjust settings per environment.
+
+### Required environment variables
+
+- `DB_PATH` – path to the broker SQLite database
+- `BROKER_URL` – broker service URL used by the worker and orchestrator
+
+### Optional environment variables
 
 | Variable | Description | Default |
 | --- | --- | --- |
-| `DB_PATH` | Path to the broker SQLite database | `tasks.db` |
-| `BROKER_URL` | Broker service URL used by the worker and orchestrator | `http://broker:8000` |
 | `BROKER_METRICS_PORT` | Port exposing broker Prometheus metrics | `9000` |
 | `WORKER_METRICS_PORT` | Port exposing worker Prometheus metrics | `9001` |
 | `METRICS_PORT` | Set both broker and worker metrics ports at once | *(unset)* |
 | `WORKER_CONCURRENCY` | Number of tasks the worker runs in parallel | `2` |
+| `NODE_HOST` | Hostname of the Node I/O service | `localhost` |
+| `NODE_PORT` | gRPC port of the Node I/O service | `50051` |
 | `API_KEY` | Shared API key required for API access | *(unset)* |
 | `API_TOKENS` | Comma separated tokens mapping to `username:role` | *(unset)* |
 | `PLUGIN_SIGNING_KEY` | HMAC key used to verify plugin manifests | *(unset)* |
+| `PLUGIN_POLICY_FILE` | Path to plugin policy JSON | `plugins/policy.json` |
+
+### Sample `config.yaml`
+
+```yaml
+broker:
+  db_path: tasks.db
+  metrics_port: 9000
+worker:
+  broker_url: http://broker:8000
+  metrics_port: 9001
+  concurrency: 2
+node:
+  host: localhost
+  port: 50051
+security:
+  api_key: null
+  api_tokens: null
+  plugin_signing_key: null
+```
+
+### Sample `.env`
+
+```env
+DB_PATH=tasks.db
+BROKER_URL=http://localhost:8000
+WORKER_CONCURRENCY=4
+API_KEY=changeme
+API_TOKENS=alice:admin,bob:viewer
+```
 
 The worker will execute up to `WORKER_CONCURRENCY` tasks simultaneously. This
 value defaults to `2` in `config.yaml` and can be overridden by the
