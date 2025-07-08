@@ -862,7 +862,7 @@
   - The Sentinel can block an action that violates a defined policy.
   - Policy violations are logged to a dedicated audit stream.
   priority: 2
-  status: pending
+  status: done
   assigned_to: null
   epic: Governance
 - id: 137
