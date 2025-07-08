@@ -1020,3 +1020,47 @@
   - Plugin archive and its signature are present in CI artifacts
   assigned_to: null
   epic: Ecosystem
+- id: 147
+  title: Finalize Dependencies and Stabilize CI Pipeline
+  description: Lock down dependencies and ensure CI/CD pipeline is stable
+  dependencies: []
+  priority: 1
+  status: pending
+  area: build
+  actionable_steps:
+    - Create a requirements.lock file with exact versions using pip-tools
+    - Remove unused packages and add comments for obscure ones in requirements.txt
+    - Analyze CI logs to find failing or flaky tests
+  acceptance_criteria:
+    - Lock file present and referenced in documentation
+    - CI pipeline passes consistently with locked dependencies
+  assigned_to: null
+  epic: Build and Test
+- id: 148
+  description: Audit CI pipeline history and reproduce failing tests locally
+  dependencies:
+    - 147
+  priority: 2
+  status: pending
+  area: ci
+  actionable_steps:
+    - Review recent workflow runs for errors
+    - Run failing tests locally using the CI configuration
+  acceptance_criteria:
+    - Documentation summarizing findings in docs/reviews/ci_audit.md
+  assigned_to: null
+  epic: Build and Test
+- id: 149
+  description: Fix failing tests or CI configuration issues
+  dependencies:
+    - 148
+  priority: 2
+  status: pending
+  area: ci
+  actionable_steps:
+    - Update code or tests to address identified failures
+    - Adjust CI workflow steps for missing dependencies or caching issues
+  acceptance_criteria:
+    - CI workflow completes without errors on main branch
+  assigned_to: null
+  epic: Build and Test
