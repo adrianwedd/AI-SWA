@@ -140,9 +140,10 @@ scrape_configs:
 
 Use the appropriate hostnames if running under Docker Compose or Kubernetes.
 
-The orchestrator exposes a `tasks_executed_total` counter via the same
-Prometheus endpoint. This metric increases each time a task finishes
-execution, allowing dashboards to track overall progress.
+The Orchestrator component exports a Prometheus counter named
+`tasks_executed_total` which increments each time a task completes.
+This metric is served alongside the other service metrics on the
+OpenTelemetry endpoint configured in `core/telemetry.py`.
 
 ### Example usage
 

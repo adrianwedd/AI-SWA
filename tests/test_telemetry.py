@@ -1,6 +1,10 @@
 import requests
 import pytest
 from core.telemetry import setup_telemetry
+from core.orchestrator import Orchestrator
+from core.task import Task
+from core.self_auditor import SelfAuditor
+from unittest.mock import MagicMock
 
 
 @pytest.fixture
