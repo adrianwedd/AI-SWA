@@ -4,6 +4,7 @@ broker:
 worker:
   broker_url: http://broker:8000
   metrics_port: 9001
+  concurrency: 2
 node:
   host: localhost
   port: 50051

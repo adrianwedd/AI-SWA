@@ -657,7 +657,7 @@
   acceptance_criteria:
   - Worker can execute at least two tasks concurrently in tests
   - Existing functionality remains intact
-  status: pending
+  status: done
   assigned_to: null
   epic: Performance Enhancements
 - id: 120
