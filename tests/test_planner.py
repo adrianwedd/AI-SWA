@@ -184,6 +184,25 @@ class TestPlanner(unittest.TestCase):
             self.planner.plan([task])
         self.assertTrue(any("missing" in msg for msg in cm.output))
 
+    def test_get_pending_tasks_helper(self):
+        tasks = [
+            self._create_task("a", 1, "done"),
+            self._create_task("b", 2, "pending"),
+            self._create_task("c", 3, "in_progress"),
+        ]
+        pending = self.planner._get_pending_tasks(tasks)
+        self.assertEqual(len(pending), 1)
+        self.assertEqual(pending[0].id, "b")
+
+    def test_dependencies_met_helper(self):
+        dep_done = self._create_task("dep", 1, "done")
+        main = self._create_task("main", 1, "pending", ["dep"])
+        self.assertTrue(self.planner._dependencies_met(main, [dep_done, main]))
+
+        dep_pending = self._create_task("dep_p", 1, "pending")
+        blocked = self._create_task("blocked", 1, "pending", ["dep_p"])
+        self.assertFalse(self.planner._dependencies_met(blocked, [blocked, dep_pending]))
+
 
 if __name__ == '__main__':
     unittest.main()

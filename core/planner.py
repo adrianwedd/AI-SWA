@@ -12,72 +12,64 @@ class Planner:
     """
 
     def plan(self, tasks: List[Task]) -> Optional[Task]:
-        """
-        Determines the next task to execute based on priority and dependencies.
+        """Determine the next task to execute.
 
-        Tasks with higher priority are selected first.
-        Tasks with dependencies are only selected if all their dependent tasks
-        have a status of "done".
+        Tasks with higher priority are selected first. Tasks with dependencies
+        are only considered if all their dependencies are marked as ``done``.
 
         Args:
-            tasks: A list of :class:`Task` objects ordered arbitrarily.
+            tasks: Arbitrary list of :class:`Task` objects.
 
         Returns:
-            The next :class:`Task` object to execute, or ``None`` if no tasks can be
-            executed (e.g., all tasks are done, or pending tasks have unmet
-            dependencies).
+            The next :class:`Task` to execute or ``None`` if no task is ready.
         """
+        self._validate_unique_ids(tasks)
+        pending_tasks = self._get_pending_tasks(tasks)
+        if not pending_tasks:
+            return None
+
+        ready_tasks = [t for t in pending_tasks if self._dependencies_met(t, tasks)]
+        if not ready_tasks:
+            return None
+
+        return self._select_highest_priority(ready_tasks)
+
+    def _validate_unique_ids(self, tasks: List[Task]) -> None:
+        """Ensure each task id is unique."""
         seen_ids = set()
         for task in tasks:
-            task_id = getattr(task, 'id', None)
+            task_id = getattr(task, "id", None)
             if task_id in seen_ids:
                 raise ValueError(f"Duplicate task id {task_id} detected")
             if task_id is not None:
                 seen_ids.add(task_id)
 
-        # Filter tasks that are "pending"
-        pending_tasks = [task for task in tasks if hasattr(task, 'status') and task.status == "pending"]
+    def _get_pending_tasks(self, tasks: List[Task]) -> List[Task]:
+        """Return tasks whose status is ``pending``."""
+        return [t for t in tasks if getattr(t, "status", None) == "pending"]
 
-        if not pending_tasks:
-            return None
+    def _dependencies_met(self, task: Task, tasks: List[Task]) -> bool:
+        """Check whether ``task`` has all dependencies completed."""
+        if not getattr(task, "dependencies", []):
+            return True
 
-        ready_tasks = []
-        for task in pending_tasks:
-            if not hasattr(task, 'dependencies') or not task.dependencies:
-                # Task has no dependencies
-                ready_tasks.append(task)
-                continue
-
-            dependencies_met = True
-            for dep_id in task.dependencies:
-                # Find the dependent task in the original list
-                dependent_task = next(
-                    (t for t in tasks if hasattr(t, 'id') and t.id == dep_id),
-                    None,
+        for dep_id in task.dependencies:
+            dependent_task = next(
+                (t for t in tasks if getattr(t, "id", None) == dep_id),
+                None,
+            )
+            if not dependent_task:
+                logger.warning(
+                    "Task %s skipped: dependency %s not found",
+                    getattr(task, "id", "<unknown>"),
+                    dep_id,
                 )
+                return False
+            if getattr(dependent_task, "status", None) != "done":
+                return False
+        return True
 
-                if not dependent_task:
-                    logger.warning(
-                        "Task %s skipped: dependency %s not found",
-                        getattr(task, "id", "<unknown>"),
-                        dep_id,
-                    )
-                    dependencies_met = False
-                    break
-
-                # If dependency task exists but is not "done", it's not met
-                if not hasattr(dependent_task, 'status') or dependent_task.status != "done":
-                    dependencies_met = False
-                    break
-
-            if dependencies_met:
-                ready_tasks.append(task)
-
-        if not ready_tasks:
-            return None
-
-        # Sort ready tasks by priority (highest first)
-        # Assumes tasks in ready_tasks have 'priority' attribute
-        ready_tasks.sort(key=lambda t: getattr(t, 'priority', 0), reverse=True)
-
-        return ready_tasks[0]
+    def _select_highest_priority(self, tasks: List[Task]) -> Task:
+        """Return the task with the highest priority."""
+        tasks.sort(key=lambda t: getattr(t, "priority", 0), reverse=True)
+        return tasks[0]
