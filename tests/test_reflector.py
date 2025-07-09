@@ -141,6 +141,31 @@ def test_create_debt_task_description():
     assert task["description"].startswith("Clean up 1 duplicate tasks")
 
 
+def test_check_refactor_collisions_warning(caplog):
+    refl = Reflector()
+    tasks = [
+        {
+            "id": 1,
+            "description": "refactor a.py",
+            "component": "c",
+            "dependencies": [],
+            "priority": 1,
+            "status": "pending",
+        },
+        {
+            "id": 2,
+            "description": "refactor a.py",
+            "component": "c",
+            "dependencies": [],
+            "priority": 1,
+            "status": "pending",
+        },
+    ]
+    with caplog.at_level(logging.WARNING):
+        refl._check_refactor_collisions(tasks)
+        assert "Potential duplicate refactor task" in caplog.text
+
+
 def test_run_cycle_uses_metrics_provider(tmp_path):
     class DummyProvider:
         def __init__(self):
