@@ -2122,3 +2122,30 @@
     - "Every documentation page has at least two methods for providing feedback."
     - "Feedback is routed to a designated Slack channel or ticketing system."
   assigned_to: null
+- id: 218
+  description: Implement SWA-QA-01 and SWA-DOCS-01 agents so that commits with 'bug' or 'docs' labels trigger automated QA and documentation checks.
+  dependencies: []
+  priority: 2
+  status: pending
+  area: core
+  actionable_steps:
+    - Develop the QA agent with Bandit integration and static analysis tooling.
+    - Develop the Documentation agent to verify code comments and docstrings.
+    - Update the supervisor to delegate tasks based on commit labels.
+  acceptance_criteria:
+    - Pull requests labeled 'bug' or 'docs' run the corresponding agent.
+    - Output from the agents is logged in the reports directory.
+  epic: Agent Implementation
+- id: 219
+  description: Fix AttributeError in self_auditor.py when auditing Python classes during orchestrator runs.
+  dependencies: []
+  priority: 3
+  status: pending
+  area: testing
+  actionable_steps:
+    - Reproduce the error with the current task queue.
+    - Add unit tests covering class analysis in the self auditor.
+    - Update the code to handle class nodes correctly.
+  acceptance_criteria:
+    - Orchestrator runs without AttributeError from self_auditor.
+  epic: Testing Improvements
