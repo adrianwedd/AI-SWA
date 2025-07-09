@@ -1,4 +1,4 @@
-"""OpenTelemetry setup utilities for AI-SWA."""
+"""OpenTelemetry setup utilities for SelfArchitectAI."""
 
 from __future__ import annotations
 

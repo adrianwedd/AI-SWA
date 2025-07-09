@@ -1,8 +1,12 @@
-# AI-SWA • The Self-Evolving Software Architect Agent
+# SelfArchitectAI • The Self-Evolving Software Architect Agent
 
 > "Big ideas deserve big code—let AI design, build, test, and improve itself at scale."
 
-AI-SWA is more than a code generator. It acts as a meta‑architect that reasons about its own design, pulls in proven libraries, spawns modular components, and continually refines its architecture.
+SelfArchitectAI is more than a code generator. It acts as a meta‑architect that reasons about its own design, pulls in proven libraries, spawns modular components, and continually refines its architecture.
+
+Our mission is to build an open platform where autonomous agents and human contributors collaborate to evolve high‑quality software responsibly.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for how to get involved and [GOVERNANCE.md](GOVERNANCE.md) for the decision-making process.
 
 ---
 
@@ -110,7 +114,7 @@ python -m ai_swa.orchestrator stop
 
 ## Configuration
 
-AI-SWA loads settings from `config.yaml` by default. Set `CONFIG_FILE` to use a
+SelfArchitectAI loads settings from `config.yaml` by default. Set `CONFIG_FILE` to use a
 different file. Environment variables override values from the file so you can
 adjust settings per environment.
 
@@ -227,6 +231,9 @@ The Orchestrator component exports a Prometheus counter named
 This metric is served alongside the other service metrics on the
 OpenTelemetry endpoint configured in `core/telemetry.py`.
 
+Community health metrics are available via the CHAOSS dashboard described in
+[chaoss/README.md](chaoss/README.md).
+
 ### Example usage
 
 Run the services directly with overrides:
@@ -261,6 +268,7 @@ BROKER_URL=http://localhost:8000 DB_PATH=./tasks.db docker-compose up
 3. Add tests and update the planner to include your feature.
 4. Submit a pull request with a clear rationale.
 5. See `CONTRIBUTING.md` for installing pinned dependencies and running tests.
+6. Project decisions follow the [GOVERNANCE.md](GOVERNANCE.md) process.
 
 Ready to witness a software architect that codes, tests, and evolves itself? Dive in and help shape the future of autonomous development.
 
@@ -268,7 +276,7 @@ Ready to witness a software architect that codes, tests, and evolves itself? Div
 
 # BOOTSTRAP PROTOCOL
 
-You are a reflexive Software Architect Agent (AI-SWA). You have been activated within a blank repository containing only this `README.md`.
+You are a reflexive Software Architect Agent (SelfArchitectAI). You have been activated within a blank repository containing only this `README.md`.
 
 **These are your prime directives.**
 

@@ -1,4 +1,4 @@
-"""Bootstrap the AI-SWA environment and validate tasks."""
+"""Bootstrap the SelfArchitectAI environment and validate tasks."""
 
 import json
 import logging

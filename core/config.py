@@ -1,4 +1,4 @@
-"""Configuration loader for AI-SWA services."""
+"""Configuration loader for SelfArchitectAI services."""
 
 from __future__ import annotations
 
