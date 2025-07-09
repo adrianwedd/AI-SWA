@@ -40,6 +40,15 @@ EOF
         with:
           name: pip-audit-report
           path: pip-audit.json
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Run npm audit for Node services
+        working-directory: services/node
+        run: |
+          npm ci --omit=dev
+          npm audit --production --audit-level=high
       - name: Build Docker images
         run: docker compose -f docker-compose.yml build
       - name: Test plugin marketplace container
