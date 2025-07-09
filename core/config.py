@@ -34,6 +34,10 @@ DEFAULT_CONFIG = {
         "warning_threshold": 0.8,
         "budget_env": "PLANNER_BUDGET",
     },
+    "tracing": {
+        "jaeger_endpoint": "http://localhost:4317",
+        "endpoint_env": "JAEGER_ENDPOINT",
+    },
     "logging": {
         "config_file": "logging.conf",
         "level": "INFO",
@@ -58,6 +62,7 @@ def load_config(path: str | Path | None = None) -> dict:
         "security": {**DEFAULT_CONFIG["security"], **data.get("security", {})},
         "sandbox": {**DEFAULT_CONFIG["sandbox"], **data.get("sandbox", {})},
         "planner": {**DEFAULT_CONFIG["planner"], **data.get("planner", {})},
+        "tracing": {**DEFAULT_CONFIG["tracing"], **data.get("tracing", {})},
         "logging": {**DEFAULT_CONFIG["logging"], **data.get("logging", {})},
     }
 
@@ -115,6 +120,10 @@ def load_config(path: str | Path | None = None) -> dict:
     env_name = cfg["planner"].get("budget_env")
     if env_name and env_name in os.environ:
         cfg["planner"]["budget"] = int(os.environ[env_name])
+
+    env_name = cfg["tracing"].get("endpoint_env")
+    if env_name and env_name in os.environ:
+        cfg["tracing"]["jaeger_endpoint"] = os.environ[env_name]
 
     if "LOG_CONFIG" in os.environ:
         cfg["logging"]["config_file"] = os.environ["LOG_CONFIG"]

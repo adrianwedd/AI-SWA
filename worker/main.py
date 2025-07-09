@@ -23,6 +23,7 @@ sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
 setup_telemetry(
     service_name="worker",
     metrics_port=int(config["worker"]["metrics_port"]),
+    jaeger_endpoint=config["tracing"]["jaeger_endpoint"],
 )
 configure_logging()
 logger = logging.getLogger(__name__)

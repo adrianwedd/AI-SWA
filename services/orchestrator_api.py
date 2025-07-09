@@ -17,7 +17,11 @@ from core.telemetry import setup_telemetry
 
 app = FastAPI()
 config = load_config()
-setup_telemetry(service_name="orchestrator_api", metrics_port=0)
+setup_telemetry(
+    service_name="orchestrator_api",
+    metrics_port=0,
+    jaeger_endpoint=config["tracing"]["jaeger_endpoint"],
+)
 FastAPIInstrumentor.instrument_app(app)
 
 _proc: Optional[subprocess.Popen] = None

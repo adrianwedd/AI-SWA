@@ -41,7 +41,11 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI()
 if setup_telemetry:
-    setup_telemetry(service_name="broker", metrics_port=int(config["broker"]["metrics_port"]))
+    setup_telemetry(
+        service_name="broker",
+        metrics_port=int(config["broker"]["metrics_port"]),
+        jaeger_endpoint=config["tracing"]["jaeger_endpoint"],
+    )
 if FastAPIInstrumentor:
     FastAPIInstrumentor.instrument_app(app)
 

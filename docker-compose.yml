@@ -14,6 +14,7 @@ services:
       BROKER_METRICS_PORT: "9000"
       OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
       OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
+      JAEGER_ENDPOINT: http://jaeger:4317
     depends_on:
       - broker
       - worker
@@ -29,6 +30,7 @@ services:
       BROKER_METRICS_PORT: "9000"
       OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
       OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
+      JAEGER_ENDPOINT: http://jaeger:4317
     volumes:
       - broker-data:/data
       - ./observability/certs:/certs:ro
@@ -44,6 +46,7 @@ services:
       WORKER_METRICS_PORT: "9001"
       OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
       OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
+      JAEGER_ENDPOINT: http://jaeger:4317
     depends_on:
       - broker
     volumes:
@@ -57,6 +60,7 @@ services:
     environment:
       OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
       OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
+      JAEGER_ENDPOINT: http://jaeger:4317
     depends_on:
       - orchestrator
     volumes:
@@ -72,6 +76,7 @@ services:
       ORCH_URL: http://orchestrator-api:8002
       OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
       OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
+      JAEGER_ENDPOINT: http://jaeger:4317
     depends_on:
       - broker
       - orchestrator-api
@@ -86,6 +91,7 @@ services:
       METRICS_PORT: "9100"
       OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
       OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
+      JAEGER_ENDPOINT: http://jaeger:4317
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9100/health"]
       interval: 5s
@@ -102,6 +108,8 @@ services:
     build:
       context: .
       dockerfile: plugin_marketplace/Dockerfile
+    environment:
+      JAEGER_ENDPOINT: http://jaeger:4317
     volumes:
       - ./observability/certs:/certs:ro
     ports:
@@ -144,6 +152,14 @@ services:
       - prometheus
     ports:
       - "3000:3000"
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.57
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"   # UI
+      - "4317:4317"     # OTLP gRPC
 
   rabbitmq:
     image: rabbitmq:3-management

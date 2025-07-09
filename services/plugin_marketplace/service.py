@@ -9,6 +9,7 @@ from pathlib import Path
 import grpc
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from config import load_config
 
 try:
     from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -34,6 +35,7 @@ if setup_telemetry:
     _metrics_server, _ = setup_telemetry(
         service_name="plugin_marketplace",
         metrics_port=int(os.getenv("METRICS_PORT", "0")),
+        jaeger_endpoint=load_config()["tracing"]["jaeger_endpoint"],
     )
 if FastAPIInstrumentor:
     FastAPIInstrumentor.instrument_app(app)
