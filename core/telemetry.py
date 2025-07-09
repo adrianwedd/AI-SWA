@@ -5,19 +5,25 @@ from __future__ import annotations
 import logging
 from typing import Tuple
 
-from opentelemetry import metrics, trace
-from opentelemetry.metrics import set_meter_provider, get_meter_provider
-from opentelemetry.sdk.metrics import MeterProvider
-from opentelemetry.sdk.trace import TracerProvider
-from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
-from opentelemetry.exporter.prometheus import PrometheusMetricReader, start_http_server
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
-from opentelemetry.sdk._logs.export import BatchLogRecordProcessor, ConsoleLogExporter
+try:
+    from opentelemetry import metrics, trace
+    from opentelemetry.metrics import set_meter_provider, get_meter_provider
+    from opentelemetry.sdk.metrics import MeterProvider
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
+    from opentelemetry.exporter.prometheus import PrometheusMetricReader, start_http_server
+    from opentelemetry.sdk.resources import Resource
+    from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
+    from opentelemetry.sdk._logs.export import BatchLogRecordProcessor, ConsoleLogExporter
+except Exception:  # pragma: no cover - optional dependency
+    metrics = trace = None
 
 
 def setup_telemetry(service_name: str = "ai_swa", metrics_port: int = 8000) -> Tuple[object, object]:
     """Configure OpenTelemetry providers and start the Prometheus metrics server."""
+
+    if metrics is None:
+        raise ImportError("opentelemetry is required for telemetry")
 
     resource = Resource.create({"service.name": service_name})
 

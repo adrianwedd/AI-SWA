@@ -454,7 +454,7 @@
   description: Build fast PPO-aligned Reflector inner loop for continuous improvement
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -465,7 +465,7 @@
   dependencies:
   - 88
   priority: 3
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -476,7 +476,7 @@
     and CrewAI
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -487,7 +487,7 @@
   dependencies:
   - 90
   priority: 3
-  status: pending
+  status: done
   area: community
   actionable_steps: []
   acceptance_criteria: []
@@ -498,7 +498,7 @@
   dependencies:
   - 95
   priority: 3
-  status: pending
+  status: done
   area: vision
   actionable_steps: []
   acceptance_criteria: []

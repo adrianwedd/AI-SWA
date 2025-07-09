@@ -19,8 +19,12 @@ from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel
-from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
-from core.telemetry import setup_telemetry
+try:
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from core.telemetry import setup_telemetry
+except Exception:  # pragma: no cover - optional dependency
+    FastAPIInstrumentor = None
+    setup_telemetry = None
 from core.security import verify_api_key, verify_token, require_role, User
 from core.config import load_config
 from core.log_utils import configure_logging
@@ -31,8 +35,10 @@ configure_logging()
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
-setup_telemetry(service_name="broker", metrics_port=int(config["broker"]["metrics_port"]))
-FastAPIInstrumentor.instrument_app(app)
+if setup_telemetry:
+    setup_telemetry(service_name="broker", metrics_port=int(config["broker"]["metrics_port"]))
+if FastAPIInstrumentor:
+    FastAPIInstrumentor.instrument_app(app)
 
 
 class AuthMiddleware(BaseHTTPMiddleware):

@@ -2,7 +2,11 @@
 
 from typing import List
 from .sentinel import EthicalSentinel
-from opentelemetry import metrics, trace
+try:
+    from opentelemetry import metrics, trace
+except Exception:  # pragma: no cover - optional dependency
+    metrics = None
+    trace = None
 import logging
 import subprocess
 
@@ -26,14 +30,18 @@ class Orchestrator:
         self.auditor = auditor
         self.sentinel = sentinel
         self.logger = logging.getLogger(__name__)
-        meter = metrics.get_meter_provider().get_meter(__name__)
-        self._runs = meter.create_counter(
-            "orchestrator_runs_total", description="Number of orchestrator loops"
-        )
-        self._tasks_executed = meter.create_counter(
-            "tasks_executed_total", description="Number of tasks executed successfully"
-        )
-        self._tracer = trace.get_tracer(__name__)
+        if metrics:
+            meter = metrics.get_meter_provider().get_meter(__name__)
+            self._runs = meter.create_counter(
+                "orchestrator_runs_total", description="Number of orchestrator loops"
+            )
+            self._tasks_executed = meter.create_counter(
+                "tasks_executed_total", description="Number of tasks executed successfully"
+            )
+        else:  # pragma: no cover - telemetry optional
+            self._runs = None
+            self._tasks_executed = None
+        self._tracer = trace.get_tracer(__name__) if trace else None
 
     # ------------------------------------------------------------------
     def _task_to_dict(self, task: Task) -> dict:
