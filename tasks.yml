@@ -30,7 +30,7 @@
   epic: Technical Debt & Refactoring
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   actionable_steps: []
   acceptance_criteria:
     - Cyclomatic complexity of core/reflector.py is reduced below 15.
@@ -39,7 +39,7 @@
   description: Refactor core/bootstrap.py complexity 15
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: core
   actionable_steps: []
   acceptance_criteria: []
@@ -49,7 +49,7 @@
   description: Refactor core/orchestrator.py complexity 13
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: core
   actionable_steps: []
   acceptance_criteria: []
@@ -71,7 +71,7 @@
   description: Refactor tests/test_executor.py complexity 13
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: core
   actionable_steps: []
   acceptance_criteria: []
@@ -91,7 +91,7 @@
   description: Refactor tests/test_planner.py complexity 23
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: core
   actionable_steps: []
   acceptance_criteria: []
@@ -129,7 +129,7 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps:
   - Review microservice patterns for Rust and Node interoperability
@@ -146,7 +146,7 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps:
   - Survey OpenTelemetry, Prometheus, Grafana integration
@@ -163,7 +163,7 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps:
   - Analyze plugin marketplace governance models
@@ -180,7 +180,7 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps:
   - Review AI ethics frameworks and safety literature
@@ -197,7 +197,7 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps:
   - Examine RL and evolutionary algorithms for autonomous coding
@@ -214,7 +214,7 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps:
   - Survey open-source agent frameworks and commercial platforms
@@ -2140,7 +2140,7 @@
   description: Fix AttributeError in self_auditor.py when auditing Python classes during orchestrator runs.
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: testing
   actionable_steps:
     - Reproduce the error with the current task queue.
