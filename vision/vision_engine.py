@@ -83,12 +83,16 @@ class RLAgent:
             with self.history_path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(entry) + "\n")
 
-    def train(self, metrics: Dict[str, float]) -> None:
-        """Collect ``metrics`` for offline training."""
+    def train(self, metrics: Dict[str, float]) -> float:
+        """Collect ``metrics`` for offline training and return reward."""
+        reward = sum(
+            v for v in metrics.values() if isinstance(v, (int, float))
+        )
         self.training_data.append(metrics)
         if self.training_path:
             with self.training_path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(metrics) + "\n")
+        return float(reward)
 
     def update_authority(self, performance_gain: float, threshold: float = 0.05) -> None:
         """Increase authority when ``performance_gain`` exceeds ``threshold``."""

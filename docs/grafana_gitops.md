@@ -11,6 +11,15 @@ Dashboards for AI-SWA are managed as code and deployed automatically.
 3. The workflow installs dependencies and runs `python scripts/apply_dashboards.py`
    to post each dashboard to the configured Grafana instance via its HTTP API.
 4. Provide `GRAFANA_URL` and `GRAFANA_API_KEY` as repository secrets so the
-   workflow can authenticate.
+ workflow can authenticate.
 
 This approach keeps Grafana configuration fully declarative and reproducible.
+
+## RL Training Dashboard
+
+The training scripts expose Prometheus metrics `rl_training_reward` and
+`rl_training_episode_length`. Running `RLTrainer` with a non-zero
+`metrics_port` starts a metrics endpoint (default `9200`).
+
+Generate the dashboard JSON and commit `grafana/dashboards/rl_training.json` to
+visualize these values in Grafana.
