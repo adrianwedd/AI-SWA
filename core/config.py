@@ -34,6 +34,11 @@ DEFAULT_CONFIG = {
         "warning_threshold": 0.8,
         "budget_env": "PLANNER_BUDGET",
     },
+    "logging": {
+        "config_file": "logging.conf",
+        "level": "INFO",
+        "logfile": None,
+    },
 }
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config.yaml"
@@ -53,6 +58,7 @@ def load_config(path: str | Path | None = None) -> dict:
         "security": {**DEFAULT_CONFIG["security"], **data.get("security", {})},
         "sandbox": {**DEFAULT_CONFIG["sandbox"], **data.get("sandbox", {})},
         "planner": {**DEFAULT_CONFIG["planner"], **data.get("planner", {})},
+        "logging": {**DEFAULT_CONFIG["logging"], **data.get("logging", {})},
     }
 
     if "DB_PATH" in os.environ:
@@ -109,5 +115,12 @@ def load_config(path: str | Path | None = None) -> dict:
     env_name = cfg["planner"].get("budget_env")
     if env_name and env_name in os.environ:
         cfg["planner"]["budget"] = int(os.environ[env_name])
+
+    if "LOG_CONFIG" in os.environ:
+        cfg["logging"]["config_file"] = os.environ["LOG_CONFIG"]
+    if "LOG_LEVEL" in os.environ:
+        cfg["logging"]["level"] = os.environ["LOG_LEVEL"]
+    if "LOG_FILE" in os.environ:
+        cfg["logging"]["logfile"] = os.environ["LOG_FILE"]
 
     return cfg

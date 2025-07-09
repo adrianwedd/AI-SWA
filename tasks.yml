@@ -681,7 +681,7 @@
   acceptance_criteria:
   - Logs from orchestrator, worker, and broker follow the same format
   - No print statements remain in core modules
-  status: pending
+  status: done
   assigned_to: null
   epic: Observability Improvements
 - id: 119
