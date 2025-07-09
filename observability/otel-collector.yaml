@@ -1,0 +1,22 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+        tls:
+          cert_file: /certs/collector.crt
+          key_file: /certs/collector.key
+exporters:
+  prometheus:
+    endpoint: 0.0.0.0:8889
+    tls:
+      cert_file: /certs/collector.crt
+      key_file: /certs/collector.key
+service:
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      exporters: [prometheus]
+  telemetry:
+    metrics:
+      address: 0.0.0.0:8888
