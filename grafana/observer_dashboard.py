@@ -1,5 +1,4 @@
 from grafanalib.core import Dashboard, Graph, Row, Target
-from grafanalib.prometheus import PromQL
 
 OBSERVER_DASHBOARD = Dashboard(
     title="Observer Metrics",

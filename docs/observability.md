@@ -9,8 +9,10 @@ SelfArchitectAI services expose Prometheus metrics for local debugging. Two Graf
 
 1. Run `observability/generate_certs.sh` once to create self‑signed certificates used by Prometheus, Grafana and the collector.
 2. Start the stack with `docker-compose up`.
-3. Execute `python scripts/update_dashboards.py` to regenerate the dashboard JSON files.
-4. The dashboards are automatically loaded and Prometheus is pre-configured as a data source.
+3. Execute `python scripts/update_dashboards.py` to regenerate the dashboard JSON files in `grafana/dashboards/`.
+4. Commit the JSON files to trigger the `Grafana Deploy` workflow which applies them to Grafana.
 
 Running the update script ensures the dashboards stay current during local runs.
+
+See [Grafana GitOps Workflow](grafana_gitops.md) for details on automated deployment.
 
