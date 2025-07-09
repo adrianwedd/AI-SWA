@@ -16,6 +16,7 @@ worker output.
 import logging
 import os
 import sqlite3
+import signal
 import sentry_sdk
 from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse
@@ -29,7 +30,7 @@ except Exception:  # pragma: no cover - optional dependency
     FastAPIInstrumentor = None
     setup_telemetry = None
 from core.security import verify_api_key, verify_token, require_role, User
-from config import load_config
+from config import load_config, reload_config
 from core.log_utils import configure_logging
 from .queue import publish_task
 try:
@@ -39,6 +40,16 @@ except Exception:  # pragma: no cover - optional dependency
 
 config = load_config()
 DB_PATH = config["broker"]["db_path"]
+
+
+def _reload_config(signum, frame) -> None:
+    """Reload configuration on ``SIGHUP``."""
+    global config, DB_PATH
+    config = reload_config()
+    DB_PATH = config["broker"]["db_path"]
+
+
+signal.signal(signal.SIGHUP, _reload_config)
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
 configure_logging()
 logger = logging.getLogger(__name__)

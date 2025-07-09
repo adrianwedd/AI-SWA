@@ -9,7 +9,8 @@ from pathlib import Path
 import grpc
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
-from config import load_config
+import signal
+from config import load_config, reload_config
 
 try:
     from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
@@ -31,15 +32,23 @@ GRPC_PORT = os.getenv("GRPC_PORT", "50052")
 app = FastAPI()
 _grpc_server: grpc.aio.Server | None = None
 _metrics_server = None
+config = load_config()
 
 if setup_telemetry:
     _metrics_server, _ = setup_telemetry(
         service_name="plugin_marketplace",
         metrics_port=int(os.getenv("METRICS_PORT", "0")),
-        jaeger_endpoint=load_config()["tracing"]["jaeger_endpoint"],
+        jaeger_endpoint=config["tracing"]["jaeger_endpoint"],
     )
 if FastAPIInstrumentor:
     FastAPIInstrumentor.instrument_app(app)
+
+def _reload_config(signum, frame) -> None:
+    global config
+    config = reload_config()
+
+signal.signal(signal.SIGHUP, _reload_config)
+
 
 
 def get_db():
