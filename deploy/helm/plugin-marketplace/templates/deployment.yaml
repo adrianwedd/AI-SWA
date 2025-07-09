@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "plugin-marketplace.fullname" . }}
+  labels:
+    app: {{ include "plugin-marketplace.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "plugin-marketplace.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "plugin-marketplace.name" . }}
+    spec:
+      containers:
+        - name: plugin-marketplace
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.httpPort }}
+            - containerPort: {{ .Values.service.grpcPort }}

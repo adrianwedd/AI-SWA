@@ -1,0 +1,16 @@
+orchestrator:
+  replicaCount: 1
+  image:
+    tag: "latest"
+worker:
+  replicaCount: 1
+  image:
+    tag: "latest"
+broker:
+  replicaCount: 1
+  image:
+    tag: "latest"
+plugin-marketplace:
+  replicaCount: 1
+  image:
+    tag: "latest"

@@ -1,0 +1,16 @@
+orchestrator:
+  replicaCount: 2
+  image:
+    tag: "stable"
+worker:
+  replicaCount: 2
+  image:
+    tag: "stable"
+broker:
+  replicaCount: 2
+  image:
+    tag: "stable"
+plugin-marketplace:
+  replicaCount: 2
+  image:
+    tag: "stable"

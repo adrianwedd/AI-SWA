@@ -1,0 +1,17 @@
+apiVersion: v2
+name: ai-swa
+version: 0.1.0
+appVersion: "0.1.0"
+dependencies:
+  - name: orchestrator
+    version: 0.1.0
+    repository: "file://orchestrator"
+  - name: worker
+    version: 0.1.0
+    repository: "file://worker"
+  - name: broker
+    version: 0.1.0
+    repository: "file://broker"
+  - name: plugin-marketplace
+    version: 0.1.0
+    repository: "file://plugin-marketplace"

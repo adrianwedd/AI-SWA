@@ -1,0 +1,7 @@
+replicaCount: 1
+image:
+  repository: ai-swa/worker
+  tag: "latest"
+  pullPolicy: IfNotPresent
+env:
+  BROKER_URL: http://broker:8000
