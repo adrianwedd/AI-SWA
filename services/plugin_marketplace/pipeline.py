@@ -6,7 +6,8 @@ from pathlib import Path
 from core.plugins import load_manifest
 from scripts.package_plugin import create_plugin_archive
 
-from .service import update_plugin, PLUGIN_DIR
+from .service import update_plugin
+from . import service
 
 
 class ScanError(Exception):
@@ -31,7 +32,7 @@ def certify_and_publish(plugin_dir: Path) -> None:
     manifest = load_manifest(plugin_dir / "manifest.json")
     _run_scans(plugin_dir)
     archive = create_plugin_archive(plugin_dir)
-    dest = Path(PLUGIN_DIR) / archive.name
+    dest = Path(service.PLUGIN_DIR) / archive.name
     dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(archive, dest)
     update_plugin(

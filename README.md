@@ -225,6 +225,12 @@ python plugins/cli.py sign dist/example-0.1.0.zip --key cosign.key --password $C
 
 # publish to the local marketplace
 python plugins/cli.py upload plugins/example_plugin
+
+# publish to a remote marketplace with authentication
+python plugins/cli.py \
+  --marketplace-url https://marketplace.example.com \
+  --auth-token MYTOKEN \
+  upload plugins/example_plugin
 ```
 
 ### Security CI Pipeline

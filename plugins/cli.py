@@ -1,11 +1,23 @@
 import argparse
 import subprocess
+import json
 from pathlib import Path
 
 from core.plugins import load_manifest
 from scripts.package_plugin import create_plugin_archive
 from services.plugin_marketplace import pipeline
 import requests
+
+
+def _request(args: argparse.Namespace, method: str, path: str, **kwargs) -> requests.Response:
+    url = f"{args.marketplace_url.rstrip('/')}{path}"
+    headers = kwargs.pop("headers", {})
+    if args.auth_token:
+        headers["Authorization"] = f"Bearer {args.auth_token}"
+    elif args.auth_user and args.auth_pass:
+        kwargs["auth"] = (args.auth_user, args.auth_pass)
+    kwargs["headers"] = headers
+    return requests.request(method, url, **kwargs)
 
 
 def _cmd_validate(args: argparse.Namespace) -> None:
@@ -39,24 +51,53 @@ def _cmd_sign(args: argparse.Namespace) -> None:
 
 
 def _cmd_upload(args: argparse.Namespace) -> None:
-    pipeline.certify_and_publish(Path(args.plugin))
+    plugin_dir = Path(args.plugin)
+    manifest = load_manifest(plugin_dir / "manifest.json")
+    archive = create_plugin_archive(plugin_dir)
+    with open(archive, "rb") as fh:
+        files = {"file": (archive.name, fh, "application/zip")}
+        data = {
+            "name": manifest.name,
+            "version": manifest.version,
+            "dependencies": json.dumps(manifest.dependencies),
+        }
+        resp = _request(args, "PUT", f"/plugins/{manifest.id}", files=files, data=data)
+    if resp.status_code != 200:
+        raise SystemExit(f"Error: {resp.status_code} {resp.text}")
     print("Plugin published to marketplace")
 
 
 def _cmd_update(args: argparse.Namespace) -> None:
-    pipeline.certify_and_publish(Path(args.plugin))
+    plugin_dir = Path(args.plugin)
+    manifest = load_manifest(plugin_dir / "manifest.json")
+    archive = create_plugin_archive(plugin_dir)
+    with open(archive, "rb") as fh:
+        files = {"file": (archive.name, fh, "application/zip")}
+        data = {
+            "name": manifest.name,
+            "version": manifest.version,
+            "dependencies": json.dumps(manifest.dependencies),
+        }
+        resp = _request(args, "PUT", f"/plugins/{manifest.id}", files=files, data=data)
+    if resp.status_code != 200:
+        raise SystemExit(f"Error: {resp.status_code} {resp.text}")
     print("Plugin updated in marketplace")
 
 
 def _cmd_remove(args: argparse.Namespace) -> None:
-    from services.plugin_marketplace import service
-    service.remove_plugin(args.plugin_id)
+    resp = _request(args, "DELETE", f"/plugins/{args.plugin_id}")
+    if resp.status_code != 200:
+        raise SystemExit(f"Error: {resp.status_code} {resp.text}")
     print("Plugin removed from marketplace")
 
 
 def _cmd_review(args: argparse.Namespace) -> None:
-    url = f"{args.url.rstrip('/')}/plugins/{args.plugin_id}/reviews"
-    resp = requests.post(url, json={"rating": args.rating, "review": args.text})
+    resp = _request(
+        args,
+        "POST",
+        f"/plugins/{args.plugin_id}/reviews",
+        json={"rating": args.rating, "review": args.text},
+    )
     if resp.status_code != 200:
         raise SystemExit(f"Error: {resp.status_code} {resp.text}")
     print("Review submitted")
@@ -64,6 +105,14 @@ def _cmd_review(args: argparse.Namespace) -> None:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Plugin management utilities")
+    parser.add_argument(
+        "--marketplace-url",
+        default="http://localhost:8003",
+        help="Plugin marketplace base URL",
+    )
+    parser.add_argument("--auth-token", help="Bearer token for authentication")
+    parser.add_argument("--auth-user", help="Basic auth username")
+    parser.add_argument("--auth-pass", help="Basic auth password")
     sub = parser.add_subparsers(dest="command", required=True)
 
     validate_p = sub.add_parser("validate", help="Validate plugin manifest")
@@ -96,7 +145,6 @@ def build_parser() -> argparse.ArgumentParser:
     review_p.add_argument("plugin_id", help="Plugin ID")
     review_p.add_argument("rating", type=int, help="Rating 1-5")
     review_p.add_argument("text", help="Review text")
-    review_p.add_argument("--url", default="http://localhost:8003", help="Marketplace URL")
     review_p.set_defaults(func=_cmd_review)
 
     return parser
