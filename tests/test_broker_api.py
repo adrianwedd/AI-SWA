@@ -133,6 +133,47 @@ def test_next_endpoint_returns_single_task(tmp_path):
     os.environ.pop("API_TOKENS")
 
 
+def test_next_requires_auth(tmp_path):
+    os.environ["DB_PATH"] = str(tmp_path / "api.db")
+    os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
+    broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
+    client = TestClient(broker.app)
+
+    resp = client.get("/tasks/next")
+    assert resp.status_code == 401
+
+    resp = client.get("/tasks/next", headers={"Authorization": "Bearer bad"})
+    assert resp.status_code == 401
+
+    os.environ.pop("API_TOKENS")
+
+
+def test_result_requires_auth(tmp_path):
+    os.environ["DB_PATH"] = str(tmp_path / "api.db")
+    os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
+    broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
+    client = TestClient(broker.app)
+
+    headers = {"Authorization": "Bearer admintoken"}
+    resp = client.post("/tasks", json={"description": "demo"}, headers=headers)
+    assert resp.status_code == 200
+    task_id = resp.json()["id"]
+
+    resp = client.post(f"/tasks/{task_id}/result", json={"stdout": "", "stderr": "", "exit_code": 0})
+    assert resp.status_code == 401
+
+    resp = client.post(
+        f"/tasks/{task_id}/result",
+        json={"stdout": "", "stderr": "", "exit_code": 0},
+        headers={"Authorization": "Bearer bad"},
+    )
+    assert resp.status_code == 401
+
+    os.environ.pop("API_TOKENS")
+
+
 @pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed")
 def test_broker_container(tmp_path):
     root = Path(__file__).resolve().parents[1]
