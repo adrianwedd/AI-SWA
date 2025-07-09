@@ -64,3 +64,17 @@ def test_self_auditor_wily_history(tmp_path):
     meta = tasks[0]["metadata"]
     assert "delta_complexity" in meta
     assert meta["delta_complexity"] != 0
+
+
+def test_self_auditor_class_nodes(tmp_path):
+    pyfile = tmp_path / "cls.py"
+    pyfile.write_text(
+        "class Foo:\n    def bar(self):\n        if True:\n            return 1\n        return 0\n"
+    )
+    auditor = SelfAuditor(complexity_threshold=1)
+    metrics = auditor.analyze([pyfile])
+    key = str(pyfile)
+    assert key in metrics
+    data = metrics[key]
+    types = {item["type"] for item in data["complexity"]}
+    assert "class" in types

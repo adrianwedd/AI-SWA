@@ -88,13 +88,21 @@ class SelfAuditor:
         for item in complexity_results:
             complexity = item.complexity
             rank = cc_rank(complexity)
+
+            if hasattr(item, "methods"):
+                node_type = "class"
+            elif getattr(item, "classname", None):
+                node_type = "method"
+            else:
+                node_type = "function"
+
             complexity_data.append(
                 {
                     "name": item.name,
                     "complexity": complexity,
                     "rank": rank,
                     "lineno": item.lineno,
-                    "type": item.classname or "function",
+                    "type": node_type,
                 }
             )
             max_complexity = max(max_complexity, complexity)
