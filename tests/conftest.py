@@ -1,12 +1,19 @@
+import os
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
 
+os.environ.setdefault("TEMPORARILY_DISABLE_PROTOBUF_VERSION_CHECK", "true")
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+
+import core.bridge_pb2 as _bridge_pb2
+sys.modules.setdefault("bridge_pb2", _bridge_pb2)
+import core.bridge_pb2_grpc as _bridge_pb2_grpc
+sys.modules.setdefault("bridge_pb2_grpc", _bridge_pb2_grpc)
 
 from core.executor import Executor
 from core.planner import Planner
