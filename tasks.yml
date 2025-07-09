@@ -1273,7 +1273,7 @@
     - Traces and metrics from all services reach the collectors.
     - CPU, memory, and request metrics are available in Prometheus.
   priority: 1
-  status: pending
+  status: done
   epic: Observability
 
 - id: 159
