@@ -1,3 +1,10 @@
+"""Utility helpers for :mod:`core.planner`.
+
+These helpers encapsulate individual pieces of logic used by
+``Planner`` to keep the main algorithm concise.  They cover
+dependency resolution, priority selection and budget tracking.
+"""
+
 import logging
 from typing import List, Optional
 
@@ -68,3 +75,21 @@ def should_warn_about_budget(budget: Optional[int], cost_used: int, warning_thre
         and cost_used >= budget * warning_threshold
         and cost_used < budget
     )
+
+
+def increment_cost_and_warn(
+    cost_used: int,
+    budget: Optional[int],
+    warning_threshold: float,
+    warned: bool,
+) -> tuple[int, bool]:
+    """Increment ``cost_used`` and emit a warning if nearing ``budget``."""
+
+    cost_used += 1
+    if should_warn_about_budget(budget, cost_used, warning_threshold, warned):
+        logger.warning(
+            "Planner budget at %d%%",
+            int(100 * cost_used / budget),
+        )
+        warned = True
+    return cost_used, warned

@@ -101,7 +101,7 @@
   description: Refactor core/planner.py complexity 41
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: core
   actionable_steps: []
   acceptance_criteria: []
