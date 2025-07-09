@@ -53,6 +53,9 @@ def init_db() -> None:
     conn.execute(
         "CREATE TABLE IF NOT EXISTS plugins (id TEXT PRIMARY KEY, name TEXT, version TEXT, dependencies TEXT, path TEXT)"
     )
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS reviews (plugin_id TEXT, rating INTEGER, review TEXT)"
+    )
     conn.commit()
     conn.close()
 
@@ -70,6 +73,26 @@ def add_plugin(id: str, name: str, version: str, dependencies: list[str], path: 
 def list_plugins_from_db() -> list[dict[str, str]]:
     conn = get_db()
     rows = conn.execute("SELECT id, name, version, dependencies, path FROM plugins").fetchall()
+    conn.close()
+    return [dict(row) for row in rows]
+
+
+def add_review(plugin_id: str, rating: int, review: str) -> None:
+    conn = get_db()
+    conn.execute(
+        "INSERT INTO reviews (plugin_id, rating, review) VALUES (?, ?, ?)",
+        (plugin_id, rating, review),
+    )
+    conn.commit()
+    conn.close()
+
+
+def list_reviews(plugin_id: str) -> list[dict]:
+    conn = get_db()
+    rows = conn.execute(
+        "SELECT rating, review FROM reviews WHERE plugin_id=?",
+        (plugin_id,),
+    ).fetchall()
     conn.close()
     return [dict(row) for row in rows]
 
@@ -104,6 +127,21 @@ class MarketplaceServicer(pb2_grpc.PluginMarketplaceServicer):
         if analytics.DOWNLOADS:
             analytics.DOWNLOADS.inc()
         return pb2.PluginData(data=data)
+
+    async def SubmitReview(
+        self, request: pb2.SubmitReviewRequest, context: grpc.aio.ServicerContext
+    ) -> pb2.Empty:
+        add_review(request.plugin_id, request.rating, request.comment)
+        if analytics.RATINGS:
+            analytics.RATINGS.inc()
+        return pb2.Empty()
+
+    async def ListReviews(
+        self, request: pb2.ReviewRequest, context: grpc.aio.ServicerContext
+    ) -> pb2.ReviewList:
+        rows = list_reviews(request.plugin_id)
+        reviews = [pb2.Review(rating=r["rating"], comment=r["review"]) for r in rows]
+        return pb2.ReviewList(reviews=reviews)
 
 
 async def start_grpc() -> None:
@@ -158,6 +196,24 @@ def download_plugin(plugin_id: str):
     if analytics.DOWNLOADS:
         analytics.DOWNLOADS.inc()
     return FileResponse(file_path, media_type="application/zip", filename=row["path"])
+
+
+@app.post("/plugins/{plugin_id}/reviews")
+def submit_review(plugin_id: str, payload: dict):
+    rating = int(payload.get("rating", 0))
+    comment = str(payload.get("review", ""))
+    if not (1 <= rating <= 5):
+        raise HTTPException(status_code=400, detail="rating must be 1-5")
+    add_review(plugin_id, rating, comment)
+    if analytics.RATINGS:
+        analytics.RATINGS.inc()
+    return {"status": "ok"}
+
+
+@app.get("/plugins/{plugin_id}/reviews")
+def get_reviews_api(plugin_id: str):
+    rows = list_reviews(plugin_id)
+    return rows
 
 
 if __name__ == "__main__":

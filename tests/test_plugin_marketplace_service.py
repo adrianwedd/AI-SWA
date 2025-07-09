@@ -92,3 +92,24 @@ def test_metrics_endpoint():
         pytest.skip("metrics not available")
     resp = requests.get(f"http://localhost:{port}/metrics")
     assert resp.status_code == 200
+
+
+def test_reviews_rest_and_grpc():
+    client = TestClient(svc.app)
+    resp = client.post("/plugins/demo/reviews", json={"rating": 5, "review": "great"})
+    assert resp.status_code == 200
+    resp = client.get("/plugins/demo/reviews")
+    assert resp.status_code == 200
+    assert resp.json()[0]["rating"] == 5
+
+    with TestClient(svc.app):
+        channel = grpc.insecure_channel("localhost:60052")
+        stub = pb2_grpc.PluginMarketplaceStub(channel)
+        for _ in range(10):
+            try:
+                stub.SubmitReview(pb2.SubmitReviewRequest(plugin_id="demo", rating=4, comment="ok"))
+                break
+            except Exception:
+                time.sleep(0.2)
+        reviews = stub.ListReviews(pb2.ReviewRequest(plugin_id="demo"))
+        assert any(r.rating == 4 for r in reviews.reviews)

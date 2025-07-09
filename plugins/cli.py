@@ -5,6 +5,7 @@ from pathlib import Path
 from core.plugins import load_manifest
 from scripts.package_plugin import create_plugin_archive
 from services.plugin_marketplace import pipeline
+import requests
 
 
 def _cmd_validate(args: argparse.Namespace) -> None:
@@ -42,6 +43,14 @@ def _cmd_upload(args: argparse.Namespace) -> None:
     print("Plugin published to marketplace")
 
 
+def _cmd_review(args: argparse.Namespace) -> None:
+    url = f"{args.url.rstrip('/')}/plugins/{args.plugin_id}/reviews"
+    resp = requests.post(url, json={"rating": args.rating, "review": args.text})
+    if resp.status_code != 200:
+        raise SystemExit(f"Error: {resp.status_code} {resp.text}")
+    print("Review submitted")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Plugin management utilities")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -63,6 +72,13 @@ def build_parser() -> argparse.ArgumentParser:
     upload_p = sub.add_parser("upload", help="Upload plugin to marketplace")
     upload_p.add_argument("plugin", help="Path to plugin directory")
     upload_p.set_defaults(func=_cmd_upload)
+
+    review_p = sub.add_parser("review", help="Submit a review for a plugin")
+    review_p.add_argument("plugin_id", help="Plugin ID")
+    review_p.add_argument("rating", type=int, help="Rating 1-5")
+    review_p.add_argument("text", help="Review text")
+    review_p.add_argument("--url", default="http://localhost:8003", help="Marketplace URL")
+    review_p.set_defaults(func=_cmd_review)
 
     return parser
 
