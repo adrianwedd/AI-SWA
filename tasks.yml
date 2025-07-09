@@ -1980,7 +1980,7 @@
     - A commit with a 'bug' label triggers the SWA-QA-01 agent.
     - A commit with a 'docs' label triggers the SWA-DOCS-01 agent.
   priority: 2
-  status: pending
+  status: done
 - id: 208
   task_id: DOC-001
   title: "Establish Documentation-as-a-Product Framework"
@@ -2126,7 +2126,7 @@
   description: Implement SWA-QA-01 and SWA-DOCS-01 agents so that commits with 'bug' or 'docs' labels trigger automated QA and documentation checks.
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: core
   actionable_steps:
     - Develop the QA agent with Bandit integration and static analysis tooling.
