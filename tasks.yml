@@ -1553,4 +1553,261 @@
   priority: 2
   status: pending
   epic: Reflector Core
+- id: 177
+  task_id: P1T1
+  title: Setup Project Environment and MARL Framework
+  description: Initialize repository and install MARLlib with dependencies.
+  area: reflector
+  actionable_steps:
+    - Configure Python environment and dependency management.
+    - Install and verify MARLlib framework.
+    - Initialize Git repository hooks for CI.
+  dependencies: []
+  acceptance_criteria:
+    - Repository builds with MARLlib installed.
+    - Basic training script runs without error.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 178
+  task_id: P1T2
+  title: Implement CI/CD Simulation Environment
+  description: Create a discrete-event simulation modeling the CI/CD pipeline.
+  area: reflector
+  actionable_steps:
+    - Model commit queue and pipeline stages with resource constraints.
+    - Simulate resource consumption and job durations.
+    - Provide interfaces for the CI/CD agent to interact with the environment.
+  dependencies: [177]
+  acceptance_criteria:
+    - Simulation produces realistic metrics for pipeline execution.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 179
+  task_id: P1T3
+  title: Implement Production Stability Simulation Environment
+  description: Build a simulation representing production service health and incidents.
+  area: reflector
+  actionable_steps:
+    - Model service telemetry such as error rates and latency.
+    - Include infrastructure metrics and incident states.
+    - Support ingestion of real workload patterns.
+  dependencies: [177]
+  acceptance_criteria:
+    - Simulation can reproduce known incident scenarios.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 180
+  task_id: P1T4
+  title: Define and Implement Core Agent Interfaces
+  description: Implement Python classes for CI/CD and Stability agents with defined SAR spaces.
+  area: reflector
+  actionable_steps:
+    - Define state, action, and reward data structures.
+    - Ensure compatibility with MARLlib environment APIs.
+    - Stub agent classes for future training.
+  dependencies: [178, 179]
+  acceptance_criteria:
+    - Agents compile and can step through both simulations.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 181
+  task_id: P2T1
+  title: Implement Recurrent Policy Network Model
+  description: Create a neural network with LSTM layers to handle partial observability.
+  area: reflector
+  actionable_steps:
+    - Design the recurrent architecture for agent policies.
+    - Integrate the model with MARLlib.
+  dependencies: [180]
+  acceptance_criteria:
+    - Model passes unit tests and can process sequence batches.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 182
+  task_id: P2T2
+  title: Configure Recurrent PPO Trainer
+  description: Set up MARLlib training configuration for Recurrent PPO.
+  area: reflector
+  actionable_steps:
+    - Enable trajectory-based sampling.
+    - Register the recurrent model with the trainer.
+  dependencies: [181]
+  acceptance_criteria:
+    - Training loop initializes with recurrent policy.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 183
+  task_id: P2T3
+  title: Train Agents and Baseline
+  description: Train recurrent agents and a non-recurrent baseline in the simulations.
+  area: reflector
+  actionable_steps:
+    - Execute training runs for recurrent agents.
+    - Train a baseline MLP PPO agent for comparison.
+  dependencies: [182]
+  acceptance_criteria:
+    - Training completes and logs rewards for both agent types.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 184
+  task_id: P2T4
+  title: Analyze and Compare Performance
+  description: Evaluate trained agents against the baseline using cumulative reward metrics.
+  area: reflector
+  actionable_steps:
+    - Gather evaluation results from simulation runs.
+    - Produce a summary comparing recurrent and baseline agents.
+  dependencies: [183]
+  acceptance_criteria:
+    - Report shows performance improvement of recurrent agent.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 185
+  task_id: P3T1
+  title: Generate Explanation Dataset
+  description: Collect state-action pairs from a trained agent for explainability.
+  area: reflector
+  actionable_steps:
+    - Run the trained agent to record observations and actions.
+    - Save dataset for proxy model training.
+  dependencies: [183]
+  acceptance_criteria:
+    - Dataset contains sufficient samples for training a proxy model.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 186
+  task_id: P3T2
+  title: Train Decision Tree Proxy Model
+  description: Train a decision tree to mimic the agent's policy.
+  area: reflector
+  actionable_steps:
+    - Split the explanation dataset into train and test sets.
+    - Fit a decision tree classifier with limited depth.
+  dependencies: [185]
+  acceptance_criteria:
+    - Proxy model fits without overfitting and can be exported.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 187
+  task_id: P3T3
+  title: Evaluate Proxy Model Fidelity
+  description: Measure how well the decision tree replicates agent actions.
+  area: reflector
+  actionable_steps:
+    - Compute accuracy of proxy predictions on held-out data.
+    - Assess stability of explanations across similar states.
+  dependencies: [186]
+  acceptance_criteria:
+    - Fidelity metrics meet defined thresholds.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 188
+  task_id: P3T4
+  title: Visualize and Document Explanations
+  description: Create visualizations of the decision tree and document findings.
+  area: reflector
+  actionable_steps:
+    - Generate diagrams of the pruned decision tree.
+    - Document explanation examples in project reports.
+  dependencies: [187]
+  acceptance_criteria:
+    - Visualizations are stored in docs and referenced in README.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 189
+  task_id: P4T1
+  title: Implement Inter-Agent Coordination
+  description: Add hybrid reward sharing and centralized critic for agent cooperation.
+  area: reflector
+  actionable_steps:
+    - Define shared global reward function.
+    - Configure centralized critic in MARLlib.
+  dependencies: [184]
+  acceptance_criteria:
+    - Agents share rewards and training completes without instability.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 190
+  task_id: P4T2
+  title: Define and Implement Developer Flow Agent
+  description: Build an agent focused on optimizing DORA metrics.
+  area: reflector
+  actionable_steps:
+    - Implement state, action, and reward definitions for the agent.
+    - Integrate the agent into the simulation environment.
+  dependencies: [189]
+  acceptance_criteria:
+    - Developer Flow agent can participate in multi-agent training.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 191
+  task_id: P4T3
+  title: Run Integrated Multi-Agent Training
+  description: Train all agents together using CTDE and hybrid rewards.
+  area: reflector
+  actionable_steps:
+    - Launch multi-agent training sessions in combined simulations.
+    - Monitor global and local reward metrics.
+  dependencies: [190]
+  acceptance_criteria:
+    - Integrated agents converge on stable policies.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 192
+  task_id: P4T4
+  title: Evaluate System-Level KPIs
+  description: Assess the integrated system against business and operational goals.
+  area: reflector
+  actionable_steps:
+    - Measure overall cost, stability, and velocity metrics.
+    - Document trade-offs achieved by the multi-agent system.
+  dependencies: [191]
+  acceptance_criteria:
+    - Evaluation report demonstrates improvements over baseline.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 193
+  task_id: P5T1
+  title: Document Code and Architecture
+  description: Write comprehensive documentation for simulations and agents.
+  area: docs
+  actionable_steps:
+    - Document environment setup, training configuration, and interfaces.
+    - Ensure architecture diagrams are up to date.
+  dependencies: [192]
+  acceptance_criteria:
+    - Documentation covers all modules and is linked from README.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+- id: 194
+  task_id: P5T2
+  title: Prepare Final Project Report
+  description: Summarize project methodology, results, and future work.
+  area: docs
+  actionable_steps:
+    - Compile performance evaluations and explanation visuals.
+    - Outline recommendations for further research.
+  dependencies: [193]
+  acceptance_criteria:
+    - Final report is published in the docs directory.
+  priority: 2
+  status: pending
+  epic: Reflector Core
 
