@@ -16,6 +16,7 @@ from .reflector import Reflector
 from .self_auditor import SelfAuditor
 from .telemetry import setup_telemetry
 from .log_utils import configure_logging
+from .config import load_config
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
