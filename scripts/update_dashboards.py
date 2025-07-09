@@ -7,6 +7,7 @@ from grafanalib._gen import DashboardEncoder
 from grafana.dashboard import DASHBOARD
 from grafana.observer_dashboard import OBSERVER_DASHBOARD
 from grafana.rl_training_dashboard import RL_TRAINING_DASHBOARD
+from grafana.plugin_analytics_dashboard import PLUGIN_ANALYTICS_DASHBOARD
 
 
 def write_dashboard(obj, path: Path) -> None:
@@ -21,6 +22,7 @@ def main() -> None:
     write_dashboard(DASHBOARD, OUTPUT_DIR / "improvement-dashboard.json")
     write_dashboard(OBSERVER_DASHBOARD, OUTPUT_DIR / "observer-dashboard.json")
     write_dashboard(RL_TRAINING_DASHBOARD, OUTPUT_DIR / "rl_training.json")
+    write_dashboard(PLUGIN_ANALYTICS_DASHBOARD, OUTPUT_DIR / "plugin_analytics.json")
     print("Dashboards updated")
 
 
