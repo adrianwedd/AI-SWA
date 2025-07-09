@@ -1228,3 +1228,164 @@
   priority: 1
   status: pending
   epic: Community
+- id: 157
+  task_id: OBS-01
+  title: Deploy Core OPG Stack
+  description: Deploy and configure the OpenTelemetry, Prometheus, and Grafana stack.
+  area: observability
+  actionable_steps:
+    - Provision Prometheus and Grafana using infrastructure-as-code.
+    - Deploy OpenTelemetry Collectors receiving OTLP data from services.
+    - Configure Collectors to export metrics to Prometheus.
+    - Establish TLS communication between all observability components.
+  dependencies: []
+  acceptance_criteria:
+    - Prometheus successfully scrapes metrics from the collectors.
+    - Grafana is configured with Prometheus as a data source.
+    - All observability components expose their own health metrics.
+  priority: 1
+  status: pending
+  epic: Observability
+
+- id: 158
+  task_id: OBS-02
+  title: Instrument Core Services with OpenTelemetry
+  description: Emit essential telemetry from all core services.
+  area: observability
+  actionable_steps:
+    - Integrate the OpenTelemetry SDK in each service.
+    - Enable auto-instrumentation for common frameworks.
+    - Initialize the SDK at application startup.
+    - Export OTLP data to the deployed collectors.
+  dependencies: [157]
+  acceptance_criteria:
+    - Traces and metrics from all services reach the collectors.
+    - CPU, memory, and request metrics are available in Prometheus.
+  priority: 1
+  status: pending
+  epic: Observability
+
+- id: 159
+  task_id: OBS-03
+  title: Establish GitOps Workflow for Dashboards
+  description: Manage Grafana dashboards declaratively via Git.
+  area: observability
+  actionable_steps:
+    - Implement a declarative tool for Grafana resources.
+    - Store dashboard definitions in a dedicated Git repository.
+    - Create a CI/CD pipeline that applies changes automatically.
+    - Build initial dashboards for basic service health.
+  dependencies: [157]
+  acceptance_criteria:
+    - Editing a dashboard JSON in Git updates Grafana automatically.
+    - Grafana dashboards and data sources are fully declarative.
+  priority: 2
+  status: pending
+  epic: Observability
+
+- id: 160
+  task_id: MEAS-01
+  title: Implement DORA Metrics Collection
+  description: Gather data required to calculate the four key DORA metrics.
+  area: metrics
+  actionable_steps:
+    - Instrument the CI/CD pipeline to count successful deployments.
+    - Build an ETL process to derive lead time for changes.
+    - Track deployments causing failures to compute change failure rate.
+    - Record incident durations to measure mean time to restore.
+  dependencies: [157, 158]
+  acceptance_criteria:
+    - All four DORA metrics are stored in Prometheus.
+    - A Grafana dashboard visualizes the DORA metrics over time.
+  priority: 2
+  status: pending
+  epic: Metrics
+
+- id: 161
+  task_id: MEAS-02
+  title: Implement SPACE Metrics and Guardrails
+  description: Add developer productivity and well-being metrics.
+  area: metrics
+  actionable_steps:
+    - Track p95 PR review-to-merge time from the Git provider API.
+    - Calculate a p90 change complexity score for each pull request.
+    - Deploy a quarterly survey to measure developer satisfaction.
+    - Create a dashboard combining DORA and SPACE metrics.
+  dependencies: [160]
+  acceptance_criteria:
+    - Key SLIs from the metrics catalog are implemented.
+    - The Developer Productivity & Health dashboard is authoritative.
+  priority: 2
+  status: pending
+  epic: Metrics
+
+- id: 162
+  task_id: OPT-01
+  title: Implement Multi-Stage Hybrid Sampling Strategy
+  description: Reduce telemetry volume while keeping critical traces.
+  area: observability
+  actionable_steps:
+    - Apply TraceIDRatioBased sampling in all services.
+    - Configure the collector tail-sampling processor policies.
+    - Preserve all error traces and high-latency traces.
+    - Sample a small fraction of remaining traffic by default.
+  dependencies: [157, 158]
+  acceptance_criteria:
+    - Trace volume is significantly reduced.
+    - Error and high-latency traces are always retained.
+  priority: 3
+  status: pending
+  epic: Observability
+
+- id: 163
+  task_id: REF-01
+  title: Develop High-Fidelity Simulation Environment
+  description: Build a simulation of the AI-SWA production environment.
+  area: reflector
+  actionable_steps:
+    - Model key services, databases, and load balancers.
+    - Ingest real workload patterns to mirror production behavior.
+    - Expose observability data and the same action space as production.
+  dependencies: []
+  acceptance_criteria:
+    - The simulation reproduces known production incidents.
+    - The RL agent can use the same state-action-reward model.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+
+- id: 164
+  task_id: REF-02
+  title: Implement Initial RL Agent with Imitation Learning
+  description: Create the first Reflector Core agent for resource allocation.
+  area: reflector
+  actionable_steps:
+    - Define the state, action, and reward schema.
+    - Collect historical scaling decisions from human operators.
+    - Pre-train the agent using behavioral cloning.
+    - Continue training with PPO in the simulation environment.
+  dependencies: [163]
+  acceptance_criteria:
+    - The agent demonstrates baseline competence in simulation.
+    - After RL training, the agent outperforms the human baseline.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+
+- id: 165
+  task_id: REF-03
+  title: Deploy Reflector Core in Shadow Mode
+  description: Validate the agent in production without executing actions.
+  area: reflector
+  actionable_steps:
+    - Connect the agent to live observability data.
+    - Log intended actions instead of performing them.
+    - Establish human review of the logged decisions.
+  dependencies: [164]
+  acceptance_criteria:
+    - The agent runs continuously without causing issues.
+    - Logged decisions are appropriate in at least 95% of cases.
+    - The system is ready for automated actions.
+  priority: 2
+  status: pending
+  epic: Reflector Core
