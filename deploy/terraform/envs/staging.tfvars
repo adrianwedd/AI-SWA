@@ -1,0 +1,9 @@
+namespace                     = "ai-swa-staging"
+orchestrator_image_tag        = "latest"
+worker_image_tag              = "latest"
+broker_image_tag              = "latest"
+plugin_marketplace_image_tag  = "latest"
+orchestrator_replicas         = 1
+worker_replicas               = 1
+broker_replicas               = 1
+plugin_marketplace_replicas   = 1

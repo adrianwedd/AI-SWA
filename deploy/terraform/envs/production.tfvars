@@ -1,0 +1,9 @@
+namespace                     = "ai-swa-prod"
+orchestrator_image_tag        = "stable"
+worker_image_tag              = "stable"
+broker_image_tag              = "stable"
+plugin_marketplace_image_tag  = "stable"
+orchestrator_replicas         = 3
+worker_replicas               = 3
+broker_replicas               = 2
+plugin_marketplace_replicas   = 2
