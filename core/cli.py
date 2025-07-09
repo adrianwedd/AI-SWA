@@ -119,7 +119,8 @@ def _check_config(path: Path) -> bool:
 def _run_orchestrator(config: Path) -> int:
     if not _check_config(config):
         return 1
-    setup_telemetry()
+    cfg = load_config()
+    setup_telemetry(jaeger_endpoint=cfg["tracing"]["jaeger_endpoint"])
     memory = Memory(Path("state.json"))
     try:
         memory.save(memory.load())

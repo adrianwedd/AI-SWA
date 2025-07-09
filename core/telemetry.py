@@ -31,6 +31,7 @@ def setup_telemetry(
     metrics_port: int = 8000,
     otlp_endpoint: str | None = None,
     otlp_cert_path: str | None = None,
+    jaeger_endpoint: str | None = None,
 ) -> Tuple[object, object]:
     """Configure OpenTelemetry providers and start the Prometheus metrics server.
 
@@ -65,8 +66,27 @@ def setup_telemetry(
     set_meter_provider(meter_provider)
     server, thread = start_http_server(port=metrics_port)
 
-    # Tracing provider with console exporter
+    # Tracing provider with optional Jaeger or OTLP exporter
     tracer_provider = TracerProvider(resource=resource)
+    jaeger_endpoint = jaeger_endpoint or os.getenv("JAEGER_ENDPOINT")
+    if jaeger_endpoint:
+        try:
+            from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+            exporter = OTLPSpanExporter(endpoint=jaeger_endpoint, insecure=True)
+            tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+        except Exception:  # pragma: no cover - optional
+            pass
+    elif otlp_endpoint:
+        try:
+            from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+            exporter = OTLPSpanExporter(
+                endpoint=otlp_endpoint,
+                insecure=not bool(otlp_cert_path),
+                certificate_file=otlp_cert_path,
+            )
+            tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
+        except Exception:  # pragma: no cover - optional
+            pass
     tracer_provider.add_span_processor(BatchSpanProcessor(ConsoleSpanExporter()))
     trace.set_tracer_provider(tracer_provider)
 

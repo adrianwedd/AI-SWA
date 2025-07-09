@@ -12,11 +12,18 @@ exporters:
     tls:
       cert_file: /certs/collector.crt
       key_file: /certs/collector.key
+  jaeger:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
 service:
   pipelines:
     metrics:
       receivers: [otlp]
       exporters: [prometheus]
+    traces:
+      receivers: [otlp]
+      exporters: [jaeger]
   telemetry:
     metrics:
       address: 0.0.0.0:8888
