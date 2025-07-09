@@ -1,6 +1,8 @@
 import os
 import sqlite3
 import os
+import requests
+import pytest
 import time
 from importlib import reload
 from pathlib import Path
@@ -18,6 +20,7 @@ def setup_module(module):
     os.environ["PLUGIN_DB"] = str(tmp / "plugins.db")
     os.environ["PLUGIN_DIR"] = str(tmp)
     os.environ["GRPC_PORT"] = "60052"
+    os.environ["METRICS_PORT"] = "0"
     from services.plugin_marketplace import service as svc
     module.svc = reload(svc)
     svc.init_db()
@@ -30,6 +33,8 @@ def teardown_module(module):
     if svc._grpc_server:
         module.svc._grpc_server.stop(None)
         time.sleep(0.2)
+    if svc._metrics_server:
+        svc._metrics_server.shutdown()
 
 
 def test_rest_list_download():
@@ -79,3 +84,11 @@ def test_graphql_queries():
     data = resp.json()["data"]["plugin"]
     assert data["dependencies"] == []
     assert data["downloadUrl"].endswith("/plugins/demo/download")
+
+
+def test_metrics_endpoint():
+    port = svc._metrics_server.server_port if svc._metrics_server else None
+    if not port:
+        pytest.skip("metrics not available")
+    resp = requests.get(f"http://localhost:{port}/metrics")
+    assert resp.status_code == 200
