@@ -1,0 +1,29 @@
+{
+  "name": "AI-SWA DevContainer",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "postCreateCommand": "pip install -r requirements.txt",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker"
+      ],
+      "tasks": {
+        "version": "2.0.0",
+        "tasks": [
+          {
+            "label": "Run Tests",
+            "type": "shell",
+            "command": "pytest --maxfail=1 --disable-warnings -q",
+            "group": "test",
+            "presentation": {
+              "reveal": "always"
+            },
+            "problemMatcher": "$pytest"
+          }
+        ]
+      }
+    }
+  }
+}
