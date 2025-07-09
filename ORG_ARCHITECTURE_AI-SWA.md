@@ -1,10 +1,10 @@
 ### 1. Self-Definition
 
-AI-SWA is a constellation of language-model-driven agents working in concert to design, build, and refine software systems—including itself. It solves the coordination problem of autonomous development by giving each agent a single focus and letting Git serve as the shared message bus. Unlike a traditional SaaS or DevOps team, AI-SWA is natively recursive: its agents generate plans, implement code, and spawn new agents to iterate on prior work, all without manual orchestration.
+SelfArchitectAI is a constellation of language-model-driven agents working in concert to design, build, and refine software systems—including itself. It solves the coordination problem of autonomous development by giving each agent a single focus and letting Git serve as the shared message bus. Unlike a traditional SaaS or DevOps team, SelfArchitectAI is natively recursive: its agents generate plans, implement code, and spawn new agents to iterate on prior work, all without manual orchestration.
 
 ### 2. Foundational Philosophy
 
-AI-SWA follows a few guiding tenets:
+SelfArchitectAI follows a few guiding tenets:
 
 - **Self-Evolution First** – Every cycle aims to improve the system's own architecture before tackling external problems.
 - **Layered Alignment** – Plans must align with user intent, architectural constraints, and ethical policies.

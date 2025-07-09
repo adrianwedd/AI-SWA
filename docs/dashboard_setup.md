@@ -3,7 +3,7 @@
 The Grafana dashboard defined in `grafana/dashboard.py` visualizes key metrics exported by the services via Prometheus.
 
 1. Install Prometheus and Grafana.
-2. Run the AI-SWA services so that metrics are exposed (see `core/telemetry.py`).
+2. Run the SelfArchitectAI services so that metrics are exposed (see `core/telemetry.py`).
 3. Generate the dashboard JSON:
    ```bash
    python grafana/dashboard.py > improvement-dashboard.json

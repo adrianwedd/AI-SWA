@@ -1,6 +1,6 @@
 # Observability Setup
 
-AI-SWA services expose Prometheus metrics for local debugging. Two Grafana dashboards are provided:
+SelfArchitectAI services expose Prometheus metrics for local debugging. Two Grafana dashboards are provided:
 
 - **improvement-dashboard.json** – tracks task throughput.
 - **observer-dashboard.json** – monitors worker CPU, memory and aggregate task metrics.

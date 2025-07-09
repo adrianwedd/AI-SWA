@@ -1,26 +1,24 @@
 # Contributing Guide
 
-This project uses pinned dependencies listed in `requirements.txt` for consistent environments.
+Thank you for helping improve **SelfArchitectAI**. Our workflow follows the [Liberal Contribution](GOVERNANCE.md) model.
 
-## Setting up your environment
+## Development Setup
 
-Before running tests or using pre-commit hooks, install the exact package versions:
+1. Install dependencies exactly as pinned:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. Optionally enable pre-commit hooks:
+   ```bash
+   pre-commit install
+   ```
 
-```bash
-pip install -r requirements.txt
-```
+## Commit Guidelines
+- Use the `type(scope): description` style described in `AGENTS.md`.
+- Ensure a clean working tree before committing.
+- Run the test suite:
+  ```bash
+  pytest --maxfail=1 --disable-warnings -q
+  ```
 
-To enable automatic checks, optionally install and configure pre-commit:
-
-```bash
-pre-commit install
-```
-
-## Running tests
-
-After installing the dependencies, run the tests to verify your changes:
-
-```bash
-pytest --maxfail=1 --disable-warnings -q
-```
-
+Contributions are welcomed via pull requests. See [GOVERNANCE.md](GOVERNANCE.md) for how decisions are made.

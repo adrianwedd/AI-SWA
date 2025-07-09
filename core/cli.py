@@ -20,7 +20,7 @@ from .log_utils import configure_logging
 
 def build_parser() -> argparse.ArgumentParser:
     """Return argument parser for the CLI."""
-    parser = argparse.ArgumentParser(description="AI-SWA orchestration CLI")
+    parser = argparse.ArgumentParser(description="SelfArchitectAI orchestration CLI")
     parser.add_argument(
         "--config",
         default="config.yaml",
