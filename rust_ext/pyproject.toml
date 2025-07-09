@@ -1,0 +1,7 @@
+[build-system]
+requires = ["maturin>=1.5"]
+build-backend = "maturin" 
+
+[project]
+name = "rust_ext"
+version = "0.1.0"

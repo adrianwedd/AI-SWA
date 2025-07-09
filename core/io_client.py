@@ -12,3 +12,27 @@ def ping(message: str, host: str | None = None, port: int | None = None) -> str:
     stub = io_service_pb2_grpc.IOServiceStub(channel)
     response = stub.Ping(io_service_pb2.PingRequest(message=message))
     return response.message
+
+
+def read_file(path: str, host: str | None = None, port: int | None = None) -> str:
+    """Read a file using the Node IOService."""
+    cfg = load_config()
+    host = host or cfg.get("node", {}).get("host", "localhost")
+    port = port or cfg.get("node", {}).get("port", 50051)
+    channel = grpc.insecure_channel(f"{host}:{int(port)}")
+    stub = io_service_pb2_grpc.IOServiceStub(channel)
+    response = stub.ReadFile(io_service_pb2.FileRequest(path=path))
+    return response.content
+
+
+def write_file(path: str, content: str, host: str | None = None, port: int | None = None) -> bool:
+    """Write a file using the Node IOService."""
+    cfg = load_config()
+    host = host or cfg.get("node", {}).get("host", "localhost")
+    port = port or cfg.get("node", {}).get("port", 50051)
+    channel = grpc.insecure_channel(f"{host}:{int(port)}")
+    stub = io_service_pb2_grpc.IOServiceStub(channel)
+    response = stub.WriteFile(
+        io_service_pb2.WriteRequest(path=path, content=content)
+    )
+    return response.success

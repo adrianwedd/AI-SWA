@@ -4,6 +4,8 @@ package aiswa;
 
 service IOService {
   rpc Ping(PingRequest) returns (PingReply) {}
+  rpc ReadFile(FileRequest) returns (FileReply) {}
+  rpc WriteFile(WriteRequest) returns (WriteReply) {}
 }
 
 message PingRequest {
@@ -12,4 +14,21 @@ message PingRequest {
 
 message PingReply {
   string message = 1;
+}
+
+message FileRequest {
+  string path = 1;
+}
+
+message FileReply {
+  string content = 1;
+}
+
+message WriteRequest {
+  string path = 1;
+  string content = 2;
+}
+
+message WriteReply {
+  bool success = 1;
 }

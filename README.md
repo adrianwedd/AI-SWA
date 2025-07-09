@@ -82,12 +82,14 @@ Planner decides what to build next. The Executor writes files and configures CI/
    ```bash
    docker-compose up --build
    ```
-   This starts the orchestrator, broker, worker, and Node I/O service containers.
-   Environment variables like `BROKER_URL`, `DB_PATH` and metrics ports are set
-   in the compose file so you can simply run `docker-compose up` on subsequent
-   launches for local development. The Node service exposes its gRPC API on
-   port `50051` and provides `GET /health` on the metrics port (default `9100`)
-   for container health checks.
+   This starts the orchestrator, broker, worker, API gateway and Node service
+   containers. Each service uses its own volume to demonstrate the
+   database-per-service pattern. All traffic is routed through the gateway on
+   port `8080`. The Node service exposes its gRPC API on port `50051` and
+   provides `GET /health` on the metrics port (default `9100`) for container
+   health checks.
+   If you want to enable the optional Rust optimizations, run `maturin develop`
+   inside the `rust_ext` directory before starting the compose stack.
 8. **Run End-to-End Tests**
    ```bash
    pytest tests/e2e/ --maxfail=1 --disable-warnings -q

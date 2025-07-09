@@ -42,6 +42,32 @@ function ping(call, callback) {
   end();
 }
 
+function readFile(call, callback) {
+  const end = latencyHistogram.startTimer({ method: 'ReadFile' });
+  requestCounter.labels('ReadFile').inc();
+  fs.readFile(call.request.path, 'utf8', (err, data) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, { content: data });
+    }
+    end();
+  });
+}
+
+function writeFile(call, callback) {
+  const end = latencyHistogram.startTimer({ method: 'WriteFile' });
+  requestCounter.labels('WriteFile').inc();
+  fs.writeFile(call.request.path, call.request.content, 'utf8', (err) => {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, { success: true });
+    }
+    end();
+  });
+}
+
 function startHttpServer(port) {
   client.collectDefaultMetrics();
   const app = express();
@@ -59,7 +85,11 @@ function startHttpServer(port) {
 
 function main() {
   const server = new grpc.Server();
-  server.addService(proto.IOService.service, { Ping: ping });
+  server.addService(proto.IOService.service, {
+    Ping: ping,
+    ReadFile: readFile,
+    WriteFile: writeFile,
+  });
   const port = process.env.PORT || '50051';
   const metricsPort = process.env.METRICS_PORT ||
     (config.worker && config.worker.metrics_port) || '9100';

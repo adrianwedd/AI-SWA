@@ -6,3 +6,4 @@ tasks.db
 tests/test.db
 services/node/node_modules/
 
+dist/

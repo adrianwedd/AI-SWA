@@ -47,6 +47,18 @@ services:
       - orchestrator
     ports:
       - "8002:8002"
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api_gateway/Dockerfile
+    environment:
+      BROKER_URL: http://broker:8000
+      ORCH_URL: http://orchestrator-api:8002
+    depends_on:
+      - broker
+      - orchestrator-api
+    ports:
+      - "8080:8080"
   io-service:
     build: ./services/node
     environment:
@@ -60,6 +72,9 @@ services:
     ports:
       - "50051:50051"
       - "9100:9100"
+    volumes:
+      - node-data:/data
 
 volumes:
   broker-data:
+  node-data:
