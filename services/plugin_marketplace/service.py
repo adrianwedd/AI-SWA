@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 import os
 import sqlite3
+import json
 from pathlib import Path
 
 import grpc
@@ -29,17 +30,17 @@ def get_db():
 def init_db() -> None:
     conn = get_db()
     conn.execute(
-        "CREATE TABLE IF NOT EXISTS plugins (id TEXT PRIMARY KEY, name TEXT, version TEXT, path TEXT)"
+        "CREATE TABLE IF NOT EXISTS plugins (id TEXT PRIMARY KEY, name TEXT, version TEXT, dependencies TEXT, path TEXT)"
     )
     conn.commit()
     conn.close()
 
 
-def add_plugin(id: str, name: str, version: str, path: str) -> None:
+def add_plugin(id: str, name: str, version: str, dependencies: list[str], path: str) -> None:
     conn = get_db()
     conn.execute(
-        "INSERT OR REPLACE INTO plugins (id, name, version, path) VALUES (?, ?, ?, ?)",
-        (id, name, version, path),
+        "INSERT OR REPLACE INTO plugins (id, name, version, dependencies, path) VALUES (?, ?, ?, ?, ?)",
+        (id, name, version, json.dumps(dependencies), path),
     )
     conn.commit()
     conn.close()
@@ -47,7 +48,7 @@ def add_plugin(id: str, name: str, version: str, path: str) -> None:
 
 def list_plugins_from_db() -> list[dict[str, str]]:
     conn = get_db()
-    rows = conn.execute("SELECT id, name, version, path FROM plugins").fetchall()
+    rows = conn.execute("SELECT id, name, version, dependencies, path FROM plugins").fetchall()
     conn.close()
     return [dict(row) for row in rows]
 

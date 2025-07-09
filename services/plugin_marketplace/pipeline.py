@@ -34,4 +34,10 @@ def certify_and_publish(plugin_dir: Path) -> None:
     dest = Path(PLUGIN_DIR) / archive.name
     dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(archive, dest)
-    add_plugin(manifest.id, manifest.name, manifest.version, dest.name)
+    add_plugin(
+        manifest.id,
+        manifest.name,
+        manifest.version,
+        manifest.dependencies,
+        dest.name,
+    )

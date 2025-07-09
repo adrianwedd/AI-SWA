@@ -20,7 +20,7 @@ def setup_module(module):
     module.svc = reload(svc)
     svc.init_db()
     # insert sample plugin
-    svc.add_plugin("demo", "Demo", "0.1.0", "demo.zip")
+    svc.add_plugin("demo", "Demo", "0.1.0", [], "demo.zip")
     (tmp / "demo.zip").write_bytes(b"demo")
 
 

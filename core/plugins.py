@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from pathlib import Path
 from typing import List
 
@@ -33,6 +33,8 @@ class PluginManifest:
     name: str
     version: str
     permissions: List[str]
+    dependencies: list[str] = field(default_factory=list)
+    compatibility: str | None = None
     signature: str | None = None
 
     def data_for_signature(self) -> dict:

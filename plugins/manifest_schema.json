@@ -9,6 +9,11 @@
       "type": "array",
       "items": {"type": "string"}
     },
+    "dependencies": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "compatibility": {"type": "string"},
     "signature": {"type": "string"}
   },
   "required": ["id", "name", "version", "permissions"],

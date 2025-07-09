@@ -2,5 +2,7 @@
   "id": "example",
   "name": "Example Plugin",
   "version": "0.1.0",
-  "permissions": ["read_files"]
+  "permissions": ["read_files"],
+  "dependencies": [],
+  "compatibility": ">=0.1"
 }

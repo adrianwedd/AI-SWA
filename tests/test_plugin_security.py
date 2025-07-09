@@ -24,6 +24,8 @@ def test_load_valid_manifest(tmp_path):
         "name": "Demo Plugin",
         "version": "0.1",
         "permissions": ["read_files"],
+        "dependencies": [],
+        "compatibility": ">=0.1",
     }
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps({**data, "signature": sign(data, key)}))
@@ -38,6 +40,8 @@ def test_reject_invalid_permission(tmp_path):
         "name": "Demo Plugin",
         "version": "0.1",
         "permissions": ["dangerous"],
+        "dependencies": [],
+        "compatibility": ">=0.1",
     }
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps(data))
@@ -53,6 +57,8 @@ def test_reject_invalid_signature(tmp_path):
         "name": "Demo Plugin",
         "version": "0.1",
         "permissions": ["read_files"],
+        "dependencies": [],
+        "compatibility": ">=0.1",
         "signature": "bad",
     }
     manifest_path = tmp_path / "manifest.json"
@@ -80,6 +86,8 @@ def test_policy_rejects_disallowed_permissions(tmp_path, monkeypatch):
         "name": "Demo Plugin",
         "version": "0.1",
         "permissions": ["network"],
+        "dependencies": [],
+        "compatibility": ">=0.1",
     }
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps(data))
@@ -96,6 +104,8 @@ def test_policy_rejects_unknown_plugin(tmp_path, monkeypatch):
         "name": "Bar Plugin",
         "version": "0.1",
         "permissions": ["read_files"],
+        "dependencies": [],
+        "compatibility": ">=0.1",
     }
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps(data))
