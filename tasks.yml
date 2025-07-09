@@ -1859,3 +1859,125 @@
   status: pending
   epic: Reflector Core
 
+- id: 200
+  title: Implement Hybrid Vision Engine
+  description: Develop the hybrid prioritization engine combining WSJF and Reinforcement Learning as specified in research documents.
+  area: vision
+  epic: Vision Engine & Prioritization
+  actionable_steps:
+    - Implement a standardized WSJF calculator as a baseline heuristic.
+    - Develop an RL-based Hyper-heuristic (RL-HH) agent for prioritization refinement.
+    - Integrate the RL agent to run in shadow mode initially, logging its decisions for analysis against the WSJF baseline.
+  dependencies: [134, 139]
+  acceptance_criteria:
+    - The Vision Engine produces a transparent, defensible ranking using WSJF scores.
+    - The RL agent's suggested prioritizations are logged for offline evaluation.
+  priority: 1
+  status: pending
+- id: 201
+  title: Evolve to Polyglot Architecture - Phase 1
+  description: Begin the phased transition to a polyglot microservices architecture by integrating Rust for performance-critical components.
+  area: core
+  epic: Architecture Evolution
+  actionable_steps:
+    - Identify computationally intensive bottlenecks in the Python codebase using profiling tools.
+    - Rewrite the identified modules in Rust.
+    - Integrate the new Rust modules into the Python application using PyO3.
+    - Benchmark performance before and after to validate improvements.
+  dependencies: [82]
+  acceptance_criteria:
+    - At least one performance-critical Python module is successfully replaced with a Rust equivalent.
+    - Integration tests pass, and performance metrics show measurable improvement.
+  priority: 2
+  status: pending
+- id: 202
+  title: Implement 'OPG' Observability Stack
+  description: Deploy and configure the OpenTelemetry, Prometheus, and Grafana stack to provide the sensory feedback for the self-improvement loop.
+  area: observability
+  epic: Observability
+  actionable_steps:
+    - Deploy Prometheus and Grafana instances using infrastructure-as-code.
+    - Instrument all services with the OpenTelemetry SDK.
+    - Configure the OTel Collector to send metrics to Prometheus.
+    - Create initial Grafana dashboards for key system health metrics, defined as code.
+  dependencies: [125, 130]
+  acceptance_criteria:
+    - Metrics from all core services are visible in a Grafana dashboard.
+    - The observability stack is deployed via an infrastructure-as-code process.
+  priority: 1
+  status: pending
+- id: 203
+  title: Implement Plugin Certification Pipeline
+  description: Build the automated CI/CD pipeline for vetting and signing third-party plugins.
+  area: security
+  epic: Foundational Stability and Governance
+  actionable_steps:
+    - Enhance the existing CI pipeline to include mandatory SCA, SAST, and secret scanning stages.
+    - Implement a sandboxed environment for dynamic behavioral testing of plugins.
+    - Integrate a dual-signing process where the pipeline cryptographically signs certified plugins.
+  dependencies: [135, 140, 143, 144, 145, 146]
+  acceptance_criteria:
+    - The CI pipeline automatically rejects plugins with high-severity vulnerabilities or license compliance issues.
+    - Successfully vetted plugins are cryptographically signed and published to a secure registry.
+  priority: 1
+  status: pending
+- id: 204
+  title: Operationalize Ethical Sentinel Policy Framework
+  description: Implement the policy catalog and human-in-the-loop governance for the Ethical Sentinel.
+  area: governance
+  epic: Governance
+  actionable_steps:
+    - Establish the hybrid AI Ethics Board with internal and external reviewers.
+    - Implement the detailed Ethical Policy Template as a required, machine-readable artifact for all new modules.
+    - Develop the two-stage AI Incident Response Plan (AI-IRP) with automated containment and human escalation paths.
+  dependencies: [136, 141]
+  acceptance_criteria:
+    - No new module can be deployed without a completed and approved Ethical Policy document.
+    - The Sentinel can demonstrate automated containment of a simulated high-severity incident.
+  priority: 2
+  status: pending
+- id: 205
+  title: Implement Two-Speed Reflector Core
+  description: Develop the dual-loop architecture for the Reflector Core's self-improvement capability.
+  area: reflector
+  epic: Reflector Core Self-Improvement
+  actionable_steps:
+    - Implement the 'inner loop' using a PPO-based agent for online policy refinement.
+    - Develop the 'outer loop' using an offline Evolutionary Strategy (ES) to optimize the architecture of the PPO agent itself.
+    - Create a high-fidelity simulation environment for the outer loop to evaluate candidate agent architectures.
+  dependencies: [137, 142, 66, 67, 70]
+  acceptance_criteria:
+    - The inner loop agent can autonomously generate and apply refactoring tasks.
+    - The outer loop can successfully execute an evolutionary cycle and produce a measurably improved inner loop agent.
+  priority: 2
+  status: pending
+- id: 206
+  title: Establish Community Governance and Outreach - Phase 1
+  description: Implement the foundational elements of the community growth blueprint to ensure long-term project health and contribution.
+  area: community
+  epic: Foundational Stability and Governance
+  actionable_steps:
+    - Select a unique, searchable project name to resolve brand ambiguity.
+    - Publish core governance documents (GOVERNANCE.md, CONTRIBUTING.md) adopting a Liberal Contribution model.
+    - Set up a community health dashboard using CHAOSS metrics, tracking Time to First Response and Contributor Absence Factor.
+  dependencies: []
+  acceptance_criteria:
+    - The project has a clear mission statement and governance model documented in the repository.
+    - A public dashboard displays key community health metrics.
+  priority: 1
+  status: pending
+- id: 207
+  title: Activate Proposed Agents
+  description: Implement the proposed SWA-QA-01 (QA & Security) and SWA-DOCS-01 (Documentation) agents as defined in AGENTS.md.
+  area: core
+  epic: Agent Implementation
+  actionable_steps:
+    - Implement the core logic for the QA & Security Agent, integrating with Bandit and other static analysis tools.
+    - Implement the core logic for the Documentation Agent, focusing on code comment and docstring consistency.
+    - Update the Supervisor Agent to delegate tasks with 'bug', 'security', and 'docs' labels to the new agents.
+  dependencies: [203]
+  acceptance_criteria:
+    - A commit with a 'bug' label triggers the SWA-QA-01 agent.
+    - A commit with a 'docs' label triggers the SWA-DOCS-01 agent.
+  priority: 2
+  status: pending
