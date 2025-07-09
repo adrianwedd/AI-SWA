@@ -10,6 +10,8 @@ from fastapi.testclient import TestClient
 
 from core import plugin_marketplace_pb2 as pb2, plugin_marketplace_pb2_grpc as pb2_grpc
 
+from services.plugin_marketplace import graphql as gql
+
 
 def setup_module(module):
     tmp = Path(module.__file__).parent
@@ -57,3 +59,23 @@ def test_grpc_list_download():
         assert resp.plugins[0].id == "demo"
         data = stub.DownloadPlugin(pb2.PluginRequest(id="demo"))
         assert data.data == b"demo"
+
+
+def test_graphql_queries():
+    client = TestClient(gql.app)
+
+    query = """
+    { plugins { id name version downloadUrl } }
+    """
+    resp = client.post("/", json={"query": query})
+    assert resp.status_code == 200
+    assert resp.json()["data"]["plugins"][0]["id"] == "demo"
+
+    detail_query = """
+    query($id: String!) { plugin(id: $id) { id dependencies downloadUrl } }
+    """
+    resp = client.post("/", json={"query": detail_query, "variables": {"id": "demo"}})
+    assert resp.status_code == 200
+    data = resp.json()["data"]["plugin"]
+    assert data["dependencies"] == []
+    assert data["downloadUrl"].endswith("/plugins/demo/download")
