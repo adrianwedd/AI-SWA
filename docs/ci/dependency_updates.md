@@ -12,6 +12,7 @@ To resolve a failing audit:
    ```bash
    pip install pip-tools
    pip-compile requirements.txt --output-file requirements.lock
+   pip-sync requirements.lock  # remove unused packages
    ```
 3. **Verify locally** by running:
    ```bash

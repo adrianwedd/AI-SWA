@@ -54,6 +54,8 @@ Planner decides what to build next. The Executor writes files and configures CI/
    git clone https://github.com/your-org/ai-swa.git
    cd ai-swa
    pip install -r requirements.lock
+   # When upgrading dependencies
+   pip-compile requirements.txt --output-file requirements.lock
    ```
 2. **Install Pre-commit Hooks**
    ```bash
