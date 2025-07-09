@@ -31,7 +31,7 @@ def test_vision_cli_ranking(tmp_path):
     tasks_file.write_text(yaml.safe_dump(tasks, sort_keys=False))
 
     env = os.environ.copy()
-    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[2])
     result = subprocess.run(
         [sys.executable, "-m", "vision.cli", str(tasks_file)],
         cwd=tmp_path,
@@ -47,7 +47,7 @@ def test_vision_cli_ranking(tmp_path):
 
 def test_vision_cli_help(tmp_path):
     env = os.environ.copy()
-    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[2])
     result = subprocess.run(
         [sys.executable, "-m", "vision.cli", "--help"],
         cwd=tmp_path,
@@ -62,7 +62,7 @@ def test_vision_cli_help(tmp_path):
 
 def test_vision_cli_missing_file(tmp_path):
     env = os.environ.copy()
-    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[2])
     result = subprocess.run(
         [sys.executable, "-m", "vision.cli", str(tmp_path / "missing.yml")],
         cwd=tmp_path,
