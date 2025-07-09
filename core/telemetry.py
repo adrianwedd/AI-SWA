@@ -14,7 +14,11 @@ try:
     from opentelemetry.sdk.trace import TracerProvider
     from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
     from opentelemetry.exporter.prometheus import PrometheusMetricReader, start_http_server
-    from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+    # OTLP exporter is optional and may require extra dependencies
+    try:
+        from opentelemetry.exporter.otlp.proto.grpc.metric_exporter import OTLPMetricExporter
+    except Exception:  # pragma: no cover - optional dependency
+        OTLPMetricExporter = None
     from opentelemetry.sdk.resources import Resource
     from opentelemetry.sdk._logs import LoggerProvider, LoggingHandler
     from opentelemetry.sdk._logs.export import BatchLogRecordProcessor, ConsoleLogExporter
@@ -45,7 +49,7 @@ def setup_telemetry(
     # Export metrics via OTLP if configured
     otlp_endpoint = otlp_endpoint or os.getenv("OTEL_EXPORTER_OTLP_ENDPOINT")
     otlp_cert_path = otlp_cert_path or os.getenv("OTEL_EXPORTER_OTLP_CERTIFICATE")
-    if otlp_endpoint:
+    if otlp_endpoint and OTLPMetricExporter:
         exporter = OTLPMetricExporter(
             endpoint=otlp_endpoint,
             insecure=not bool(otlp_cert_path),

@@ -4,6 +4,9 @@ This module exposes the same CLI as :mod:`core.cli`. Available
 subcommands include ``start``, ``stop``, ``status`` and ``list``.
 """
 from core.cli import build_parser, main as cli_main
+from config import load_config
+
+_cfg = load_config()
 
 __all__ = ["build_parser", "main"]
 
