@@ -167,6 +167,22 @@ The worker will execute up to `WORKER_CONCURRENCY` tasks simultaneously. This
 value defaults to `2` in `config.yaml` and can be overridden by the
 `WORKER_CONCURRENCY` environment variable.
 
+## Security Model
+
+The broker API requires authentication on every request. Configure a shared
+`API_KEY` and a set of bearer tokens with associated roles through the
+`API_TOKENS` variable. Tokens are provided as comma separated
+`token:username:role` triples. Each HTTP request must include `Authorization:
+Bearer <token>` and (when configured) the `X-API-Key` header.
+
+Two roles are currently recognised:
+
+- `admin` – full access to create tasks and submit results.
+- `worker` – may fetch tasks and record execution results.
+
+If no tokens are configured the broker allows anonymous admin access which is
+useful for local testing.
+
 ### Plugin Manifests
 
 Each plugin contains a `manifest.json` file validated against
