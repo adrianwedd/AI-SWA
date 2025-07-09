@@ -57,6 +57,17 @@ class Orchestrator:
         return tasks or []
 
     # ------------------------------------------------------------------
+    def _items_to_tasks(self, items: list) -> List[Task]:
+        fields = set(Task.__dataclass_fields__.keys())
+        return [Task(**{k: v for k, v in item.items() if k in fields}) for item in items]
+
+    # ------------------------------------------------------------------
+    def _convert_reflection(self, reflected) -> List[Task]:
+        if reflected and isinstance(reflected[0], Task):
+            return list(reflected)
+        return self._items_to_tasks(reflected)
+
+    # ------------------------------------------------------------------
     def _reflect(self, tasks: List[Task], tasks_file: str) -> List[Task]:
         try:
             reflected = self.reflector.run_cycle([self._task_to_dict(t) for t in tasks])
@@ -66,11 +77,7 @@ class Orchestrator:
             return tasks
         if reflected is None:
             return tasks
-        if reflected and isinstance(reflected[0], Task):
-            tasks = reflected
-        else:
-            fields = set(Task.__dataclass_fields__.keys())
-            tasks = [Task(**{k: v for k, v in item.items() if k in fields}) for item in reflected]
+        tasks = self._convert_reflection(reflected)
         self._save_tasks(tasks, tasks_file)
         return tasks
 
@@ -110,8 +117,7 @@ class Orchestrator:
             return
         if not audit_results:
             return
-        fields = set(Task.__dataclass_fields__.keys())
-        new_tasks = [Task(**{k: v for k, v in item.items() if k in fields}) for item in audit_results]
+        new_tasks = self._items_to_tasks(audit_results)
         tasks.extend(new_tasks)
         self._save_tasks(tasks, tasks_file)
 
