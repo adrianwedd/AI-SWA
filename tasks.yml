@@ -747,7 +747,7 @@
   acceptance_criteria:
   - Additional fields in tasks.yml round-trip without loss
   - Tests cover backward compatibility
-  status: pending
+  status: done
   assigned_to: null
   epic: Schema Evolution
 - id: 122

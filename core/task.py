@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import List, Optional, Dict, Any
 
 
 @dataclass
@@ -21,4 +21,4 @@ class Task:
     acceptance_criteria: Optional[List[str]] = None
     assigned_to: Optional[str] = None
     epic: Optional[str] = None
-    metadata: Optional[dict] = None
+    metadata: Optional[Dict[str, Any]] = None
