@@ -2,7 +2,9 @@
 
 import json
 import logging
+import os
 import sys
+import sentry_sdk
 from datetime import datetime
 from pathlib import Path
 
@@ -109,6 +111,7 @@ def load_schema_and_tasks(path: Path):
 
 def main():
     """Bootstrap the system by validating ``tasks.yml``."""
+    sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
     setup_logging()
     schema, tasks = load_schema_and_tasks(Path("tasks.yml"))
 
