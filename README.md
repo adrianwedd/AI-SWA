@@ -209,6 +209,24 @@ and is verified when `PLUGIN_SIGNING_KEY` is set. See
 [`docs/plugins/api.md`](docs/plugins/api.md) for plugin API details and
 isolation requirements.
 
+### Plugin CLI
+
+`plugins/cli.py` provides commands for common plugin tasks:
+
+```bash
+# validate manifest
+python plugins/cli.py validate plugins/example_plugin
+
+# create dist/example-0.1.0.zip
+python plugins/cli.py package plugins/example_plugin
+
+# sign the archive with cosign
+python plugins/cli.py sign dist/example-0.1.0.zip --key cosign.key --password $COSIGN_PASSWORD
+
+# publish to the local marketplace
+python plugins/cli.py upload plugins/example_plugin
+```
+
 ### Security CI Pipeline
 
 The CI workflow performs automated security checks on every push:
