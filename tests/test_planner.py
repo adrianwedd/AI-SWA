@@ -83,24 +83,48 @@ def test_dependency_missing_in_list(planner, task_factory):
     assert selected.id == "other"
 
 
-def test_complex_scenario_priority_and_dependencies(planner, task_factory):
-    """Simulate a sequence of tasks becoming ready over time."""
+def _setup_complex_tasks(task_factory):
     done = create_task(task_factory, "td1", 1, "done")
-    blocked_missing = create_task(task_factory, "tpb_missing", 20, "pending", ["td_missing"])
+    blocked_missing = create_task(
+        task_factory, "tpb_missing", 20, "pending", ["td_missing"]
+    )
     ready = create_task(task_factory, "tpd1", 10, "pending", ["td1"])
     low_prio = create_task(task_factory, "tpnlp", 5, "pending")
     blocked_pending = create_task(task_factory, "tpdp", 15, "pending", ["tpnlp"])
+    return [done, blocked_missing, ready, low_prio, blocked_pending], {
+        "ready": ready,
+        "low_prio": low_prio,
+        "blocked_pending": blocked_pending,
+    }
 
-    tasks = [done, blocked_missing, ready, low_prio, blocked_pending]
+
+def test_complex_initial_selection(planner, task_factory):
+    """Initially pick the ready task with highest priority."""
+    tasks, _ = _setup_complex_tasks(task_factory)
     assert planner.plan(tasks).id == "tpd1"
 
-    ready.status = "done"
+
+def test_complex_after_ready_done(planner, task_factory):
+    """Next choose the low-priority task once its dependency completes."""
+    tasks, refs = _setup_complex_tasks(task_factory)
+    refs["ready"].status = "done"
     assert planner.plan(tasks).id == "tpnlp"
 
-    low_prio.status = "done"
+
+def test_complex_after_low_prio_done(planner, task_factory):
+    """Select blocked task after its dependency finishes."""
+    tasks, refs = _setup_complex_tasks(task_factory)
+    refs["ready"].status = "done"
+    refs["low_prio"].status = "done"
     assert planner.plan(tasks).id == "tpdp"
 
-    blocked_pending.status = "done"
+
+def test_complex_all_done_returns_none(planner, task_factory):
+    """Return ``None`` when all tasks in the scenario are finished."""
+    tasks, refs = _setup_complex_tasks(task_factory)
+    refs["ready"].status = "done"
+    refs["low_prio"].status = "done"
+    refs["blocked_pending"].status = "done"
     assert planner.plan(tasks) is None
 
 
