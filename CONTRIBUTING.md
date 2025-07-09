@@ -22,4 +22,6 @@ Thank you for helping improve **SelfArchitectAI**. Our workflow follows the [Lib
   pytest --maxfail=1 --disable-warnings -q
   ```
 
+Refer to [cross-language gRPC guidelines](docs/development/cross_language_guidelines.md) when adding new services.
+
 Contributions are welcomed via pull requests. See [GOVERNANCE.md](GOVERNANCE.md) for how decisions are made.
