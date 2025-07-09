@@ -550,7 +550,7 @@
   description: Semantic search for Researcher agent
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps: []
   acceptance_criteria: []
@@ -560,7 +560,7 @@
   description: Observer metrics dashboard
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: observability
   actionable_steps: []
   acceptance_criteria: []
