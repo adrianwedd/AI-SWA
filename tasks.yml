@@ -1362,7 +1362,43 @@
     - The simulation reproduces known production incidents.
     - The RL agent can use the same state-action-reward model.
   priority: 2
+  status: in_progress
+  epic: Reflector Core
+
+- id: 195
+  description: Model key services, databases, and load balancers for the simulation
+  dependencies: [163]
+  priority: 2
   status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria:
+    - Service and database objects can be instantiated for the simulator
+  assigned_to: null
+  epic: Reflector Core
+
+- id: 196
+  description: Ingest real workload patterns into the simulator
+  dependencies: [195]
+  priority: 2
+  status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria:
+    - Simulator loads workload data from JSON traces
+  assigned_to: null
+  epic: Reflector Core
+
+- id: 197
+  description: Expose observability data and production-like action space
+  dependencies: [196]
+  priority: 2
+  status: pending
+  area: reflector
+  actionable_steps: []
+  acceptance_criteria:
+    - Simulator provides metrics via MetricsProvider interface
+  assigned_to: null
   epic: Reflector Core
 
 - id: 164
