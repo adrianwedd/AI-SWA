@@ -101,3 +101,36 @@ class Memory:
         path = Path(tasks_file)
         with path.open("w") as fh:
             yaml.safe_dump(tasks_data, fh, sort_keys=False)
+
+    def load_critiques(self, file: str) -> dict:
+        """Return critique data from YAML or an empty dict."""
+        path = Path(file)
+        if not path.exists():
+            return {}
+        with path.open("r") as fh:
+            return yaml.safe_load(fh) or {}
+
+    def save_critiques(self, data: dict, file: str) -> None:
+        """Write critique data to ``file``."""
+        path = Path(file)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w") as fh:
+            yaml.safe_dump(data, fh, sort_keys=False)
+
+    def reconcile_tasks(
+        self,
+        existing: List[Task],
+        incoming: List[Task],
+        critique_map: dict,
+    ) -> List[Task]:
+        """Merge tasks preferring versions with higher critique scores."""
+        selected: dict[int, tuple[Task, int]] = {}
+        for task in existing:
+            score = critique_map.get(task.id, {}).get("existing", 0)
+            selected[task.id] = (task, score)
+        for task in incoming:
+            new_score = critique_map.get(task.id, {}).get("new", 0)
+            current_score = selected.get(task.id, (None, -1))[1]
+            if task.id not in selected or new_score >= current_score:
+                selected[task.id] = (task, new_score)
+        return [t for t, _ in selected.values()]

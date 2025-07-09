@@ -508,7 +508,7 @@
   description: Add reflective critique layer to Evaluator
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: evaluator
   actionable_steps: []
   acceptance_criteria: []
@@ -519,7 +519,7 @@
   dependencies:
   - 102
   priority: 3
-  status: pending
+  status: done
   area: memory
   actionable_steps: []
   acceptance_criteria: []
