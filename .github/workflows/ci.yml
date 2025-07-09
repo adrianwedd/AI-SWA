@@ -42,6 +42,12 @@ EOF
           path: pip-audit.json
       - name: Build Docker images
         run: docker compose -f docker-compose.yml build
+      - name: Test plugin marketplace container
+        run: |
+          docker compose up -d plugin-marketplace
+          sleep 5
+          curl -f http://localhost:8003/plugins || (docker compose logs plugin-marketplace && exit 1)
+          docker compose down
       - name: Install pylint
         run: pip install pylint==3.3.7
       - name: Run pylint
