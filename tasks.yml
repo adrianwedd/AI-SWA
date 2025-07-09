@@ -62,7 +62,7 @@
   epic: Technical Debt & Refactoring
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   actionable_steps: []
   acceptance_criteria:
     - Cyclomatic complexity of core/planner.py is reduced below 15.

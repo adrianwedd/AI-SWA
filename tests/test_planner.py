@@ -1,6 +1,7 @@
 import pytest
 
 from core.task import Task
+from core import planner_utils
 
 
 def create_task(task_factory, id, priority, status, dependencies=None, description="A task"):
@@ -190,7 +191,7 @@ def test_get_pending_tasks_helper(planner, task_factory):
         create_task(task_factory, "b", 2, "pending"),
         create_task(task_factory, "c", 3, "in_progress"),
     ]
-    pending = planner._get_pending_tasks(tasks)
+    pending = planner_utils.get_pending_tasks(tasks)
     assert len(pending) == 1 and pending[0].id == "b"
 
 
@@ -198,9 +199,9 @@ def test_dependencies_met_helper(planner, task_factory):
     """Check dependency evaluation logic."""
     dep_done = create_task(task_factory, "dep", 1, "done")
     main = create_task(task_factory, "main", 1, "pending", ["dep"])
-    assert planner._dependencies_met(main, [dep_done, main])
+    assert planner_utils.dependencies_met(main, [dep_done, main])
 
     dep_pending = create_task(task_factory, "dep_p", 1, "pending")
     blocked = create_task(task_factory, "blocked", 1, "pending", ["dep_p"])
-    assert not planner._dependencies_met(blocked, [blocked, dep_pending])
+    assert not planner_utils.dependencies_met(blocked, [blocked, dep_pending])
 
