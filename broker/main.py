@@ -32,12 +32,28 @@ from core.security import verify_api_key, verify_token, require_role, User
 from config import load_config
 from core.log_utils import configure_logging
 from .queue import publish_task
+try:
+    from prometheus_client import Gauge
+except Exception:  # pragma: no cover - optional dependency
+    Gauge = None
 
 config = load_config()
 DB_PATH = config["broker"]["db_path"]
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
 configure_logging()
 logger = logging.getLogger(__name__)
+if Gauge:
+    from prometheus_client import REGISTRY
+
+    if "broker_queue_length" in getattr(REGISTRY, "_names_to_collectors", {}):
+        QUEUE_LENGTH_GAUGE = REGISTRY._names_to_collectors["broker_queue_length"]
+    else:
+        QUEUE_LENGTH_GAUGE = Gauge(
+            "broker_queue_length",
+            "Number of pending tasks in the broker queue",
+        )
+else:  # pragma: no cover - metrics optional
+    QUEUE_LENGTH_GAUGE = None
 
 app = FastAPI()
 if setup_telemetry:
@@ -72,6 +88,24 @@ def get_db():
     return conn
 
 
+def _queue_length(conn: sqlite3.Connection | None = None) -> int:
+    """Return number of pending tasks."""
+    close = conn is None
+    if conn is None:
+        conn = get_db()
+    count = conn.execute(
+        "SELECT COUNT(*) FROM tasks WHERE status='pending'"
+    ).fetchone()[0]
+    if close:
+        conn.close()
+    return int(count)
+
+
+def update_queue_length(conn: sqlite3.Connection | None = None) -> None:
+    if QUEUE_LENGTH_GAUGE:
+        QUEUE_LENGTH_GAUGE.set(_queue_length(conn))
+
+
 def init_db():
     conn = get_db()
     conn.execute(
@@ -81,6 +115,7 @@ def init_db():
         "CREATE TABLE IF NOT EXISTS task_results (task_id INTEGER, stdout TEXT, stderr TEXT, exit_code INTEGER)"
     )
     conn.commit()
+    update_queue_length(conn)
     conn.close()
 
 
@@ -112,6 +147,7 @@ def create_task(
         (task.description, task.status, task.command),
     )
     conn.commit()
+    update_queue_length(conn)
     task.id = cur.lastrowid
     conn.close()
     try:
@@ -151,6 +187,7 @@ def next_task(__: User = Depends(require_role(["admin", "worker"]))):
     ).fetchone()
     if not row:
         conn.execute("COMMIT")
+        update_queue_length(conn)
         conn.close()
         return None
     task_id = row["id"]
@@ -159,6 +196,7 @@ def next_task(__: User = Depends(require_role(["admin", "worker"]))):
         (task_id,),
     )
     conn.execute("COMMIT")
+    update_queue_length(conn)
     conn.close()
     return Task(id=task_id, description=row["description"], status="in_progress", command=row["command"])
 
