@@ -98,6 +98,16 @@ services:
       - node-data:/data
       - ./observability/certs:/certs:ro
 
+  plugin-marketplace:
+    build:
+      context: .
+      dockerfile: plugin_marketplace/Dockerfile
+    volumes:
+      - ./observability/certs:/certs:ro
+    ports:
+      - "8003:8003"
+      - "50052:50052"
+
   otel-collector:
     image: otel/opentelemetry-collector:0.93.0
     command: ["--config=/etc/otelcol/config.yaml"]

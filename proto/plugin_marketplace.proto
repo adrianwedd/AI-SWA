@@ -1,0 +1,27 @@
+syntax = "proto3";
+package aiswa;
+
+service PluginMarketplace {
+  rpc ListPlugins(Empty) returns (PluginList) {}
+  rpc DownloadPlugin(PluginRequest) returns (PluginData) {}
+}
+
+message Empty {}
+
+message PluginRequest {
+  string id = 1;
+}
+
+message PluginInfo {
+  string id = 1;
+  string name = 2;
+  string version = 3;
+}
+
+message PluginList {
+  repeated PluginInfo plugins = 1;
+}
+
+message PluginData {
+  bytes data = 1;
+}
