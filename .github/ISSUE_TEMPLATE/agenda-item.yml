@@ -1,0 +1,29 @@
+name: Governance Board Agenda Item
+description: Submit a topic for discussion at the next governance board meeting.
+title: "[Agenda]: "
+labels: [governance, agenda]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please provide a concise summary of the agenda item. Include any links or background information necessary for board members to prepare.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What should the board discuss?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Optional background, links, or references.
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - High
+        - Medium
+        - Low
