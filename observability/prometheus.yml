@@ -1,0 +1,10 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: 'otel-collector'
+    scheme: https
+    tls_config:
+      ca_file: /certs/ca.crt
+      insecure_skip_verify: true
+    static_configs:
+      - targets: ['otel-collector:8889']

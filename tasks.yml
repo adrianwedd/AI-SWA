@@ -1255,7 +1255,7 @@
     - Grafana is configured with Prometheus as a data source.
     - All observability components expose their own health metrics.
   priority: 1
-  status: pending
+  status: done
   epic: Observability
 
 - id: 158

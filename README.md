@@ -212,16 +212,16 @@ Set `SNYK_TOKEN`, `COSIGN_KEY`, and `COSIGN_PASSWORD` secrets to enable these st
 All services expose Prometheus-compatible metrics. The Node I/O service uses
 `prom-client` to call `collectDefaultMetrics()` and serves them at `/metrics`
 (default port `9100`). The broker and worker export metrics on ports `9000` and
-`9001` respectively. Configure Prometheus to scrape these endpoints:
+`9001` respectively. In the default Docker Compose deployment an OpenTelemetry
+Collector receives OTLP data from each service and exposes it via a secured
+Prometheus endpoint. Configure Prometheus to scrape the collector:
 
 ```yaml
 scrape_configs:
   - job_name: ai_swa
     static_configs:
       - targets:
-          - 'localhost:9000'
-          - 'localhost:9001'
-          - 'localhost:9100'
+          - 'localhost:8889'
 ```
 
 Use the appropriate hostnames if running under Docker Compose or Kubernetes.
