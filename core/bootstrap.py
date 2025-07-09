@@ -1,6 +1,7 @@
 """Bootstrap the SelfArchitectAI environment and validate tasks."""
 
 import json
+import itertools
 import logging
 import os
 import sys
@@ -14,6 +15,15 @@ import yaml
 from jsonschema import validate, ValidationError
 from core.memory import TASK_SCHEMA
 from core.log_utils import configure_logging
+
+
+def _load_json(lines):
+    """Return parsed JSON from lines or exit with error."""
+    try:
+        return json.loads("\n".join(lines))
+    except json.JSONDecodeError as exc:
+        logging.error("[ERROR] %s", exc)
+        sys.exit(1)
 
 
 def create_logfile_path(base_dir: Path = Path("logs")) -> Path:
@@ -49,10 +59,21 @@ def setup_logging(base_dir: Path = Path("logs")) -> Path:
 
 def select_next_task(tasks):
     """Return the highest priority pending task or ``None`` if absent."""
-    pending = [t for t in tasks if t.get("status") == "pending"]
-    if not pending:
-        return None
-    return sorted(pending, key=lambda x: x.get("priority", 5))[0]
+    return min(
+        (t for t in tasks if t.get("status") == "pending"),
+        key=lambda x: x.get("priority", 5),
+        default=None,
+    )
+
+
+def _extract_schema(lines):
+    """Return schema and index where task definitions start."""
+    if not lines or not lines[0].startswith("# jsonschema:"):
+        return TASK_SCHEMA, 0
+
+    strip = lambda l: l[1:].lstrip()
+    schema_lines = [strip(l) for l in itertools.takewhile(lambda l: l.startswith("#"), lines[1:])]
+    return _load_json(schema_lines), len(schema_lines) + 1
 
 
 def load_schema_and_tasks(path: Path):
@@ -77,31 +98,10 @@ def load_schema_and_tasks(path: Path):
         logging.error("[ERROR] %s", exc)
         sys.exit(2)
 
-    schema_lines = []
-    task_lines = []
     lines = text.splitlines()
-    schema_started = False
-    for line in lines:
-        if line.startswith("# jsonschema:"):
-            schema_started = True
-            continue
-        if schema_started and line.startswith("#"):
-            schema_lines.append(line[1:].lstrip())
-            continue
-        task_lines.append(line)
-
-    if schema_lines:
-        schema_str = "\n".join(schema_lines)
-        try:
-            schema = json.loads(schema_str)
-        except json.JSONDecodeError as exc:
-            logging.error("[ERROR] %s", exc)
-            sys.exit(1)
-    else:
-        schema = TASK_SCHEMA
-
+    schema, start = _extract_schema(lines)
     try:
-        tasks = yaml.safe_load("\n".join(task_lines)) or []
+        tasks = yaml.safe_load("\n".join(lines[start:])) or []
     except yaml.YAMLError as exc:
         logging.error("[ERROR] %s", exc)
         sys.exit(1)
