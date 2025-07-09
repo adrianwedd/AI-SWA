@@ -1369,7 +1369,7 @@
   description: Model key services, databases, and load balancers for the simulation
   dependencies: [163]
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria:
@@ -1381,7 +1381,7 @@
   description: Ingest real workload patterns into the simulator
   dependencies: [195]
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria:
@@ -1393,7 +1393,7 @@
   description: Expose observability data and production-like action space
   dependencies: [196]
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria:
