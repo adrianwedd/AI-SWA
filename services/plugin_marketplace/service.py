@@ -10,6 +10,15 @@ import grpc
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 
+try:
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from core.telemetry import setup_telemetry
+except Exception:  # pragma: no cover - optional dependency
+    FastAPIInstrumentor = None
+    setup_telemetry = None
+
+from . import metrics as mp_metrics
+
 from core import plugin_marketplace_pb2 as pb2
 from core import plugin_marketplace_pb2_grpc as pb2_grpc
 
@@ -19,6 +28,15 @@ GRPC_PORT = os.getenv("GRPC_PORT", "50052")
 
 app = FastAPI()
 _grpc_server: grpc.aio.Server | None = None
+_metrics_server = None
+
+if setup_telemetry:
+    _metrics_server, _ = setup_telemetry(
+        service_name="plugin_marketplace",
+        metrics_port=int(os.getenv("METRICS_PORT", "0")),
+    )
+if FastAPIInstrumentor:
+    FastAPIInstrumentor.instrument_app(app)
 
 
 def get_db():
@@ -68,9 +86,18 @@ class MarketplaceServicer(pb2_grpc.PluginMarketplaceServicer):
         row = conn.execute("SELECT path FROM plugins WHERE id=?", (request.id,)).fetchone()
         conn.close()
         if not row:
+            if mp_metrics.ERRORS:
+                mp_metrics.ERRORS.add(1, {"plugin_id": request.id})
             context.abort(grpc.StatusCode.NOT_FOUND, "Not found")
         file_path = Path(PLUGIN_DIR) / row["path"]
-        data = file_path.read_bytes()
+        try:
+            data = file_path.read_bytes()
+        except FileNotFoundError:
+            if mp_metrics.ERRORS:
+                mp_metrics.ERRORS.add(1, {"plugin_id": request.id})
+            context.abort(grpc.StatusCode.NOT_FOUND, "Not found")
+        if mp_metrics.DOWNLOADS:
+            mp_metrics.DOWNLOADS.add(1, {"plugin_id": request.id})
         return pb2.PluginData(data=data)
 
 
@@ -94,6 +121,8 @@ async def _startup() -> None:
 async def _shutdown() -> None:
     if _grpc_server:
         await _grpc_server.stop(0)
+    if _metrics_server:
+        _metrics_server.shutdown()
 
 
 @app.get("/plugins")
@@ -111,10 +140,16 @@ def download_plugin(plugin_id: str):
     row = conn.execute("SELECT path FROM plugins WHERE id=?", (plugin_id,)).fetchone()
     conn.close()
     if not row:
+        if mp_metrics.ERRORS:
+            mp_metrics.ERRORS.add(1, {"plugin_id": plugin_id})
         raise HTTPException(status_code=404, detail="Plugin not found")
     file_path = Path(PLUGIN_DIR) / row["path"]
     if not file_path.exists():
+        if mp_metrics.ERRORS:
+            mp_metrics.ERRORS.add(1, {"plugin_id": plugin_id})
         raise HTTPException(status_code=404, detail="File not found")
+    if mp_metrics.DOWNLOADS:
+        mp_metrics.DOWNLOADS.add(1, {"plugin_id": plugin_id})
     return FileResponse(file_path, media_type="application/zip", filename=row["path"])
 
 
