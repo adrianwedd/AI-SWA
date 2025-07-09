@@ -1981,3 +1981,144 @@
     - A commit with a 'docs' label triggers the SWA-DOCS-01 agent.
   priority: 2
   status: pending
+- id: 208
+  task_id: DOC-001
+  title: "Establish Documentation-as-a-Product Framework"
+  description: "Treat our documentation as a first-class product. This involves assigning clear ownership, defining a roadmap, and setting success metrics to ensure quality and relevance, mirroring Netflix's strategy."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: []
+  priority: 1
+  status: pending
+  actionable_steps:
+    - "Appoint a Documentation Product Owner or lead."
+    - "Draft a documentation mission statement and vision."
+    - "Define key metrics (e.g., developer satisfaction, time-to-first-hello-world, search success rate)."
+    - "Create a Q3/Q4 documentation roadmap."
+  acceptance_criteria:
+    - "A product owner for documentation is officially designated."
+    - "A public roadmap for documentation improvements is published."
+    - "A dashboard for tracking key documentation metrics is created."
+  assigned_to: null
+- id: 209
+  task_id: DOC-002
+  title: "Define Documentation Audience Personas"
+  description: "Identify and define key developer personas (e.g., new hire, backend specialist, frontend developer, SRE) to tailor content, structure, and language effectively."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: [208]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - "Interview developers from different teams and levels of experience."
+    - "Create 3-5 detailed developer personas."
+    - "Document the primary information needs and pain points for each persona."
+  acceptance_criteria:
+    - "Persona documents are created and shared with the engineering team."
+    - "Content templates are updated to reference target personas."
+  assigned_to: null
+- id: 210
+  task_id: DOC-003
+  title: "Implement a Centralized Documentation Portal"
+  description: "To solve discoverability, we will select and implement a single, searchable portal (like Backstage, MkDocs, or a custom solution) to serve as the source of truth for all technical documentation."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: []
+  priority: 1
+  status: pending
+  command: "npx @techdocs/cli serve"
+  actionable_steps:
+    - "Evaluate and select a documentation portal technology."
+    - "Deploy a proof-of-concept of the chosen portal."
+    - "Configure search functionality."
+    - "Develop a migration plan for existing docs."
+  acceptance_criteria:
+    - "A documentation portal is deployed and accessible to all developers."
+    - "The portal's search can index and find content across multiple repositories."
+  assigned_to: null
+- id: 211
+  task_id: DOC-004
+  title: "Implement Docs-as-Code Workflow"
+  description: "Integrate documentation into our version control system (Git) and CI/CD pipeline. This allows developers to write and update docs in Markdown alongside their code, promoting timely updates."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: [210]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - "Establish a standard location for docs within service repositories (e.g., a `/docs` folder)."
+    - "Configure CI pipeline to build and publish docs to the portal on merge to main."
+    - "Create a template repository or starter kit for new services."
+  acceptance_criteria:
+    - "Developers can update documentation in the same PR as their code changes."
+    - "Documentation changes are automatically published to the portal within 5 minutes of a merge."
+  assigned_to: null
+- id: 212
+  task_id: DOC-005
+  title: "Automate API Documentation Generation"
+  description: "Set up tooling to automatically generate and publish API reference documentation from code annotations (e.g., OpenAPI/Swagger, JSDoc) to ensure it's always synchronized with the code."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: [211]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - "Choose a standard for API specifications (e.g., OpenAPI 3.0)."
+    - "Integrate a generator into the CI pipeline for key services."
+    - "Ensure the generated API docs are automatically published and versioned in the central portal."
+  acceptance_criteria:
+    - "The API reference for at least two key services is auto-generated and available in the portal."
+    - "The generated documentation is updated with every new release of the service."
+  assigned_to: null
+- id: 213
+  task_id: DOC-006
+  title: "Create Content Style Guide and Templates"
+  description: "Develop a comprehensive style guide and a set of content templates (e.g., for tutorials, how-to guides, conceptual overviews). Templates will emphasize explaining the 'why' behind technical decisions, not just the 'how'."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: [209]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - "Write a style guide covering tone, voice, and formatting."
+    - "Create Markdown templates for at least three core document types (e.g., Tutorial, Reference, Explanation)."
+    - "Incorporate a 'Context' or 'Why' section into all relevant templates."
+  acceptance_criteria:
+    - "A style guide is published in the documentation portal."
+    - "A repository of official documentation templates is created and linked from the portal."
+  assigned_to: null
+- id: 214
+  task_id: DOC-007
+  title: "Audit and Migrate Existing Documentation"
+  description: "Review all existing documentation from sources like Confluence, Google Docs, and wikis. Identify what is outdated vs. valuable, and migrate the valuable content to the new portal, updating it to meet the new standards."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: [210, 213]
+  priority: 4
+  status: pending
+  actionable_steps:
+    - "Create an inventory of all existing documentation sources."
+    - "For each document, decide to 'migrate', 'archive', or 'delete'."
+    - "Assign owners for migrating key documents."
+    - "Track migration progress."
+  acceptance_criteria:
+    - "At least 80% of valuable, active documentation is migrated to the new portal."
+    - "Legacy documentation sources are set to read-only with links pointing to the new portal."
+  assigned_to: null
+- id: 215
+  task_id: DOC-008
+  title: "Integrate Feedback Mechanisms into Portal"
+  description: "Add features to the documentation portal that allow readers to easily provide feedback, suggest edits via a PR, or ask questions on every page to foster a culture of community ownership."
+  area: documentation
+  epic: Implement Netflix-Inspired Documentation Strategy
+  dependencies: [210]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - "Add a 'Rate this page' widget."
+    - "Add an 'Edit this page' link that deep-links to the source file in Git."
+    - "Integrate a comments/questions widget (e.g., Giscus, Utterances)."
+  acceptance_criteria:
+    - "Every documentation page has at least two methods for providing feedback."
+    - "Feedback is routed to a designated Slack channel or ticketing system."
+  assigned_to: null
