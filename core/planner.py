@@ -1,3 +1,10 @@
+"""Core planning algorithm used by the orchestrator.
+
+The heavy lifting such as dependency evaluation and budget tracking is
+implemented in :mod:`core.planner_utils` to keep this module small and
+easy to maintain.
+"""
+
 from typing import List, Optional
 import logging
 
@@ -10,6 +17,7 @@ from .planner_utils import (
     filter_ready_tasks,
     is_budget_exhausted,
     should_warn_about_budget,
+    increment_cost_and_warn,
 )
 
 logger = logging.getLogger(__name__)
@@ -54,17 +62,11 @@ class Planner:
             return None
 
         selected = select_highest_priority(ready_tasks)
-        self.cost_used += 1
-        if should_warn_about_budget(
-            self.budget,
+        self.cost_used, self._warned = increment_cost_and_warn(
             self.cost_used,
+            self.budget,
             self.warning_threshold,
             self._warned,
-        ):
-            logger.warning(
-                "Planner budget at %d%%",
-                int(100 * self.cost_used / self.budget),
-            )
-            self._warned = True
+        )
         return selected
 

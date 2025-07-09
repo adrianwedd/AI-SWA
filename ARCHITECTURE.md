@@ -104,38 +104,32 @@ class Memory:
 ```
 
 ### Planner
-The `Planner` is responsible for deciding which task should be executed next. Its `plan` method takes a list of all current tasks. It filters these tasks to find those that are ready to be executed: specifically, tasks that have a status of "todo" and whose declared dependencies (other tasks) have a status of "done". Among these eligible tasks, it selects the one with the highest `priority` value. If no tasks are ready, it returns `None`.
+The `Planner` decides which task should run next while tracking an optional
+execution budget. The heavy lifting is delegated to helper functions in
+`core.planner_utils` which keeps the class small and testable. Tasks are
+considered **pending** when their status is ``"pending"`` and all declared
+dependencies are marked ``"done"``.
 
 ```python
 class Planner:
-    """
-    A class that plans the execution order of tasks.
-    It prioritizes tasks based on their priority and dependencies.
-    """
+    """Plan task execution order while tracking a cost budget."""
+
     def plan(self, tasks: list) -> object | None:
-        """
-        Determines the next task to execute based on priority and dependencies.
+        """Return the next runnable task or ``None``."""
 
-        Tasks with higher priority are selected first.
-        Tasks with dependencies are only selected if all their dependent tasks
-        have a status of "done".
+        if is_budget_exhausted(self.budget, self.cost_used):
+            return None
 
-        Args:
-            tasks: A list of task objects. Each task object is expected to have
-                   at least the following attributes:
-                   - id (any): A unique identifier for the task.
-                   - priority (int): The priority of the task (higher value means higher priority).
-                   - dependencies (list): A list of task IDs that this task depends on.
-                   - status (str): The current status of the task (e.g., "todo", "done").
+        validate_unique_ids(tasks)
+        ready = filter_ready_tasks(get_pending_tasks(tasks), tasks)
+        if not ready:
+            return None
 
-        Returns:
-            The next task object to execute, or None if no tasks can be
-            executed (e.g., all tasks are done, or pending tasks have unmet
-            dependencies).
-        """
-        # todo_tasks = [task for task in tasks if hasattr(task, 'status') and task.status == "todo"]
-        # ... Full method implementation as in core/planner.py
-        pass # Placeholder for brevity in markdown
+        task = select_highest_priority(ready)
+        self.cost_used, self._warned = increment_cost_and_warn(
+            self.cost_used, self.budget, self.warning_threshold, self._warned
+        )
+        return task
 ```
 
 ### Executor
