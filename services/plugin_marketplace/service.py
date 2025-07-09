@@ -19,6 +19,7 @@ except Exception:  # pragma: no cover - optional dependency
     setup_telemetry = None
 
 from . import metrics as mp_metrics
+from . import analytics
 
 from core import plugin_marketplace_pb2 as pb2
 from core import plugin_marketplace_pb2_grpc as pb2_grpc
@@ -100,6 +101,8 @@ class MarketplaceServicer(pb2_grpc.PluginMarketplaceServicer):
             context.abort(grpc.StatusCode.NOT_FOUND, "Not found")
         if mp_metrics.DOWNLOADS:
             mp_metrics.DOWNLOADS.add(1, {"plugin_id": request.id})
+        if analytics.DOWNLOADS:
+            analytics.DOWNLOADS.inc()
         return pb2.PluginData(data=data)
 
 
@@ -152,6 +155,8 @@ def download_plugin(plugin_id: str):
         raise HTTPException(status_code=404, detail="File not found")
     if mp_metrics.DOWNLOADS:
         mp_metrics.DOWNLOADS.add(1, {"plugin_id": plugin_id})
+    if analytics.DOWNLOADS:
+        analytics.DOWNLOADS.inc()
     return FileResponse(file_path, media_type="application/zip", filename=row["path"])
 
 
