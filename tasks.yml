@@ -1389,3 +1389,168 @@
   priority: 2
   status: pending
   epic: Reflector Core
+- id: 166
+  task_id: P2-T1
+  title: Develop Data Integrations
+  description: Integrate external systems to collect data for DORA and SPACE metrics.
+  area: metrics
+  actionable_steps:
+    - Configure Git provider webhooks and CI/CD API access.
+    - Pull incident management data for failure tracking.
+  dependencies: [157, 158]
+  acceptance_criteria:
+    - Data required for DORA and SPACE metrics is collected automatically.
+  priority: 2
+  status: pending
+  epic: Observability
+
+- id: 167
+  task_id: P2-T2
+  title: Instrument Unified Metrics Catalog
+  description: Instrument the full set of SLIs from the Unified AI-SWA Metrics Catalog.
+  area: metrics
+  actionable_steps:
+    - Add instrumentation hooks for all defined SLIs.
+    - Verify metrics appear in Prometheus.
+  dependencies: [166]
+  acceptance_criteria:
+    - Each SLI in the catalog has a corresponding metric in Prometheus.
+  priority: 2
+  status: pending
+  epic: Observability
+
+- id: 168
+  task_id: P2-T3
+  title: Define Initial SLOs
+  description: Collaborate with teams to establish service level objectives.
+  area: metrics
+  actionable_steps:
+    - Hold workshops with engineering leads.
+    - Document agreed SLOs for each service.
+  dependencies: [167]
+  acceptance_criteria:
+    - SLOs are documented and approved by stakeholders.
+  priority: 2
+  status: pending
+  epic: Observability
+
+- id: 169
+  task_id: P2-T4
+  title: Build DORA and SPACE Dashboards
+  description: Create Grafana dashboards visualizing DORA and SPACE metrics.
+  area: observability
+  actionable_steps:
+    - Use the dashboards-as-code workflow to define panels.
+    - Include visualizations for all key metrics.
+  dependencies: [166, 160, 161]
+  acceptance_criteria:
+    - Grafana dashboards display DORA and SPACE metrics side by side.
+  priority: 2
+  status: pending
+  epic: Observability
+
+- id: 170
+  task_id: P2-T5
+  title: Collect Developer Perceptual Data
+  description: Launch surveys to measure developer satisfaction and burnout.
+  area: metrics
+  actionable_steps:
+    - Deploy quarterly anonymous surveys.
+    - Aggregate results into Prometheus gauges.
+  dependencies: [166]
+  acceptance_criteria:
+    - Survey results are stored and visualized in Grafana.
+  priority: 3
+  status: pending
+  epic: Observability
+
+- id: 171
+  task_id: P3-T1
+  title: Analyze Telemetry Volume
+  description: Measure production telemetry volume and collector performance.
+  area: observability
+  actionable_steps:
+    - Gather baseline metrics on collector throughput.
+    - Identify optimization opportunities.
+  dependencies: [157, 158]
+  acceptance_criteria:
+    - Report documenting telemetry load and proposed optimizations.
+  priority: 3
+  status: pending
+  epic: Observability
+
+- id: 172
+  task_id: P3-T3
+  title: Tune Collector Resources
+  description: Adjust CPU and memory limits for OpenTelemetry Collectors based on production load.
+  area: observability
+  actionable_steps:
+    - Benchmark collector performance under load.
+    - Update deployment manifests with optimized limits.
+  dependencies: [171]
+  acceptance_criteria:
+    - Collectors operate within resource budgets without drops.
+  priority: 3
+  status: pending
+  epic: Observability
+
+- id: 173
+  task_id: P3-T4
+  title: Build Custom Collector Images
+  description: Use OpenTelemetry Collector Builder to create lean images.
+  area: observability
+  actionable_steps:
+    - Configure ocb with required components only.
+    - Publish optimized collector images to the registry.
+  dependencies: [171]
+  acceptance_criteria:
+    - Custom images run successfully in staging and production.
+  priority: 3
+  status: pending
+  epic: Observability
+
+- id: 174
+  task_id: P4-T2
+  title: Select Initial Optimization Problem
+  description: Choose the first production service for RL-based optimization.
+  area: reflector
+  actionable_steps:
+    - Review service metrics to identify scaling pain points.
+    - Document the chosen optimization target.
+  dependencies: [163]
+  acceptance_criteria:
+    - Optimization problem statement is approved by engineering leadership.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+
+- id: 175
+  task_id: P4-T4
+  title: Train First RL Agent
+  description: Train the Reflector Core agent using simulation data.
+  area: reflector
+  actionable_steps:
+    - Run imitation learning phase using historical data.
+    - Continue training with PPO until convergence.
+  dependencies: [164, 174]
+  acceptance_criteria:
+    - Training produces a policy that meets defined SLO targets in simulation.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+
+- id: 176
+  task_id: P4-T6
+  title: Enable Automated Actions
+  description: Gradually permit the RL agent to take actions in production.
+  area: reflector
+  actionable_steps:
+    - Implement safeguards and monitoring for automated actions.
+    - Roll out authority incrementally based on shadow mode results.
+  dependencies: [165, 175]
+  acceptance_criteria:
+    - Agent actions can be enabled with human override.
+  priority: 2
+  status: pending
+  epic: Reflector Core
+
