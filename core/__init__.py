@@ -7,3 +7,9 @@ except Exception:  # pragma: no cover - optional grpc dependency
         """Fallback when ``grpc`` is unavailable."""
         raise ImportError("grpc is required for io_ping")
 
+from .qa_agent import QAAgent
+from .docs_agent import DocsAgent
+from .supervisor import Supervisor
+
+__all__ = ["io_ping", "QAAgent", "DocsAgent", "Supervisor"]
+
