@@ -23,3 +23,8 @@ sandbox:
 planner:
   budget: 0
   warning_threshold: 0.8
+
+logging:
+  config_file: logging.conf
+  level: INFO
+  logfile: null
