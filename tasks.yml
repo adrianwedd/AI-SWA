@@ -421,7 +421,7 @@
   description: Introduce Rust modules via PyO3 for performance-critical code
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
@@ -432,7 +432,7 @@
   dependencies:
   - 82
   priority: 3
-  status: in_progress
+  status: done
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
@@ -444,7 +444,7 @@
   - 82
   - 83
   priority: 3
-  status: pending
+  status: done
   area: microservices
   actionable_steps: []
   acceptance_criteria: []

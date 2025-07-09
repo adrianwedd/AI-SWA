@@ -5,7 +5,7 @@ import requests
 
 import pytest
 
-from core.io_client import ping
+from core.io_client import ping, read_file, write_file
 
 
 @pytest.fixture(scope="module")
@@ -41,3 +41,9 @@ def test_metrics_endpoint(node_server):
     assert "process_cpu_user_seconds_total" in body
     assert "io_requests_total" in body
     assert "io_request_duration_seconds" in body
+
+
+def test_read_write_file(tmp_path, node_server):
+    test_path = tmp_path / "test.txt"
+    assert write_file(str(test_path), "data")
+    assert read_file(str(test_path)) == "data"

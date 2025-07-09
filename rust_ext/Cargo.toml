@@ -1,0 +1,15 @@
+[package]
+name = "rust_ext"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "rust_ext"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.21", features = ["extension-module"] }
+hmac = "0.12"
+sha2 = "0.10"
+base64 = "0.21"
+hex = "0.4"

@@ -80,11 +80,11 @@ def verify_plugin_signature(manifest: dict, signature: str) -> None:
     key = load_config()["security"].get("plugin_signing_key")
     if not key:
         return
-    import base64
-    import hashlib
     import hmac
-    payload = json.dumps(manifest, sort_keys=True).encode()
-    expected = base64.b64encode(hmac.new(key.encode(), payload, hashlib.sha256).digest()).decode()
+    from .fast_crypto import hmac_sha256_base64
+
+    payload = json.dumps(manifest, sort_keys=True)
+    expected = hmac_sha256_base64(key, payload)
     if not hmac.compare_digest(signature, expected):
         raise ValueError("Invalid plugin signature")
 
