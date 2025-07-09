@@ -247,6 +247,14 @@ OpenTelemetry endpoint configured in `core/telemetry.py`.
 Community health metrics are available via the CHAOSS dashboard described in
 [chaoss/README.md](chaoss/README.md).
 
+### Grafana Dashboards as Code
+
+Dashboard JSON files reside in [grafana/dashboards](grafana/dashboards). Pushing
+changes to this directory triggers the *Grafana Deploy* workflow, which runs
+`scripts/apply_dashboards.py` to apply the dashboards to Grafana using the
+`GRAFANA_URL` and `GRAFANA_API_KEY` secrets. See
+[docs/grafana_gitops.md](docs/grafana_gitops.md) for details.
+
 ### Example usage
 
 Run the services directly with overrides:

@@ -1291,7 +1291,7 @@
     - Editing a dashboard JSON in Git updates Grafana automatically.
     - Grafana dashboards and data sources are fully declarative.
   priority: 2
-  status: pending
+  status: done
   epic: Observability
 
 - id: 160
