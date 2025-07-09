@@ -43,6 +43,17 @@ def _cmd_upload(args: argparse.Namespace) -> None:
     print("Plugin published to marketplace")
 
 
+def _cmd_update(args: argparse.Namespace) -> None:
+    pipeline.certify_and_publish(Path(args.plugin))
+    print("Plugin updated in marketplace")
+
+
+def _cmd_remove(args: argparse.Namespace) -> None:
+    from services.plugin_marketplace import service
+    service.remove_plugin(args.plugin_id)
+    print("Plugin removed from marketplace")
+
+
 def _cmd_review(args: argparse.Namespace) -> None:
     url = f"{args.url.rstrip('/')}/plugins/{args.plugin_id}/reviews"
     resp = requests.post(url, json={"rating": args.rating, "review": args.text})
@@ -72,6 +83,14 @@ def build_parser() -> argparse.ArgumentParser:
     upload_p = sub.add_parser("upload", help="Upload plugin to marketplace")
     upload_p.add_argument("plugin", help="Path to plugin directory")
     upload_p.set_defaults(func=_cmd_upload)
+
+    update_p = sub.add_parser("update", help="Update plugin in marketplace")
+    update_p.add_argument("plugin", help="Path to plugin directory")
+    update_p.set_defaults(func=_cmd_update)
+
+    remove_p = sub.add_parser("remove", help="Remove plugin from marketplace")
+    remove_p.add_argument("plugin_id", help="Plugin ID")
+    remove_p.set_defaults(func=_cmd_remove)
 
     review_p = sub.add_parser("review", help="Submit a review for a plugin")
     review_p.add_argument("plugin_id", help="Plugin ID")
