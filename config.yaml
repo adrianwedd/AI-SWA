@@ -15,3 +15,11 @@ security:
   api_tokens_env: API_TOKENS
   plugin_signing_key: null
   plugin_signing_key_env: PLUGIN_SIGNING_KEY
+sandbox:
+  root: sandbox
+  allowed_commands:
+    - echo
+    - touch
+planner:
+  budget: 0
+  warning_threshold: 0.8

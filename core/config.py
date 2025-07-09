@@ -24,6 +24,16 @@ DEFAULT_CONFIG = {
         "plugin_policy_file": "plugins/policy.json",
         "plugin_policy_file_env": "PLUGIN_POLICY_FILE",
     },
+    "sandbox": {
+        "root": "sandbox",
+        "allowed_commands": ["echo", "touch"],
+        "root_env": "SANDBOX_ROOT",
+    },
+    "planner": {
+        "budget": 0,
+        "warning_threshold": 0.8,
+        "budget_env": "PLANNER_BUDGET",
+    },
 }
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config.yaml"
@@ -41,6 +51,8 @@ def load_config(path: str | Path | None = None) -> dict:
         "worker": {**DEFAULT_CONFIG["worker"], **data.get("worker", {})},
         "node": {**DEFAULT_CONFIG["node"], **data.get("node", {})},
         "security": {**DEFAULT_CONFIG["security"], **data.get("security", {})},
+        "sandbox": {**DEFAULT_CONFIG["sandbox"], **data.get("sandbox", {})},
+        "planner": {**DEFAULT_CONFIG["planner"], **data.get("planner", {})},
     }
 
     if "DB_PATH" in os.environ:
@@ -63,6 +75,11 @@ def load_config(path: str | Path | None = None) -> dict:
         cfg["worker"]["metrics_port"] = port
     sec = cfg["security"]
 
+    if "SANDBOX_ROOT" in os.environ:
+        cfg["sandbox"]["root"] = os.environ["SANDBOX_ROOT"]
+    if "PLANNER_BUDGET" in os.environ:
+        cfg["planner"]["budget"] = int(os.environ["PLANNER_BUDGET"])
+
     if "API_KEY" in os.environ:
         sec["api_key"] = os.environ["API_KEY"]
     if "API_TOKENS" in os.environ:
@@ -84,5 +101,13 @@ def load_config(path: str | Path | None = None) -> dict:
     env_name = sec.get("plugin_policy_file_env")
     if env_name and env_name in os.environ:
         sec["plugin_policy_file"] = os.environ[env_name]
+
+    env_name = cfg["sandbox"].get("root_env")
+    if env_name and env_name in os.environ:
+        cfg["sandbox"]["root"] = os.environ[env_name]
+
+    env_name = cfg["planner"].get("budget_env")
+    if env_name and env_name in os.environ:
+        cfg["planner"]["budget"] = int(os.environ[env_name])
 
     return cfg
