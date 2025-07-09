@@ -2,6 +2,8 @@
 
 SelfArchitectAI follows the **Liberal Contribution** model. Maintainers guide the project's direction while welcoming community input.
 
+For details on board membership and how meetings are run, see [docs/community/governance_board.md](docs/community/governance_board.md).
+
 ## Maintainers
 - Responsible for reviewing contributions and ensuring project health.
 - New maintainers are nominated by the existing team and accepted by lazy consensus.
