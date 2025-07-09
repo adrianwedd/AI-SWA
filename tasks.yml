@@ -112,7 +112,7 @@
   dependencies:
   - 53
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps:
   - Summarize literature on WSJF and RL-based prioritization
