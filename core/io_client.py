@@ -1,10 +1,15 @@
-import grpc
+try:
+    import grpc
+except Exception:  # pragma: no cover - optional dependency
+    grpc = None
 from . import io_service_pb2, io_service_pb2_grpc
 from .config import load_config
 
 
 def ping(message: str, host: str | None = None, port: int | None = None) -> str:
     """Send a ping request to the Node IOService."""
+    if grpc is None:
+        raise ImportError("grpc is required for ping")
     cfg = load_config()
     host = host or cfg.get("node", {}).get("host", "localhost")
     port = port or cfg.get("node", {}).get("port", 50051)
@@ -16,6 +21,8 @@ def ping(message: str, host: str | None = None, port: int | None = None) -> str:
 
 def read_file(path: str, host: str | None = None, port: int | None = None) -> str:
     """Read a file using the Node IOService."""
+    if grpc is None:
+        raise ImportError("grpc is required for read_file")
     cfg = load_config()
     host = host or cfg.get("node", {}).get("host", "localhost")
     port = port or cfg.get("node", {}).get("port", 50051)
@@ -27,6 +34,8 @@ def read_file(path: str, host: str | None = None, port: int | None = None) -> st
 
 def write_file(path: str, content: str, host: str | None = None, port: int | None = None) -> bool:
     """Write a file using the Node IOService."""
+    if grpc is None:
+        raise ImportError("grpc is required for write_file")
     cfg = load_config()
     host = host or cfg.get("node", {}).get("host", "localhost")
     port = port or cfg.get("node", {}).get("port", 50051)
