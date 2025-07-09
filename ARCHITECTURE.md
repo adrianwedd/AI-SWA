@@ -347,7 +347,15 @@ would have re-ranked tasks.
 The ``RLAgent`` tracks an ``authority`` value from ``0.0`` to ``1.0``. The
 ``VisionEngine`` applies the agent's ordering to the top fraction of tasks
 equal to this authority. The value only increases when observed
-performance gains exceed a threshold, allowing gradual delegation.
+
+### Production Simulation Environment
+The Reflector Core uses a **ProductionSimulator** to mirror the behavior of the
+live system. The simulator models key services, databases, and load balancers
+so that agents can interact with realistic state transitions. Workload traces
+are loaded from JSON files to replay real traffic patterns. The simulator
+publishes metrics through the existing ``MetricsProvider`` interface and
+supports the same action space exposed in production. This allows reinforcement
+learning agents to train safely while observing near-production metrics.
 
 ## Dependencies
 - **PyYAML==6.0.1** - Safe YAML parsing
