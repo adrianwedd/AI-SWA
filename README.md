@@ -220,6 +220,10 @@ The CI workflow performs automated security checks on every push:
 
 Set `SNYK_TOKEN`, `COSIGN_KEY`, and `COSIGN_PASSWORD` secrets to enable these steps.
 
+### Plugin Certification Pipeline
+
+See [docs/plugins/certification_pipeline.md](docs/plugins/certification_pipeline.md) for a diagram and explanation of the full vetting process.
+
 ## 📈 Observability
 
 All services expose Prometheus-compatible metrics. The Node I/O service uses
