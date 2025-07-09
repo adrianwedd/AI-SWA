@@ -49,7 +49,11 @@ class Orchestrator:
 
     # ------------------------------------------------------------------
     def _load_tasks(self, tasks_file: str) -> List[Task]:
-        tasks = self.memory.load_tasks(tasks_file)
+        try:
+            tasks = self.memory.load_tasks(tasks_file)
+        except Exception as exc:  # pragma: no cover - defensive
+            self.logger.exception("Loading tasks failed: %s", exc)
+            return []
         return tasks or []
 
     # ------------------------------------------------------------------
@@ -67,13 +71,16 @@ class Orchestrator:
         else:
             fields = set(Task.__dataclass_fields__.keys())
             tasks = [Task(**{k: v for k, v in item.items() if k in fields}) for item in reflected]
-        self.memory.save_tasks(tasks, tasks_file)
+        self._save_tasks(tasks, tasks_file)
         return tasks
 
     # ------------------------------------------------------------------
     def _save_tasks(self, tasks: List[Task], tasks_file: str) -> None:
         """Persist tasks to disk."""
-        self.memory.save_tasks(tasks, tasks_file)
+        try:
+            self.memory.save_tasks(tasks, tasks_file)
+        except Exception as exc:  # pragma: no cover - defensive
+            self.logger.exception("Saving tasks failed: %s", exc)
 
     def _set_status(self, task: Task, status: str, tasks: List[Task], tasks_file: str) -> None:
         """Update task status if possible and persist."""
@@ -96,7 +103,11 @@ class Orchestrator:
         return False
 
     def _audit_and_extend(self, tasks: List[Task], tasks_file: str) -> None:
-        audit_results = self.auditor.audit([self._task_to_dict(t) for t in tasks])
+        try:
+            audit_results = self.auditor.audit([self._task_to_dict(t) for t in tasks])
+        except Exception as exc:  # pragma: no cover - defensive
+            self.logger.exception("Audit failed: %s", exc)
+            return
         if not audit_results:
             return
         fields = set(Task.__dataclass_fields__.keys())
@@ -120,7 +131,8 @@ class Orchestrator:
 
         self._set_status(task, "done", tasks, tasks_file)
         self.logger.info("Orchestrator: Task '%s' completed.", getattr(task, "id", "N/A"))
-        self._tasks_executed.add(1)
+        if self._tasks_executed:
+            self._tasks_executed.add(1)
         self._audit_and_extend(tasks, tasks_file)
 
     def run(self, tasks_file: str = "tasks.yml") -> None:

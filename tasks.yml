@@ -570,7 +570,7 @@
   description: Increase test coverage for the Reflector component
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: testing
   actionable_steps: []
   acceptance_criteria: []
@@ -580,7 +580,7 @@
   description: Increase test coverage for the Orchestrator component
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: testing
   actionable_steps: []
   acceptance_criteria: []
@@ -590,7 +590,7 @@
   description: Implement more robust error handling in the Orchestrator
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: orchestrator
   actionable_steps: []
   acceptance_criteria: []
