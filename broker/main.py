@@ -31,6 +31,7 @@ except Exception:  # pragma: no cover - optional dependency
 from core.security import verify_api_key, verify_token, require_role, User
 from config import load_config
 from core.log_utils import configure_logging
+from .queue import publish_task
 
 config = load_config()
 DB_PATH = config["broker"]["db_path"]
@@ -109,6 +110,10 @@ def create_task(
     conn.commit()
     task.id = cur.lastrowid
     conn.close()
+    try:
+        publish_task(task.id)
+    except Exception:  # pragma: no cover - queue optional
+        logger.warning("Failed to publish task %s to queue", task.id)
     return task
 
 
