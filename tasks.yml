@@ -24,15 +24,17 @@
 #     }
 #   }
 - id: 33
-  description: Refactor core/reflector.py complexity 24
+  title: Refactor core/reflector.py
+  description: Refactor core/reflector.py which has a cyclomatic complexity of 24.
+  area: core
+  epic: Technical Debt & Refactoring
   dependencies: []
   priority: 3
   status: pending
-  area: core
   actionable_steps: []
-  acceptance_criteria: []
+  acceptance_criteria:
+    - Cyclomatic complexity of core/reflector.py is reduced below 15.
   assigned_to: null
-  epic: Legacy
 - id: 34
   description: Refactor core/bootstrap.py complexity 15
   dependencies: []
@@ -54,15 +56,17 @@
   assigned_to: null
   epic: Legacy
 - id: 36
-  description: Refactor core/planner.py complexity 35
+  title: Refactor core/planner.py
+  description: Refactor core/planner.py which has a cyclomatic complexity of 35.
+  area: core
+  epic: Technical Debt & Refactoring
   dependencies: []
   priority: 3
   status: pending
-  area: core
   actionable_steps: []
-  acceptance_criteria: []
+  acceptance_criteria:
+    - Cyclomatic complexity of core/planner.py is reduced below 15.
   assigned_to: null
-  epic: Legacy
 - id: 37
   description: Refactor tests/test_executor.py complexity 13
   dependencies: []
@@ -597,25 +601,34 @@
   assigned_to: null
   epic: Legacy
 - id: 111
-  description: Implement authentication and authorization for the broker API
+  title: Implement Auth for Broker API
+  description: Implement authentication and authorization for the broker API to secure task management.
+  area: security
+  epic: Foundational Stability and Governance
   dependencies: []
   priority: 1
   status: pending
-  area: security
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+    - Implement API key and bearer token verification middleware in broker/main.py.
+    - Add role-based access control decorators for all endpoints.
+  acceptance_criteria:
+    - Unauthenticated requests to the broker API are rejected with a 401 status.
+    - Requests with valid tokens but insufficient roles are rejected with a 403 status.
   assigned_to: null
-  epic: Legacy
 - id: 112
-  description: Consolidate application configuration into a single file
+  title: Consolidate application configuration
+  description: Consolidate application configuration into a single file and loading mechanism to improve maintainability.
+  area: configuration
+  epic: Technical Debt & Refactoring
   dependencies: []
   priority: 3
   status: pending
-  area: configuration
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+    - Create a single `config.py` module with a `load_config` function.
+    - Refactor all components to use the centralized configuration.
+  acceptance_criteria:
+    - All service configurations are loaded from a single, unified source.
   assigned_to: null
-  epic: Legacy
 - id: 113
   description: Add more detailed logging to the core components
   dependencies: []
@@ -1122,7 +1135,7 @@
     - The RL agent's suggested prioritizations are logged for offline evaluation.
   priority: 1
   status: pending
-  epic: Vision Engine
+  epic: Vision Engine & Prioritization
 
 - id: 151
   task_id: ARCH-001
@@ -1140,7 +1153,7 @@
     - Integration tests pass, and performance metrics show measurable improvement.
   priority: 2
   status: pending
-  epic: Architecture
+  epic: Architecture Evolution
 
 - id: 152
   task_id: OBS-002
@@ -1148,7 +1161,7 @@
   description: Deploy and configure the OpenTelemetry, Prometheus, and Grafana stack to provide the sensory feedback for the self-improvement loop.
   area: observability
   actionable_steps:
-    - Deploy Prometheus and Grafana instances.
+    - Deploy Prometheus and Grafana instances using infrastructure-as-code.
     - Instrument all services with the OpenTelemetry SDK.
     - Configure the OTel Collector to send metrics to Prometheus.
     - Create initial Grafana dashboards for key system health metrics, defined as code.
@@ -1158,7 +1171,7 @@
     - The observability stack is deployed via an infrastructure-as-code process.
   priority: 1
   status: pending
-  epic: Observability
+  epic: Foundational Stability and Governance
 
 - id: 153
   task_id: SEC-002
@@ -1175,7 +1188,7 @@
     - Successfully vetted plugins are cryptographically signed and published to a secure registry.
   priority: 1
   status: pending
-  epic: Ecosystem
+  epic: Foundational Stability and Governance
 
 - id: 154
   task_id: ETH-002
@@ -1209,26 +1222,24 @@
     - The outer loop can successfully execute an evolutionary cycle and produce a measurably improved inner loop agent.
   priority: 2
   status: pending
-  epic: Reflector Outer Loop
+  epic: Reflector Core Self-Improvement
 
 - id: 156
   task_id: COM-001
   title: Establish Community Governance and Outreach - Phase 1
-  description: Implement the foundational elements of the community growth blueprint.
+  description: Implement the foundational elements of the community growth blueprint to ensure long-term project health and contribution.
   area: community
   actionable_steps:
     - Select a unique, searchable project name to resolve brand ambiguity.
-    - "Publish core governance documents: GOVERNANCE.md (adopting a Liberal Contribution model) and a clear CONTRIBUTING.md."
+    - Publish core governance documents (GOVERNANCE.md, CONTRIBUTING.md) adopting a Liberal Contribution model.
     - Set up a community health dashboard using CHAOSS metrics, tracking Time to First Response and Contributor Absence Factor.
-  dependencies: [91]
+  dependencies: []
   acceptance_criteria:
-    - The project is renamed and has a clear mission statement in its README.
-    - Core governance and contribution documents are published.
-    - A public community health dashboard is available.
+    - The project has a clear mission statement and governance model documented in the repository.
+    - A public dashboard displays key community health metrics.
   priority: 1
   status: pending
-  epic: Community
-- id: 157
+  epic: Foundational Stability and Governance
   task_id: OBS-01
   title: Deploy Core OPG Stack
   description: Deploy and configure the OpenTelemetry, Prometheus, and Grafana stack.
