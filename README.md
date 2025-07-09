@@ -114,9 +114,9 @@ python -m ai_swa.orchestrator stop
 
 ## Configuration
 
-SelfArchitectAI loads settings from `config.yaml` by default. Set `CONFIG_FILE` to use a
-different file. Environment variables override values from the file so you can
-adjust settings per environment.
+SelfArchitectAI loads settings from `config.yaml` by default. Set the `CONFIG_FILE`
+environment variable to specify an alternative location. Environment variables always
+override values from the file so you can adjust settings per environment.
 
 ### Required environment variables
 
@@ -137,6 +137,15 @@ adjust settings per environment.
 | `API_TOKENS` | Comma separated tokens mapping to `username:role` | *(unset)* |
 | `PLUGIN_SIGNING_KEY` | HMAC key used to verify plugin manifests | *(unset)* |
 | `PLUGIN_POLICY_FILE` | Path to plugin policy JSON | `plugins/policy.json` |
+| `SANDBOX_ROOT` | Directory used for isolated plugin execution | `sandbox` |
+| `PLANNER_BUDGET` | Maximum planner steps before warning | `0` |
+| `LOG_CONFIG` | Path to logging configuration file | `logging.conf` |
+| `LOG_LEVEL` | Root logging level | `INFO` |
+| `LOG_FILE` | Optional log file path | *(unset)* |
+| `CONFIG_FILE` | Alternate config YAML location | `config.yaml` |
+| `ORCH_URL` | Orchestrator API URL used by API gateway | `http://orchestrator-api:8002` |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | OTLP metrics export endpoint | *(unset)* |
+| `OTEL_EXPORTER_OTLP_CERTIFICATE` | TLS certificate for OTLP endpoint | *(unset)* |
 
 ### Sample `config.yaml`
 

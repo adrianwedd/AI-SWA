@@ -764,7 +764,7 @@
   priority: 2
   acceptance_criteria:
   - README contains new Configuration section
-  status: pending
+  status: done
   assigned_to: null
   epic: Documentation
 - id: 128
