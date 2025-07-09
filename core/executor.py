@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import logging
-import subprocess
 import shlex
+import subprocess
 from datetime import datetime
 from pathlib import Path
 import time
 from contextlib import nullcontext
+
+from .config import load_config
+from .tool_runner import ToolRunner
 
 try:
     from opentelemetry import metrics, trace
@@ -18,7 +21,7 @@ except Exception:  # pragma: no cover - optional dependency
 class Executor:
     """Carry out tasks and capture their output."""
 
-    def __init__(self) -> None:
+    def __init__(self, tool_runner: ToolRunner | None = None) -> None:
         self.logger = logging.getLogger(__name__)
         if metrics:
             meter = metrics.get_meter_provider().get_meter(__name__)
@@ -32,6 +35,14 @@ class Executor:
             self._tasks_executed = None
             self._task_duration = None
         self._tracer = trace.get_tracer(__name__) if trace else None
+        cfg = load_config()
+        sandbox_cfg = cfg.get("sandbox", {})
+        if tool_runner is None:
+            tool_runner = ToolRunner(
+                sandbox_cfg.get("root", "sandbox"),
+                sandbox_cfg.get("allowed_commands", []),
+            )
+        self.tool_runner = tool_runner
 
     def execute(self, task: object) -> None:
         """Execute ``task`` and write any command output to ``logs/``.
@@ -66,8 +77,7 @@ class Executor:
             else nullcontext()
         )
         with span_ctx:
-            args = shlex.split(command)
-            result = subprocess.run(args, capture_output=True, text=True)
+            result = self.tool_runner.run(command)
         duration = time.perf_counter() - start_time
 
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
