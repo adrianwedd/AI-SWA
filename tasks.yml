@@ -49,7 +49,7 @@
   description: Refactor core/orchestrator.py complexity 13
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: core
   actionable_steps: []
   acceptance_criteria: []
@@ -112,7 +112,7 @@
   dependencies:
   - 53
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps:
   - Summarize literature on WSJF and RL-based prioritization
@@ -129,7 +129,7 @@
   dependencies:
   - 53
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps:
   - Review microservice patterns for Rust and Node interoperability
@@ -146,7 +146,7 @@
   dependencies:
   - 53
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps:
   - Survey OpenTelemetry, Prometheus, Grafana integration
@@ -163,7 +163,7 @@
   dependencies:
   - 53
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps:
   - Analyze plugin marketplace governance models
@@ -180,7 +180,7 @@
   dependencies:
   - 53
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps:
   - Review AI ethics frameworks and safety literature
@@ -197,7 +197,7 @@
   dependencies:
   - 53
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps:
   - Examine RL and evolutionary algorithms for autonomous coding
@@ -214,7 +214,7 @@
   dependencies:
   - 53
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps:
   - Survey open-source agent frameworks and commercial platforms
@@ -297,7 +297,7 @@
   dependencies:
   - 66
   priority: 3
-  status: done
+  status: pending
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -308,7 +308,7 @@
   dependencies:
   - 67
   priority: 3
-  status: done
+  status: pending
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -318,7 +318,7 @@
   description: Create high-fidelity simulation environment for code changes
   dependencies: []
   priority: 2
-  status: done
+  status: pending
   area: infrastructure
   actionable_steps: []
   acceptance_criteria: []
@@ -330,7 +330,7 @@
   - 67
   - 69
   priority: 2
-  status: done
+  status: pending
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -340,7 +340,7 @@
   description: Develop standardized benchmarking suite for agent evaluation
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: tests
   actionable_steps: []
   acceptance_criteria: []
@@ -350,7 +350,7 @@
   description: Implement continuous improvement dashboard for key metrics
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -360,7 +360,7 @@
   description: Define plugin APIs, isolation model, and threat analysis
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: plugins
   actionable_steps: []
   acceptance_criteria: []
@@ -371,7 +371,7 @@
   dependencies:
   - 73
   priority: 3
-  status: done
+  status: pending
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -381,7 +381,7 @@
   description: Add SAST, SCA, secret scanning, and compliance checks in CI/CD
   dependencies: []
   priority: 2
-  status: done
+  status: pending
   area: ci
   actionable_steps: []
   acceptance_criteria: []
@@ -392,7 +392,7 @@
   dependencies:
   - 75
   priority: 2
-  status: done
+  status: pending
   area: ci
   actionable_steps: []
   acceptance_criteria: []
@@ -404,7 +404,7 @@
   - 73
   - 75
   priority: 3
-  status: done
+  status: pending
   area: plugins
   actionable_steps: []
   acceptance_criteria: []
@@ -415,7 +415,7 @@
   dependencies:
   - 77
   priority: 3
-  status: done
+  status: pending
   area: plugins
   actionable_steps: []
   acceptance_criteria: []
@@ -425,7 +425,7 @@
   description: Introduce Rust modules via PyO3 for performance-critical code
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
@@ -436,7 +436,7 @@
   dependencies:
   - 82
   priority: 3
-  status: done
+  status: pending
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
@@ -448,7 +448,7 @@
   - 82
   - 83
   priority: 3
-  status: done
+  status: pending
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
@@ -458,7 +458,7 @@
   description: Build fast PPO-aligned Reflector inner loop for continuous improvement
   dependencies: []
   priority: 2
-  status: done
+  status: pending
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -469,7 +469,7 @@
   dependencies:
   - 88
   priority: 3
-  status: done
+  status: pending
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -480,7 +480,7 @@
     and CrewAI
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -491,7 +491,7 @@
   dependencies:
   - 90
   priority: 3
-  status: done
+  status: pending
   area: community
   actionable_steps: []
   acceptance_criteria: []
@@ -502,7 +502,7 @@
   dependencies:
   - 95
   priority: 3
-  status: done
+  status: pending
   area: vision
   actionable_steps: []
   acceptance_criteria: []
@@ -512,7 +512,7 @@
   description: Add reflective critique layer to Evaluator
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: evaluator
   actionable_steps: []
   acceptance_criteria: []
@@ -523,7 +523,7 @@
   dependencies:
   - 102
   priority: 3
-  status: done
+  status: pending
   area: memory
   actionable_steps: []
   acceptance_criteria: []
@@ -554,7 +554,7 @@
   description: Semantic search for Researcher agent
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: research
   actionable_steps: []
   acceptance_criteria: []
@@ -564,7 +564,7 @@
   description: Observer metrics dashboard
   dependencies: []
   priority: 3
-  status: done
+  status: pending
   area: observability
   actionable_steps: []
   acceptance_criteria: []
@@ -574,7 +574,7 @@
   description: Increase test coverage for the Reflector component
   dependencies: []
   priority: 2
-  status: done
+  status: pending
   area: testing
   actionable_steps: []
   acceptance_criteria: []
@@ -584,7 +584,7 @@
   description: Increase test coverage for the Orchestrator component
   dependencies: []
   priority: 2
-  status: done
+  status: pending
   area: testing
   actionable_steps: []
   acceptance_criteria: []
@@ -594,7 +594,7 @@
   description: Implement more robust error handling in the Orchestrator
   dependencies: []
   priority: 2
-  status: done
+  status: pending
   area: orchestrator
   actionable_steps: []
   acceptance_criteria: []
@@ -663,7 +663,7 @@
   description: Implement a more sophisticated security model for the plugin architecture
   dependencies: []
   priority: 1
-  status: done
+  status: pending
   area: security
   actionable_steps: []
   acceptance_criteria: []
@@ -1255,7 +1255,7 @@
     - Grafana is configured with Prometheus as a data source.
     - All observability components expose their own health metrics.
   priority: 1
-  status: done
+  status: pending
   epic: Observability
 
 - id: 158
@@ -1273,7 +1273,7 @@
     - Traces and metrics from all services reach the collectors.
     - CPU, memory, and request metrics are available in Prometheus.
   priority: 1
-  status: done
+  status: pending
   epic: Observability
 
 - id: 159
@@ -1291,7 +1291,7 @@
     - Editing a dashboard JSON in Git updates Grafana automatically.
     - Grafana dashboards and data sources are fully declarative.
   priority: 2
-  status: done
+  status: pending
   epic: Observability
 
 - id: 160
