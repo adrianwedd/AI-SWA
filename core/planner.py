@@ -1,15 +1,23 @@
 from typing import List, Optional
 from .task import Task
+from .config import load_config
 import logging
 
 logger = logging.getLogger(__name__)
 
 
 class Planner:
-    """
-    A class that plans the execution order of tasks.
-    It prioritizes tasks based on their priority and dependencies.
-    """
+    """Plan task execution order while tracking a cost budget."""
+
+    def __init__(self, budget: int | None = None, warning_threshold: float | None = None) -> None:
+        cfg = load_config()
+        planner_cfg = cfg.get("planner", {})
+        self.budget = budget if budget is not None else planner_cfg.get("budget", 0)
+        self.warning_threshold = (
+            warning_threshold if warning_threshold is not None else planner_cfg.get("warning_threshold", 0.8)
+        )
+        self.cost_used = 0
+        self._warned = False
 
     def plan(self, tasks: List[Task]) -> Optional[Task]:
         """Determine the next task to execute.
@@ -23,6 +31,10 @@ class Planner:
         Returns:
             The next :class:`Task` to execute or ``None`` if no task is ready.
         """
+        if self.budget and self.cost_used >= self.budget:
+            logger.warning("Budget exhausted; no further tasks will be planned")
+            return None
+
         self._validate_unique_ids(tasks)
         pending_tasks = self._get_pending_tasks(tasks)
         if not pending_tasks:
@@ -32,7 +44,17 @@ class Planner:
         if not ready_tasks:
             return None
 
-        return self._select_highest_priority(ready_tasks)
+        selected = self._select_highest_priority(ready_tasks)
+        self.cost_used += 1
+        if (
+            self.budget
+            and not self._warned
+            and self.cost_used >= self.budget * self.warning_threshold
+            and self.cost_used < self.budget
+        ):
+            logger.warning("Planner budget at %d%%", int(100 * self.cost_used / self.budget))
+            self._warned = True
+        return selected
 
     def _validate_unique_ids(self, tasks: List[Task]) -> None:
         """Ensure each task id is unique."""

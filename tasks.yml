@@ -508,7 +508,7 @@
   description: Add reflective critique layer to Evaluator
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: evaluator
   actionable_steps: []
   acceptance_criteria: []
@@ -519,7 +519,7 @@
   dependencies:
   - 102
   priority: 3
-  status: pending
+  status: done
   area: memory
   actionable_steps: []
   acceptance_criteria: []
@@ -550,7 +550,7 @@
   description: Semantic search for Researcher agent
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: research
   actionable_steps: []
   acceptance_criteria: []
@@ -560,7 +560,7 @@
   description: Observer metrics dashboard
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: observability
   actionable_steps: []
   acceptance_criteria: []
@@ -570,7 +570,7 @@
   description: Increase test coverage for the Reflector component
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: testing
   actionable_steps: []
   acceptance_criteria: []
@@ -580,7 +580,7 @@
   description: Increase test coverage for the Orchestrator component
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: testing
   actionable_steps: []
   acceptance_criteria: []
@@ -590,7 +590,7 @@
   description: Implement more robust error handling in the Orchestrator
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: orchestrator
   actionable_steps: []
   acceptance_criteria: []
@@ -681,7 +681,7 @@
   acceptance_criteria:
   - Logs from orchestrator, worker, and broker follow the same format
   - No print statements remain in core modules
-  status: pending
+  status: done
   assigned_to: null
   epic: Observability Improvements
 - id: 119
@@ -1811,3 +1811,4 @@
   priority: 2
   status: pending
   epic: Reflector Core
+
