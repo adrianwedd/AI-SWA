@@ -50,6 +50,7 @@ def test_cli_start_status_stop(tmp_path):
         "-m",
         "ai_swa.orchestrator",
         "status",
+        "orchestrator",
         "--pid-file",
         str(pid_file),
     ], tmp_path, env)
@@ -72,6 +73,7 @@ def test_cli_start_status_stop(tmp_path):
         "-m",
         "ai_swa.orchestrator",
         "status",
+        "orchestrator",
         "--pid-file",
         str(pid_file),
     ], tmp_path, env)
@@ -125,3 +127,51 @@ def test_cli_list(tmp_path):
     data = yaml.safe_load(result.stdout)
     assert data[0]["id"] == 1
     assert data[0]["description"] == "test task"
+
+
+def test_cli_status_agents(tmp_path):
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    result = _run([
+        sys.executable,
+        "-m",
+        "ai_swa.orchestrator",
+        "status",
+        "agents",
+    ], tmp_path, env)
+    assert result.returncode == 0
+    assert "SWA-CORE-01" in result.stdout
+
+
+def test_cli_status_queue(tmp_path):
+    tasks = [
+        {
+            "id": 1,
+            "description": "test task",
+            "dependencies": [],
+            "priority": 1,
+            "status": "pending",
+        },
+        {
+            "id": 2,
+            "description": "done task",
+            "dependencies": [],
+            "priority": 1,
+            "status": "done",
+        },
+    ]
+    tasks_file = tmp_path / "tasks.yml"
+    tasks_file.write_text(yaml.safe_dump(tasks, sort_keys=False))
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
+    result = _run([
+        sys.executable,
+        "-m",
+        "ai_swa.orchestrator",
+        "status",
+        "queue",
+        "--tasks",
+        str(tasks_file),
+    ], tmp_path, env)
+    assert result.returncode == 0
+    assert result.stdout.strip() == "1"

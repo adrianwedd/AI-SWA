@@ -17,6 +17,27 @@ from .self_auditor import SelfAuditor
 from .telemetry import setup_telemetry
 from .log_utils import configure_logging
 
+REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _active_agent_ids() -> list[str]:
+    path = REPO_ROOT / "AGENTS.md"
+    if not path.exists():
+        return []
+    agents = []
+    for line in path.read_text().splitlines():
+        if line.startswith("|") and "**Active**" in line:
+            parts = [p.strip() for p in line.split("|")]
+            if len(parts) > 1:
+                agents.append(parts[1].strip(" *"))
+    return agents
+
+
+def _queue_length(tasks_file: str) -> int:
+    mem = Memory(REPO_ROOT / "state.json")
+    tasks = mem.load_tasks(tasks_file)
+    return len([t for t in tasks if getattr(t, "status", "") != "done"])
+
 
 def build_parser() -> argparse.ArgumentParser:
     """Return argument parser for the CLI."""
@@ -49,11 +70,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="File containing orchestrator PID",
     )
 
-    status = subparsers.add_parser("status", help="Show orchestrator status")
-    status.add_argument(
+    status = subparsers.add_parser("status", help="Show system status")
+    status_sub = status.add_subparsers(dest="status_command")
+    status.set_defaults(status_command="orchestrator")
+
+    orch = status_sub.add_parser("orchestrator", help="Show orchestrator status")
+    orch.add_argument(
         "--pid-file",
         default="orchestrator.pid",
         help="File containing orchestrator PID",
+    )
+
+    status_sub.add_parser("agents", help="List active agent IDs")
+
+    queue = status_sub.add_parser("queue", help="Show task queue length")
+    queue.add_argument(
+        "--tasks",
+        default="tasks.yml",
+        help="Path to tasks.yml",
     )
 
     list_cmd = subparsers.add_parser("list", help="List tasks from tasks.yml")
@@ -138,19 +172,29 @@ def main(argv=None) -> int:
         return 0
 
     if args.command == "status":
-        pid_path = Path(args.pid_file)
-        if not pid_path.exists():
-            logging.error("Not running")
-            return 1
-        pid = int(pid_path.read_text())
-        try:
-            os.kill(pid, 0)
-        except OSError:
-            logging.error("Not running")
-            pid_path.unlink(missing_ok=True)
-            return 1
-        logging.info("Orchestrator running with PID %s", pid)
-        return 0
+        subcmd = args.status_command
+        if subcmd == "orchestrator":
+            pid_path = Path(args.pid_file)
+            if not pid_path.exists():
+                logging.error("Not running")
+                return 1
+            pid = int(pid_path.read_text())
+            try:
+                os.kill(pid, 0)
+            except OSError:
+                logging.error("Not running")
+                pid_path.unlink(missing_ok=True)
+                return 1
+            logging.info("Orchestrator running with PID %s", pid)
+            return 0
+        if subcmd == "agents":
+            for agent in _active_agent_ids():
+                print(agent)
+            return 0
+        if subcmd == "queue":
+            length = _queue_length(args.tasks)
+            print(length)
+            return 0
 
     if args.command == "list":
         memory = Memory(Path("state.json"))
