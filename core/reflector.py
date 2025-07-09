@@ -158,19 +158,37 @@ class Reflector:
         refactor_tasks = [t for t in tasks if "refactor" in t.get("description", "").lower()]
         refactor_files: Dict[str, Dict] = {}
         for task in refactor_tasks:
-            desc = task.get("description", "")
-            parts = desc.split()
-            if len(parts) >= 2 and parts[1].endswith(".py"):
-                filepath = parts[1]
-                if filepath in refactor_files and task.get("status") == refactor_files[filepath].get("status") == "pending":
-                    self.logger.warning(
-                        "Potential duplicate refactor task for %s: tasks %s and %s",
-                        filepath,
-                        task.get("id"),
-                        refactor_files[filepath].get("id"),
-                    )
-                else:
-                    refactor_files[filepath] = task
+            filepath = self._extract_refactor_filepath(task.get("description", ""))
+            if not filepath:
+                continue
+            if self._is_duplicate_pending(filepath, task, refactor_files):
+                self._log_duplicate_warning(filepath, task, refactor_files[filepath])
+            refactor_files[filepath] = task
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _extract_refactor_filepath(description: str) -> Optional[str]:
+        parts = description.split()
+        if len(parts) >= 2 and parts[1].endswith(".py"):
+            return parts[1]
+        return None
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _is_duplicate_pending(filepath: str, task: Dict, files: Dict[str, Dict]) -> bool:
+        if filepath in files:
+            existing = files[filepath]
+            return task.get("status") == existing.get("status") == "pending"
+        return False
+
+    # ------------------------------------------------------------------
+    def _log_duplicate_warning(self, filepath: str, task: Dict, existing: Dict) -> None:
+        self.logger.warning(
+            "Potential duplicate refactor task for %s: tasks %s and %s",
+            filepath,
+            task.get("id"),
+            existing.get("id"),
+        )
 
     # ------------------------------------------------------------------
     def _check_required_fields(self, tasks: List[Dict]) -> None:
@@ -224,14 +242,8 @@ class Reflector:
             complexities.append(max_c)
             summary["max_complexity"] = max(summary["max_complexity"], max_c)
 
-            if max_c > 25:
-                summary["complexity_distribution"]["critical"] += 1
-            elif max_c > 15:
-                summary["complexity_distribution"]["high"] += 1
-            elif max_c > 10:
-                summary["complexity_distribution"]["medium"] += 1
-            else:
-                summary["complexity_distribution"]["low"] += 1
+            bucket = self._complexity_bucket(max_c)
+            summary["complexity_distribution"][bucket] += 1
 
         if complexities:
             summary["avg_complexity"] = sum(complexities) / len(complexities)
@@ -241,6 +253,17 @@ class Reflector:
         )
 
         return summary
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def _complexity_bucket(value: int) -> str:
+        if value > 25:
+            return "critical"
+        if value > 15:
+            return "high"
+        if value > 10:
+            return "medium"
+        return "low"
 
     # ------------------------------------------------------------------
     def _analyze_system_health(self) -> Dict:
