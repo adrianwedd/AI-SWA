@@ -2,9 +2,9 @@
 
 The CI workflow uses [Bandit](https://bandit.readthedocs.io) to scan the source code for security issues. To reproduce the scan locally:
 
-1. Install the dependencies:
+1. Install the dependencies from the lock file:
    ```bash
-   pip install -r requirements.txt
+   pip install -r requirements.lock
    ```
 2. Run Bandit from the project root:
    ```bash
