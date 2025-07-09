@@ -8,8 +8,9 @@ Thank you for helping improve **SelfArchitectAI**. Our workflow follows the [Lib
    ```bash
    pip install -r requirements.txt
    ```
-2. Optionally enable pre-commit hooks:
+2. Install and enable pre-commit hooks:
    ```bash
+   pip install pre-commit
    pre-commit install
    ```
 
