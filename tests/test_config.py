@@ -21,3 +21,46 @@ def test_node_env_override(tmp_path, monkeypatch):
     assert cfg["node"]["host"] == "envhost"
     assert cfg["node"]["port"] == 2222
 
+
+def test_sandbox_config_loaded(tmp_path, monkeypatch):
+    cfg_file = tmp_path / "config.yaml"
+    cfg_file.write_text("sandbox:\n  root: /tmp/sbox\n  allowed_commands: [touch]\n")
+    monkeypatch.setenv("CONFIG_FILE", str(cfg_file))
+    cfg = load_config()
+    assert cfg["sandbox"]["root"] == "/tmp/sbox"
+    assert cfg["sandbox"]["allowed_commands"] == ["touch"]
+
+
+def test_planner_env_override(tmp_path, monkeypatch):
+    cfg_file = tmp_path / "config.yaml"
+    cfg_file.write_text("")
+    monkeypatch.setenv("CONFIG_FILE", str(cfg_file))
+    monkeypatch.setenv("PLANNER_BUDGET", "42")
+    cfg = load_config()
+    assert cfg["planner"]["budget"] == 42
+
+
+def test_logging_section(tmp_path, monkeypatch):
+    cfg_file = tmp_path / "config.yaml"
+    cfg_file.write_text(
+        "logging:\n  config_file: custom.conf\n  level: DEBUG\n  logfile: run.log\n"
+    )
+    monkeypatch.setenv("CONFIG_FILE", str(cfg_file))
+    cfg = load_config()
+    assert cfg["logging"]["config_file"] == "custom.conf"
+    assert cfg["logging"]["level"] == "DEBUG"
+    assert cfg["logging"]["logfile"] == "run.log"
+
+
+def test_logging_env_override(tmp_path, monkeypatch):
+    cfg_file = tmp_path / "config.yaml"
+    cfg_file.write_text("")
+    monkeypatch.setenv("CONFIG_FILE", str(cfg_file))
+    monkeypatch.setenv("LOG_CONFIG", "foo.conf")
+    monkeypatch.setenv("LOG_LEVEL", "WARNING")
+    monkeypatch.setenv("LOG_FILE", "bar.log")
+    cfg = load_config()
+    assert cfg["logging"]["config_file"] == "foo.conf"
+    assert cfg["logging"]["level"] == "WARNING"
+    assert cfg["logging"]["logfile"] == "bar.log"
+

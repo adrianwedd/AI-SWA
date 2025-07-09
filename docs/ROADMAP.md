@@ -24,3 +24,15 @@ Each phase builds on previous components and highlights key dependencies.
 | **5. Ecosystem & Governance** | Q1 2025 | Plugin marketplace, Ethical Sentinel | Intelligent Planning |
 
 The timeline is intentionally high level. Each phase represents a checkpoint in the system's evolution where functionality from the previous phase is considered stable enough to support the next.
+
+## Detailed Schedule
+| Quarter | Focus | Major Deliverables |
+|---------|-------|--------------------|
+| Q1 2024 | Foundation | CLI interface, persistent storage via `Memory`, first working `Orchestrator` cycle |
+| Q2 2024 | Observability | Metrics collection with `SelfAuditor`, Prometheus endpoints, dashboard setup |
+| Q3 2024 | Distributed Execution | FastAPI broker, asynchronous worker pool, Node.js IO service |
+| Q4 2024 | Intelligent Planning | Initial `VisionEngine` WSJF integration, RLAgent experimentation |
+| Q1 2025 | Ecosystem | Plugin API, signed manifest verification, basic plugin registry |
+| Q2 2025 | Governance | Ethical Sentinel enforcement, security scanning, automated policy checks |
+| Q3 2025 | Scaling | Horizontal worker scaling, task sharding, real-time monitoring |
+| Q4 2025 | Community | Public contribution guidelines, outreach program, long term maintenance planning |

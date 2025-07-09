@@ -2,6 +2,7 @@
 
 import argparse
 import sys
+import logging
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -24,9 +25,10 @@ def main(argv=None) -> int:
     """Run the WSJF ranking CLI."""
     parser = build_parser()
     args = parser.parse_args(argv)
+    logging.basicConfig(level=logging.INFO)
     path = Path(args.tasks_file)
     if not path.exists():
-        print(f"Tasks file not found: {path}", file=sys.stderr)
+        logging.error("Tasks file not found: %s", path)
         return 1
     data = yaml.safe_load(path.read_text()) or []
     tasks = [SimpleNamespace(**item) for item in data]
