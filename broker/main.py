@@ -19,6 +19,7 @@ from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel
+from typing import Any
 try:
     from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
     from core.telemetry import setup_telemetry
@@ -80,6 +81,7 @@ class Task(BaseModel):
     description: str
     status: str = "pending"
     command: str | None = None
+    metadata: dict[str, Any] | None = None
 
 
 class TaskResult(BaseModel):

@@ -40,6 +40,22 @@ def test_create_and_get_task(tmp_path):
     os.environ.pop("API_TOKENS")
 
 
+def test_create_task_with_metadata(tmp_path):
+    os.environ["DB_PATH"] = str(tmp_path / "api.db")
+    os.environ["METRICS_PORT"] = "0"
+    os.environ["API_TOKENS"] = "admintoken:admin:admin"
+    broker = reload(__import__("broker.main", fromlist=["app", "init_db"]))
+    client = TestClient(broker.app)
+
+    headers = {"Authorization": "Bearer admintoken"}
+    resp = client.post("/tasks", json={"description": "demo", "metadata": {"foo": "bar"}}, headers=headers)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["metadata"] == {"foo": "bar"}
+
+    os.environ.pop("API_TOKENS")
+
+
 def test_api_key(tmp_path):
     os.environ["DB_PATH"] = str(tmp_path / "api.db")
     os.environ["METRICS_PORT"] = "0"
