@@ -12,10 +12,14 @@ services:
       BROKER_URL: http://broker:8000
       WORKER_METRICS_PORT: "9001"
       BROKER_METRICS_PORT: "9000"
+      OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
+      OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
     depends_on:
       - broker
       - worker
       - io-service
+    volumes:
+      - ./observability/certs:/certs:ro
   broker:
     build:
       context: .
@@ -23,8 +27,11 @@ services:
     environment:
       DB_PATH: /data/tasks.db
       BROKER_METRICS_PORT: "9000"
+      OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
+      OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
     volumes:
       - broker-data:/data
+      - ./observability/certs:/certs:ro
     ports:
       - "8000:8000"
       - "9000:9000"
@@ -35,16 +42,25 @@ services:
     environment:
       BROKER_URL: http://broker:8000
       WORKER_METRICS_PORT: "9001"
+      OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
+      OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
     depends_on:
       - broker
+    volumes:
+      - ./observability/certs:/certs:ro
     ports:
       - "9001:9001"
   orchestrator-api:
     build:
       context: .
       dockerfile: orchestrator_api/Dockerfile
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
+      OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
     depends_on:
       - orchestrator
+    volumes:
+      - ./observability/certs:/certs:ro
     ports:
       - "8002:8002"
   api-gateway:
@@ -54,9 +70,13 @@ services:
     environment:
       BROKER_URL: http://broker:8000
       ORCH_URL: http://orchestrator-api:8002
+      OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
+      OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
     depends_on:
       - broker
       - orchestrator-api
+    volumes:
+      - ./observability/certs:/certs:ro
     ports:
       - "8080:8080"
   io-service:
@@ -64,6 +84,8 @@ services:
     environment:
       PORT: "50051"
       METRICS_PORT: "9100"
+      OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
+      OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9100/health"]
       interval: 5s
@@ -74,6 +96,44 @@ services:
       - "9100:9100"
     volumes:
       - node-data:/data
+      - ./observability/certs:/certs:ro
+
+  otel-collector:
+    image: otel/opentelemetry-collector:0.93.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./observability/otel-collector.yaml:/etc/otelcol/config.yaml:ro
+      - ./observability/certs:/certs:ro
+    ports:
+      - "4317:4317"
+      - "8889:8889"
+    healthcheck:
+      test: ["CMD", "otelcol", "--version"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  prometheus:
+    image: prom/prometheus:v2.52.0
+    volumes:
+      - ./observability/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./observability/certs:/certs:ro
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    volumes:
+      - ./observability/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./observability/certs:/certs:ro
+    environment:
+      GF_SERVER_PROTOCOL: https
+      GF_SERVER_CERT_FILE: /certs/collector.crt
+      GF_SERVER_CERT_KEY: /certs/collector.key
+    depends_on:
+      - prometheus
+    ports:
+      - "3000:3000"
 
 volumes:
   broker-data:
