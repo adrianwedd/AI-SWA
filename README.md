@@ -118,6 +118,10 @@ SelfArchitectAI loads settings from `config.yaml` by default. Set the `CONFIG_FI
 environment variable to specify an alternative location. Environment variables always
 override values from the file so you can adjust settings per environment.
 
+Use `config.load_config()` inside any service to access the merged
+configuration dictionary. The returned object contains sections like
+`broker`, `worker`, `node`, `security`, `sandbox`, `planner`, and `logging`.
+
 ### Required environment variables
 
 - `DB_PATH` – path to the broker SQLite database

@@ -1,5 +1,5 @@
 import os
-from core.config import load_config
+from config import load_config
 
 
 def test_load_node_config(tmp_path, monkeypatch):

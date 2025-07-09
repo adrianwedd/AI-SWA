@@ -10,7 +10,7 @@ import logging
 import asyncio
 import requests
 from core.telemetry import setup_telemetry
-from core.config import load_config
+from config import load_config
 from core.log_utils import configure_logging
 from core.async_runner import AsyncRunner
 

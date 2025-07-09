@@ -27,7 +27,7 @@ except Exception:  # pragma: no cover - optional dependency
     FastAPIInstrumentor = None
     setup_telemetry = None
 from core.security import verify_api_key, verify_token, require_role, User
-from core.config import load_config
+from config import load_config
 from core.log_utils import configure_logging
 
 config = load_config()
