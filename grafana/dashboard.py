@@ -2,7 +2,7 @@ from grafanalib.core import Dashboard, Graph, Row, Target
 from grafanalib.prometheus import PromQL
 
 DASHBOARD = Dashboard(
-    title="AI-SWA Overview",
+    title="SelfArchitectAI Overview",
     rows=[
         Row(panels=[
             Graph(

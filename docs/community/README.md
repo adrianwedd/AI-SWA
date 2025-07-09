@@ -1,6 +1,6 @@
-# AI-SWA Community Guide
+# SelfArchitectAI Community Guide
 
-This document outlines how developers can participate in the AI‑SWA project.
+This document outlines how developers can participate in the SelfArchitectAI project.
 
 ## Join the Discussion
 
@@ -15,7 +15,7 @@ This document outlines how developers can participate in the AI‑SWA project.
 
 ## Community Health Metrics
 
-AI-SWA tracks CHAOSS metrics such as Time to First Response and Contributor Absence Factor. These metrics are displayed on the community dashboard to ensure a welcoming environment.
+SelfArchitectAI tracks CHAOSS metrics such as Time to First Response and Contributor Absence Factor. These metrics are displayed on the community dashboard to ensure a welcoming environment.
 
 ## Growing Authority
 
