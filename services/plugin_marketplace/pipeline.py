@@ -6,7 +6,7 @@ from pathlib import Path
 from core.plugins import load_manifest
 from scripts.package_plugin import create_plugin_archive
 
-from .service import add_plugin, PLUGIN_DIR
+from .service import update_plugin, PLUGIN_DIR
 
 
 class ScanError(Exception):
@@ -34,7 +34,7 @@ def certify_and_publish(plugin_dir: Path) -> None:
     dest = Path(PLUGIN_DIR) / archive.name
     dest.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(archive, dest)
-    add_plugin(
+    update_plugin(
         manifest.id,
         manifest.name,
         manifest.version,

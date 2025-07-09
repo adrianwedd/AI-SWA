@@ -70,6 +70,36 @@ def add_plugin(id: str, name: str, version: str, dependencies: list[str], path: 
     conn.close()
 
 
+def update_plugin(id: str, name: str, version: str, dependencies: list[str], path: str) -> None:
+    """Update an existing plugin or insert if missing."""
+    conn = get_db()
+    old = conn.execute("SELECT path FROM plugins WHERE id=?", (id,)).fetchone()
+    conn.execute(
+        "INSERT OR REPLACE INTO plugins (id, name, version, dependencies, path) VALUES (?, ?, ?, ?, ?)",
+        (id, name, version, json.dumps(dependencies), path),
+    )
+    conn.commit()
+    conn.close()
+    if old and old["path"] != path:
+        old_file = Path(PLUGIN_DIR) / old["path"]
+        if old_file.exists():
+            old_file.unlink()
+
+
+def remove_plugin(id: str) -> None:
+    """Delete a plugin and associated files and reviews."""
+    conn = get_db()
+    row = conn.execute("SELECT path FROM plugins WHERE id=?", (id,)).fetchone()
+    conn.execute("DELETE FROM plugins WHERE id=?", (id,))
+    conn.execute("DELETE FROM reviews WHERE plugin_id=?", (id,))
+    conn.commit()
+    conn.close()
+    if row:
+        file = Path(PLUGIN_DIR) / row["path"]
+        if file.exists():
+            file.unlink()
+
+
 def list_plugins_from_db() -> list[dict[str, str]]:
     conn = get_db()
     rows = conn.execute("SELECT id, name, version, dependencies, path FROM plugins").fetchall()
@@ -196,6 +226,25 @@ def download_plugin(plugin_id: str):
     if analytics.DOWNLOADS:
         analytics.DOWNLOADS.inc()
     return FileResponse(file_path, media_type="application/zip", filename=row["path"])
+
+
+@app.put("/plugins/{plugin_id}")
+def update_plugin_api(plugin_id: str, payload: dict):
+    """Update a plugin's metadata and stored archive."""
+    name = payload.get("name", plugin_id)
+    version = payload.get("version")
+    path = payload.get("path")
+    deps = payload.get("dependencies", [])
+    if not version or not path:
+        raise HTTPException(status_code=400, detail="version and path required")
+    update_plugin(plugin_id, name, version, deps, path)
+    return {"status": "ok"}
+
+
+@app.delete("/plugins/{plugin_id}")
+def delete_plugin_api(plugin_id: str):
+    remove_plugin(plugin_id)
+    return {"status": "ok"}
 
 
 @app.post("/plugins/{plugin_id}/reviews")
