@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "broker.fullname" . }}
+  labels:
+    app: {{ include "broker.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "broker.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "broker.name" . }}
+    spec:
+      containers:
+        - name: broker
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: DB_PATH
+              value: {{ .Values.env.DB_PATH | quote }}
+          ports:
+            - containerPort: {{ .Values.service.port }}

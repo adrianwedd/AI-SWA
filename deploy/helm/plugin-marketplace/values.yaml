@@ -1,0 +1,9 @@
+replicaCount: 1
+image:
+  repository: ai-swa/plugin-marketplace
+  tag: "latest"
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  httpPort: 8003
+  grpcPort: 50052

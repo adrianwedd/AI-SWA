@@ -1,0 +1,10 @@
+replicaCount: 1
+image:
+  repository: ai-swa/broker
+  tag: "latest"
+  pullPolicy: IfNotPresent
+env:
+  DB_PATH: /data/tasks.db
+service:
+  type: ClusterIP
+  port: 8000
