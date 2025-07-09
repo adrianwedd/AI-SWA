@@ -13,6 +13,8 @@ def _cmd_validate(args: argparse.Namespace) -> None:
 
 
 def _cmd_package(args: argparse.Namespace) -> None:
+    # Validate manifest before packaging
+    load_manifest(Path(args.plugin) / "manifest.json")
     archive = create_plugin_archive(Path(args.plugin))
     print(f"Created archive at {archive}")
 

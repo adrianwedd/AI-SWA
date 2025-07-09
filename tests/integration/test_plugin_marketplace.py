@@ -36,6 +36,8 @@ def _make_plugin(tmp_path: Path, plugin_id: str, fail_scan=False) -> Path:
         "name": plugin_id.title(),
         "version": "0.1.0",
         "permissions": ["read_files"],
+        "dependencies": [],
+        "compatibility": ">=0.1",
     }
     (plugin_dir / "manifest.json").write_text(json.dumps(manifest))
     code = "def run():\n    return 'ok'\n"
