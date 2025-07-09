@@ -133,3 +133,28 @@ def load_config(path: str | Path | None = None) -> dict:
         cfg["logging"]["logfile"] = os.environ["LOG_FILE"]
 
     return cfg
+
+
+# cache for reload_config
+_CACHED_CFG: dict | None = None
+_CACHE_MTIME: float | None = None
+
+
+def reload_config(path: str | Path | None = None) -> dict:
+    """Reload configuration if the file has changed.
+
+    This function caches the loaded configuration and re-reads the
+    ``config.yaml`` file when its modification time changes. It returns
+    the cached configuration dictionary in all cases.
+    """
+
+    global _CACHED_CFG, _CACHE_MTIME
+
+    cfg_path = Path(os.getenv("CONFIG_FILE", path or CONFIG_PATH))
+    mtime = cfg_path.stat().st_mtime if cfg_path.exists() else None
+
+    if _CACHED_CFG is None or mtime != _CACHE_MTIME:
+        _CACHED_CFG = load_config(path)
+        _CACHE_MTIME = mtime
+
+    return _CACHED_CFG

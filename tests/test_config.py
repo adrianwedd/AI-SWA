@@ -1,5 +1,5 @@
 import os
-from config import load_config
+from config import load_config, reload_config
 
 
 def test_load_node_config(tmp_path, monkeypatch):
@@ -63,4 +63,15 @@ def test_logging_env_override(tmp_path, monkeypatch):
     assert cfg["logging"]["config_file"] == "foo.conf"
     assert cfg["logging"]["level"] == "WARNING"
     assert cfg["logging"]["logfile"] == "bar.log"
+
+
+def test_reload_config(tmp_path, monkeypatch):
+    cfg_file = tmp_path / "config.yaml"
+    cfg_file.write_text("node:\n  host: first\n")
+    monkeypatch.setenv("CONFIG_FILE", str(cfg_file))
+    cfg = load_config()
+    assert cfg["node"]["host"] == "first"
+    cfg_file.write_text("node:\n  host: second\n")
+    reloaded = reload_config()
+    assert reloaded["node"]["host"] == "second"
 

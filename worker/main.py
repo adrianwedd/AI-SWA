@@ -9,10 +9,11 @@ next available task via ``/tasks/next``. Each task may provide a shell
 import logging
 import os
 import asyncio
+import signal
 import requests
 import sentry_sdk
 from core.telemetry import setup_telemetry
-from config import load_config
+from config import load_config, reload_config
 from core.log_utils import configure_logging
 from core.async_runner import AsyncRunner
 
@@ -20,6 +21,15 @@ config = load_config()
 BROKER_URL = config["worker"]["broker_url"]
 CONCURRENCY = int(config["worker"].get("concurrency", 2))
 sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"))
+
+def _reload_config(signum, frame) -> None:
+    """Reload settings on ``SIGHUP``."""
+    global config, BROKER_URL, CONCURRENCY
+    config = reload_config()
+    BROKER_URL = config["worker"]["broker_url"]
+    CONCURRENCY = int(config["worker"].get("concurrency", 2))
+
+signal.signal(signal.SIGHUP, _reload_config)
 setup_telemetry(
     service_name="worker",
     metrics_port=int(config["worker"]["metrics_port"]),

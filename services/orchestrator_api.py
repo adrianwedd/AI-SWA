@@ -11,12 +11,18 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Depends
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
-from core.config import load_config
+from core.config import load_config, reload_config
 from core.security import verify_api_key, require_role, User
 from core.telemetry import setup_telemetry
 
 app = FastAPI()
 config = load_config()
+
+def _reload_config(signum, frame) -> None:
+    global config
+    config = reload_config()
+
+signal.signal(signal.SIGHUP, _reload_config)
 setup_telemetry(
     service_name="orchestrator_api",
     metrics_port=0,
