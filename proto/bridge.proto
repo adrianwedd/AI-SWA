@@ -1,0 +1,14 @@
+syntax = "proto3";
+package aiswa;
+
+service Bridge {
+  rpc Reverse(ReverseRequest) returns (ReverseReply) {}
+}
+
+message ReverseRequest {
+  string text = 1;
+}
+
+message ReverseReply {
+  string text = 1;
+}
