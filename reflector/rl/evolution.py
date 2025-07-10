@@ -142,8 +142,35 @@ class HyperParamEvolution:
             json.dump(results, f)
 
 
+@dataclass
+class EvolutionStrategyOptimizer:
+    """Mutation-only ES optimizer for PPO hyperparameters."""
+
+    environment: EvolutionEnvironment
+    population_size: int = 4
+    generations: int = 1
+    history: List[HyperParams] = field(default_factory=list)
+
+    def evolve(self, seed: HyperParams) -> HyperParams:
+        """Return best params after ``generations`` of mutation."""
+        population = [seed] + [seed.mutate() for _ in range(self.population_size - 1)]
+        best = seed
+        for _ in range(self.generations):
+            scored = sorted(
+                ((self.environment.evaluate(p), p) for p in population),
+                key=lambda x: x[0],
+                reverse=True,
+            )
+            best = scored[0][1]
+            self.history.append(best)
+            parents = [g for _, g in scored[:2]]
+            population = parents + [random.choice(parents).mutate() for _ in range(self.population_size - 2)]
+        return best
+
+
 __all__ = [
     "HyperParams",
     "EvolutionEnvironment",
     "HyperParamEvolution",
+    "EvolutionStrategyOptimizer",
 ]
