@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass, field
 from typing import Dict, Optional
@@ -18,11 +19,18 @@ class PPOAgent:
     replay_buffer: ReplayBuffer
     ewc: Optional[EWC] = None
     gamma: float = 0.99
+    learning_rate: float = 0.01
+    clip_epsilon: float = 0.2
+    policy: Dict[str, float] = field(default_factory=dict)
     value: Dict[str, float] = field(default_factory=dict)
 
-    def select_action(self, state: Dict[str, float]) -> int:
-        """Return an action. Random for placeholder implementation."""
-        return random.choice([0, 1])
+    def select_action(self, state: Dict[str, float]) -> tuple[int, float]:
+        """Return an action and its log probability under the current policy."""
+        z = sum(state.get(k, 0.0) * self.policy.get(k, 0.0) for k in state.keys())
+        p = 1.0 / (1.0 + math.exp(-z))
+        action = 1 if random.random() < p else 0
+        log_prob = math.log(p if action == 1 else 1.0 - p + 1e-8)
+        return action, log_prob
 
     def store_transition(
         self,
@@ -31,8 +39,9 @@ class PPOAgent:
         reward: float,
         next_state: Dict[str, float],
         done: bool,
+        log_prob: float,
     ) -> None:
-        self.replay_buffer.add((state, action, reward, next_state, done))
+        self.replay_buffer.add((state, action, reward, next_state, done, log_prob))
 
     def value_estimate(self, state: Dict[str, float]) -> float:
         return sum(state.get(k, 0.0) * self.value.get(k, 0.0) for k in state.keys())
@@ -52,14 +61,30 @@ class PPOAgent:
                     * (self.value.get(name, 0.0) - self.ewc.opt_params.get(name, 0.0))
                 )
 
-        for state, action, reward, next_state, done in batch:
-            target = reward + self.gamma * self.value_estimate(next_state) * (1 - int(done))
-            td_error = target - self.value_estimate(state)
+        for state, action, reward, next_state, done, old_log_prob in batch:
+            v_next = self.value_estimate(next_state)
+            v_curr = self.value_estimate(state)
+            target = reward + self.gamma * v_next * (1 - int(done))
+            advantage = target - v_curr
+
+            z = sum(state.get(k, 0.0) * self.policy.get(k, 0.0) for k in state.keys())
+            p = 1.0 / (1.0 + math.exp(-z))
+            new_log_prob = math.log(p if action == 1 else 1.0 - p + 1e-8)
+            ratio = math.exp(new_log_prob - old_log_prob)
+            clipped = max(min(ratio, 1 + self.clip_epsilon), 1 - self.clip_epsilon)
+            policy_factor = min(ratio, clipped) * advantage
+
             for k, v in state.items():
-                update = 0.01 * td_error * v
+                if action == 1:
+                    grad_log_prob = (1 - p) * v
+                else:
+                    grad_log_prob = -p * v
+                self.policy[k] = self.policy.get(k, 0.0) + self.learning_rate * policy_factor * grad_log_prob
+
+                val_update = self.learning_rate * advantage * v
                 if self.ewc:
-                    update -= penalty_grad.get(k, 0.0)
-                self.value[k] = self.value.get(k, 0.0) + update
+                    val_update -= penalty_grad.get(k, 0.0)
+                self.value[k] = self.value.get(k, 0.0) + val_update
 
         self.replay_buffer.buffer.clear()
 
@@ -71,6 +96,6 @@ class PPOAgent:
     def train(self, metrics: Dict[str, float]) -> None:
         state = self.state_builder.build()
         reward = calculate_reward(metrics)
-        action = self.select_action(state)
-        self.store_transition(state, action, reward, state, True)
+        action, log_prob = self.select_action(state)
+        self.store_transition(state, action, reward, state, True, log_prob)
         self.update()
