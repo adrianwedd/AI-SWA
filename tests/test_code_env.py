@@ -16,3 +16,15 @@ def test_code_env_step_and_task_queue(tmp_path):
 
     result = env.step({})
     assert result["metrics"]["events_processed"] == 1
+
+
+def test_code_env_reset(tmp_path):
+    workload = tmp_path / "workload.json"
+    workload.write_text('[{"service": "api"}, {"service": "worker"}]')
+    env = CodeEnv(workload_path=workload, seed=123)
+    env.add_service(Service(name="api", capacity=1))
+    env.add_service(Service(name="worker", capacity=1))
+    first = [env.step({})["state"] for _ in range(2)]
+    env.reset()
+    again = [env.step({})["state"] for _ in range(2)]
+    assert first == again

@@ -1630,7 +1630,7 @@
   acceptance_criteria:
     - Simulation produces realistic metrics for pipeline execution.
   priority: 2
-  status: pending
+  status: done
   epic: Reflector Core
 - id: 179
   task_id: P1T3
@@ -1645,7 +1645,7 @@
   acceptance_criteria:
     - Simulation can reproduce known incident scenarios.
   priority: 2
-  status: pending
+  status: done
   epic: Reflector Core
 - id: 180
   task_id: P1T4
@@ -1660,7 +1660,7 @@
   acceptance_criteria:
     - Agents compile and can step through both simulations.
   priority: 2
-  status: pending
+  status: done
   epic: Reflector Core
 - id: 181
   task_id: P2T1

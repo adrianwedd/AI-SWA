@@ -21,6 +21,7 @@ class CodeEnv:
 
     workload_path: Path
     metrics_provider: Optional[MetricsProvider] = None
+    seed: Optional[int] = None
 
     def __post_init__(self) -> None:
         provider = self.metrics_provider or SimulationMetricsProvider
@@ -29,6 +30,7 @@ class CodeEnv:
         self.simulator = ProductionSimulator(
             workload_path=self.workload_path,
             metrics_provider=provider,
+            seed=self.seed,
         )
         self.tasks: List[Task] = []
 
@@ -55,6 +57,11 @@ class CodeEnv:
         if self.tasks:
             return self.tasks.pop(0)
         return None
+
+    # --------------------------------------------------------------
+    def reset(self) -> None:
+        """Reset the underlying simulator to its initial state."""
+        self.simulator.reset()
 
     # --------------------------------------------------------------
     def step(self, action: Dict[str, Any]) -> Dict[str, Any]:

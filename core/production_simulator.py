@@ -76,15 +76,30 @@ class SimulationMetricsProvider(MetricsProvider):
 class ProductionSimulator:
     """High-level simulator mirroring production behavior."""
 
-    def __init__(self, workload_path: Path, metrics_provider: Optional[MetricsProvider] = None) -> None:
+    def __init__(
+        self,
+        workload_path: Path,
+        metrics_provider: Optional[MetricsProvider] = None,
+        seed: Optional[int] = None,
+    ) -> None:
         self.workload_path = Path(workload_path)
         self.metrics_provider = metrics_provider
+        self.random = random.Random(seed)
         self.services: Dict[str, Service] = {}
         self.databases: Dict[str, Database] = {}
         self.load_balancers: Dict[str, LoadBalancer] = {}
         self.workload: List[Dict[str, Any]] = self._load_workload()
         self._cursor = 0
         self._metrics: Dict[str, Any] = {"events_processed": 0}
+        self._seed = seed
+
+    # ------------------------------------------------------------------
+    def reset(self) -> None:
+        """Reset simulator state for a reproducible run."""
+        self.random = random.Random(self._seed)
+        self.workload = self._load_workload()
+        self._cursor = 0
+        self._metrics = {"events_processed": 0}
 
     # ------------------------------------------------------------------
     def snapshot(self) -> Dict[str, Any]:
@@ -119,7 +134,9 @@ class ProductionSimulator:
         try:
             with self.workload_path.open("r", encoding="utf-8") as f:
                 data = json.load(f)
-            return data if isinstance(data, list) else []
+            events = data if isinstance(data, list) else []
+            self.random.shuffle(events)
+            return events
         except Exception:  # pragma: no cover - I/O errors
             return []
 
@@ -136,6 +153,21 @@ class ProductionSimulator:
         self.load_balancers[lb.name] = lb
 
     # ------------------------------------------------------------------
+    def apply_action(self, action: Dict[str, Any]) -> None:
+        """Apply an action modifying simulator state."""
+        scale = action.get("scale_service")
+        if scale:
+            svc = self.services.get(scale.get("name"))
+            if svc:
+                svc.capacity += int(scale.get("delta", 0))
+
+        latency = action.get("set_latency")
+        if latency:
+            svc = self.services.get(latency.get("name"))
+            if svc:
+                svc.latency_ms = int(latency.get("latency_ms", svc.latency_ms))
+
+    # ------------------------------------------------------------------
     def collect_metrics(self) -> Dict[str, Any]:
         metrics = {"events_processed": self._metrics["events_processed"]}
         for name, svc in self.services.items():
@@ -147,6 +179,7 @@ class ProductionSimulator:
     # ------------------------------------------------------------------
     def step(self, action: Dict[str, Any]) -> Dict[str, Any]:
         """Return simulated state transition and metrics."""
+        self.apply_action(action)
         if not self.workload:
             event = {}
         else:
