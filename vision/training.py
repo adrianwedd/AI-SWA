@@ -3,12 +3,13 @@ from __future__ import annotations
 """Simple RL training pipeline for the Vision Engine."""
 
 from dataclasses import dataclass, field
+from typing import Optional
 
 from prometheus_client import Gauge, start_http_server
 
 from core.observability import MetricsProvider
 from .vision_engine import RLAgent
-from .epo import TwoSpeedEngine
+from .epo import TwoSpeedEngine, Scheduler
 
 REWARD_GAUGE = Gauge("rl_training_reward", "Reward for the last episode")
 LENGTH_GAUGE = Gauge("rl_training_episode_length", "Steps in the last episode")
@@ -57,10 +58,18 @@ class TwoSpeedTrainer:
 
     engine: TwoSpeedEngine
     inner_steps: int = 1
+    scheduler: Optional[Scheduler] = None
 
     def run(self, cycles: int = 1) -> None:
         """Run ``inner_steps`` and then an outer-loop cycle for each iteration."""
         for _ in range(cycles):
             for _ in range(self.inner_steps):
-                self.engine.inner_step()
-            self.engine.outer_cycle()
+                if self.scheduler:
+                    self.scheduler.schedule(self.engine.inner_step)
+                else:
+                    self.engine.inner_step()
+            if self.scheduler:
+                self.scheduler.schedule(self.engine.outer_cycle)
+                self.scheduler.run()
+            else:
+                self.engine.outer_cycle()
