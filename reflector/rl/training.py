@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Dict, Optional
 
 from ..state_builder import StateBuilder
-from core.reward import calculate_reward
+from .reward import calculate_reward
 from .gen_actions import ActionGenerator
 import math
 import random
@@ -35,7 +35,7 @@ class PPOAgent:
     def train_step(self, metrics: Dict[str, float]) -> None:
         """Update policy using ``metrics`` and the current state."""
         state = self.state_builder.build()
-        reward = calculate_reward(metrics)
+        reward, _terms = calculate_reward(metrics)
         action, log_prob = self.select_action(state)
         self.replay_buffer.add((state, action, reward, state, True, log_prob))
         batch = self.replay_buffer.sample(batch_size=4)

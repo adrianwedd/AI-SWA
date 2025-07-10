@@ -12,6 +12,13 @@ from .epo import TwoSpeedEngine
 
 REWARD_GAUGE = Gauge("rl_training_reward", "Reward for the last episode")
 LENGTH_GAUGE = Gauge("rl_training_episode_length", "Steps in the last episode")
+CORRECTNESS_GAUGE = Gauge(
+    "rl_training_correctness", "Correctness component of the reward"
+)
+PERFORMANCE_GAUGE = Gauge(
+    "rl_training_performance", "Performance component of the reward"
+)
+STYLE_GAUGE = Gauge("rl_training_style", "Style component of the reward")
 
 
 @dataclass
@@ -38,6 +45,10 @@ class RLTrainer:
                     pass
             REWARD_GAUGE.set(reward)
             LENGTH_GAUGE.set(len(metrics))
+            terms = getattr(self.agent, "last_reward_terms", {})
+            CORRECTNESS_GAUGE.set(terms.get("correctness", 0.0))
+            PERFORMANCE_GAUGE.set(terms.get("performance", 0.0))
+            STYLE_GAUGE.set(terms.get("style", 0.0))
 
 
 @dataclass
