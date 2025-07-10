@@ -39,7 +39,8 @@ def test_ppo_agent_training_step(tmp_path):
     metrics = provider.collect()
     agent.train(metrics)
     assert len(buffer) == 0
-    assert agent.value  # weights updated
+    assert agent.value  # critic weights updated
+    assert agent.policy  # policy weights updated
 
 
 def test_ppo_consolidation_updates_fisher(tmp_path):
