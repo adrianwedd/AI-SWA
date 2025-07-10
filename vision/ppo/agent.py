@@ -7,6 +7,7 @@ from typing import Dict, Optional
 from .replay_buffer import ReplayBuffer
 from .ewc import EWC
 from .state_builder import StateBuilder
+from core.reward import calculate_reward
 
 
 @dataclass
@@ -69,7 +70,7 @@ class PPOAgent:
     # Integration with RLTrainer
     def train(self, metrics: Dict[str, float]) -> None:
         state = self.state_builder.build()
-        reward = sum(metrics.get(k, 0.0) for k in metrics if isinstance(metrics[k], (int, float)))
+        reward = calculate_reward(metrics)
         action = self.select_action(state)
         self.store_transition(state, action, reward, state, True)
         self.update()
