@@ -12,7 +12,7 @@ def test_rl_trainer_runs(tmp_path):
     agent = RLAgent()
     trainer = RLTrainer(agent=agent, metrics_provider=provider)
     trainer.run()
-    assert agent.training_data == [{"coverage": 85}]
+    assert agent.training_data == [{"coverage": 1.0}]
 
 
 def test_rl_training_persists_data(tmp_path):
@@ -25,7 +25,21 @@ def test_rl_training_persists_data(tmp_path):
     trainer.run()
     assert train_file.exists()
     data = train_file.read_text().strip()
-    assert json.loads(data) == {"coverage": 99}
+    assert json.loads(data) == {"coverage": 1.0}
+
+
+def test_rl_trainer_includes_log_metrics(tmp_path):
+    metrics_file = tmp_path / "metrics.json"
+    metrics_file.write_text('{"coverage": 2}')
+    log_file = tmp_path / "train.log"
+    log_file.write_text("error\nline\nline\nline\n")
+    provider = MetricsProvider(metrics_file)
+    agent = RLAgent()
+    trainer = RLTrainer(agent=agent, metrics_provider=provider, logs_path=log_file)
+    trainer.run()
+    entry = agent.training_data[0]
+    assert entry["log_lines"] == 1.0
+    assert entry["error_lines"] == 0.25
 
 
 def test_rl_trainer_consolidates(tmp_path):

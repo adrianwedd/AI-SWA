@@ -24,7 +24,7 @@ def test_state_builder_numeric_filter(tmp_path):
     provider = MetricsProvider(metrics_file)
     builder = StateBuilder(provider)
     state = builder.build()
-    assert state == {"coverage": 95.0}
+    assert state == {"coverage": 1.0}
 
 
 def test_state_builder_vector(tmp_path):
@@ -32,7 +32,7 @@ def test_state_builder_vector(tmp_path):
     metrics_file.write_text('{"b": 2, "a": 1}')
     provider = MetricsProvider(metrics_file)
     builder = StateBuilder(provider)
-    assert builder.vector() == [1.0, 2.0]
+    assert builder.vector() == [0.5, 1.0]
 
 
 def test_ppo_agent_training_step(tmp_path):
