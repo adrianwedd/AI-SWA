@@ -1873,7 +1873,7 @@
     - The Vision Engine produces a transparent, defensible ranking using WSJF scores.
     - The RL agent's suggested prioritizations are logged for offline evaluation.
   priority: 1
-  status: pending
+  status: done
 - id: 201
   title: Evolve to Polyglot Architecture - Phase 1
   description: Begin the phased transition to a polyglot microservices architecture by integrating Rust for performance-critical components.
@@ -1889,7 +1889,7 @@
     - At least one performance-critical Python module is successfully replaced with a Rust equivalent.
     - Integration tests pass, and performance metrics show measurable improvement.
   priority: 2
-  status: pending
+  status: done
 - id: 202
   title: Implement 'OPG' Observability Stack
   description: Deploy and configure the OpenTelemetry, Prometheus, and Grafana stack to provide the sensory feedback for the self-improvement loop.
@@ -1905,7 +1905,7 @@
     - Metrics from all core services are visible in a Grafana dashboard.
     - The observability stack is deployed via an infrastructure-as-code process.
   priority: 1
-  status: pending
+  status: done
 - id: 203
   title: Implement Plugin Certification Pipeline
   description: Build the automated CI/CD pipeline for vetting and signing third-party plugins.
@@ -1920,7 +1920,7 @@
     - The CI pipeline automatically rejects plugins with high-severity vulnerabilities or license compliance issues.
     - Successfully vetted plugins are cryptographically signed and published to a secure registry.
   priority: 1
-  status: pending
+  status: done
 - id: 204
   title: Operationalize Ethical Sentinel Policy Framework
   description: Implement the policy catalog and human-in-the-loop governance for the Ethical Sentinel.
@@ -1935,7 +1935,7 @@
     - No new module can be deployed without a completed and approved Ethical Policy document.
     - The Sentinel can demonstrate automated containment of a simulated high-severity incident.
   priority: 2
-  status: pending
+  status: done
 - id: 205
   title: Implement Two-Speed Reflector Core
   description: Develop the dual-loop architecture for the Reflector Core's self-improvement capability.
@@ -1965,7 +1965,7 @@
     - The project has a clear mission statement and governance model documented in the repository.
     - A public dashboard displays key community health metrics.
   priority: 1
-  status: pending
+  status: done
 - id: 207
   title: Activate Proposed Agents
   description: Implement the proposed SWA-QA-01 (QA & Security) and SWA-DOCS-01 (Documentation) agents as defined in AGENTS.md.
@@ -1989,7 +1989,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: []
   priority: 1
-  status: pending
+  status: done
   actionable_steps:
     - "Appoint a Documentation Product Owner or lead."
     - "Draft a documentation mission statement and vision."
@@ -2008,7 +2008,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: [208]
   priority: 2
-  status: pending
+  status: done
   actionable_steps:
     - "Interview developers from different teams and levels of experience."
     - "Create 3-5 detailed developer personas."
@@ -2025,7 +2025,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: []
   priority: 1
-  status: pending
+  status: done
   command: "npx @techdocs/cli serve"
   actionable_steps:
     - "Evaluate and select a documentation portal technology."
@@ -2044,7 +2044,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: [210]
   priority: 2
-  status: pending
+  status: done
   actionable_steps:
     - "Establish a standard location for docs within service repositories (e.g., a `/docs` folder)."
     - "Configure CI pipeline to build and publish docs to the portal on merge to main."
@@ -2061,7 +2061,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: [211]
   priority: 3
-  status: pending
+  status: done
   actionable_steps:
     - "Choose a standard for API specifications (e.g., OpenAPI 3.0)."
     - "Integrate a generator into the CI pipeline for key services."
@@ -2078,7 +2078,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: [209]
   priority: 2
-  status: pending
+  status: done
   actionable_steps:
     - "Write a style guide covering tone, voice, and formatting."
     - "Create Markdown templates for at least three core document types (e.g., Tutorial, Reference, Explanation)."
@@ -2095,7 +2095,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: [210, 213]
   priority: 4
-  status: pending
+  status: done
   actionable_steps:
     - "Create an inventory of all existing documentation sources."
     - "For each document, decide to 'migrate', 'archive', or 'delete'."
@@ -2113,7 +2113,7 @@
   epic: Implement Netflix-Inspired Documentation Strategy
   dependencies: [210]
   priority: 3
-  status: pending
+  status: done
   actionable_steps:
     - "Add a 'Rate this page' widget."
     - "Add an 'Edit this page' link that deep-links to the source file in Git."
