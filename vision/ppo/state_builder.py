@@ -13,8 +13,14 @@ class StateBuilder:
 
     def build(self) -> Dict[str, float]:
         metrics = self.metrics_provider.collect()
+
         return {
             k: float(v)
             for k, v in metrics.items()
             if isinstance(v, (int, float))
         }
+
+    def vector(self) -> list[float]:
+        """Return a sorted list of numeric metric values."""
+        state = self.build()
+        return [state[k] for k in sorted(state.keys())]
