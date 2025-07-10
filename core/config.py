@@ -43,6 +43,11 @@ DEFAULT_CONFIG = {
         "level": "INFO",
         "logfile": None,
     },
+    "reward": {
+        "correctness": 1.0,
+        "performance": 0.5,
+        "style": 0.2,
+    },
 }
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config.yaml"
@@ -64,6 +69,7 @@ def load_config(path: str | Path | None = None) -> dict:
         "planner": {**DEFAULT_CONFIG["planner"], **data.get("planner", {})},
         "tracing": {**DEFAULT_CONFIG["tracing"], **data.get("tracing", {})},
         "logging": {**DEFAULT_CONFIG["logging"], **data.get("logging", {})},
+        "reward": {**DEFAULT_CONFIG["reward"], **data.get("reward", {})},
     }
 
     if "DB_PATH" in os.environ:
@@ -131,6 +137,13 @@ def load_config(path: str | Path | None = None) -> dict:
         cfg["logging"]["level"] = os.environ["LOG_LEVEL"]
     if "LOG_FILE" in os.environ:
         cfg["logging"]["logfile"] = os.environ["LOG_FILE"]
+
+    if "REWARD_CORRECTNESS" in os.environ:
+        cfg["reward"]["correctness"] = float(os.environ["REWARD_CORRECTNESS"])
+    if "REWARD_PERFORMANCE" in os.environ:
+        cfg["reward"]["performance"] = float(os.environ["REWARD_PERFORMANCE"])
+    if "REWARD_STYLE" in os.environ:
+        cfg["reward"]["style"] = float(os.environ["REWARD_STYLE"])
 
     return cfg
 

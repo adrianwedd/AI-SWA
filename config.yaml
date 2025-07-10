@@ -28,3 +28,8 @@ logging:
   config_file: logging.conf
   level: INFO
   logfile: null
+
+reward:
+  correctness: 1.0
+  performance: 0.5
+  style: 0.2
