@@ -40,7 +40,7 @@ def test_environment_builds_agent_with_gene_params(tmp_path):
     metrics_file.write_text('{"reward": 1}')
     provider = MetricsProvider(metrics_file)
     env = SimulationEnvironment(metrics_provider=provider, episodes=1)
-    gene = Gene(hidden_dim=32, learning_rate=0.005, clip_epsilon=0.3, gamma=0.9)
+    gene = Gene(architecture=(32,), learning_rate=0.005, clip_epsilon=0.3, gamma=0.9)
     agent = env.build_agent(gene)
     assert agent.learning_rate == gene.learning_rate
     assert agent.clip_epsilon == gene.clip_epsilon
