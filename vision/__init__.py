@@ -1,7 +1,7 @@
 """Vision Engine package."""
 
 from .vision_engine import VisionEngine, RLAgent, wsjf_score
-from .training import RLTrainer
+from .training import RLTrainer, TwoSpeedTrainer
 from .ppo import ReplayBuffer, EWC, StateBuilder, PPOAgent
 from .epo import (
     Gene,
@@ -15,6 +15,7 @@ __all__ = [
     "RLAgent",
     "wsjf_score",
     "RLTrainer",
+    "TwoSpeedTrainer",
     "ReplayBuffer",
     "EWC",
     "StateBuilder",

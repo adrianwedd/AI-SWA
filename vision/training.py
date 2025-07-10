@@ -8,6 +8,7 @@ from prometheus_client import Gauge, start_http_server
 
 from core.observability import MetricsProvider
 from .vision_engine import RLAgent
+from .epo import TwoSpeedEngine
 
 REWARD_GAUGE = Gauge("rl_training_reward", "Reward for the last episode")
 LENGTH_GAUGE = Gauge("rl_training_episode_length", "Steps in the last episode")
@@ -37,3 +38,18 @@ class RLTrainer:
                     pass
             REWARD_GAUGE.set(reward)
             LENGTH_GAUGE.set(len(metrics))
+
+
+@dataclass
+class TwoSpeedTrainer:
+    """Coordinate PPO inner loop and evolutionary outer loop."""
+
+    engine: TwoSpeedEngine
+    inner_steps: int = 1
+
+    def run(self, cycles: int = 1) -> None:
+        """Run ``inner_steps`` and then an outer-loop cycle for each iteration."""
+        for _ in range(cycles):
+            for _ in range(self.inner_steps):
+                self.engine.inner_step()
+            self.engine.outer_cycle()
