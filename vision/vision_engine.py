@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import List, Dict, Optional
 import json
 
+from core.reward import calculate_reward
+
 from core.code_llm import CodeLLM
 
 from core.task import Task
@@ -89,9 +91,7 @@ class RLAgent:
 
     def train(self, metrics: Dict[str, float]) -> float:
         """Collect ``metrics`` for offline training and return reward."""
-        reward = sum(
-            v for v in metrics.values() if isinstance(v, (int, float))
-        )
+        reward = calculate_reward(metrics)
         self.training_data.append(metrics)
         if self.training_path:
             with self.training_path.open("a", encoding="utf-8") as f:
