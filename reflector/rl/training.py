@@ -2,6 +2,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Dict, Optional
+
+from ..state_builder import StateBuilder
+from core.reward import calculate_reward
 import math
 import random
 
@@ -14,6 +17,7 @@ class PPOAgent:
     """Minimal PPO agent storing experiences in a replay buffer."""
 
     replay_buffer: ReplayBuffer
+    state_builder: StateBuilder
     ewc: Optional[EWC] = None
     gamma: float = 0.99
     learning_rate: float = 0.01
@@ -26,7 +30,10 @@ class PPOAgent:
         log_prob = math.log(p if action == 1 else 1.0 - p + 1e-8)
         return action, log_prob
 
-    def train_step(self, state: Dict[str, float], reward: float) -> None:
+    def train_step(self, metrics: Dict[str, float]) -> None:
+        """Update policy using ``metrics`` and the current state."""
+        state = self.state_builder.build()
+        reward = calculate_reward(metrics)
         action, log_prob = self.select_action(state)
         self.replay_buffer.add((state, action, reward, state, True, log_prob))
         batch = self.replay_buffer.sample(batch_size=4)
