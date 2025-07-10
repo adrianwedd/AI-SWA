@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from typing import Dict
 
 from core.observability import MetricsProvider
-from core.reward import calculate_reward
+from reflector.rl.reward import calculate_reward
 from ..ppo import ReplayBuffer, StateBuilder, PPOAgent
 from .gene import Gene
 
@@ -35,5 +35,6 @@ class SimulationEnvironment:
         for _ in range(self.episodes):
             metrics = self.metrics_provider.collect()
             agent.train(metrics)
-            total += calculate_reward(metrics)
+            reward, _terms = calculate_reward(metrics)
+            total += reward
         return total + sum(agent.value.values())

@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import List, Dict, Optional
 import json
 
-from core.reward import calculate_reward
+from reflector.rl.reward import calculate_reward
 
 from core.code_llm import CodeLLM
 
@@ -73,6 +73,7 @@ class RLAgent:
         self.training_path = Path(training_path) if training_path else None
         self.authority: float = 0.0
         self.code_model = code_model
+        self.last_reward_terms: Dict[str, float] = {}
 
     def suggest(self, tasks: List[Task]) -> List[Task]:
         """Return refined ordering. Currently identity function."""
@@ -91,7 +92,8 @@ class RLAgent:
 
     def train(self, metrics: Dict[str, float]) -> float:
         """Collect ``metrics`` for offline training and return reward."""
-        reward = calculate_reward(metrics)
+        reward, terms = calculate_reward(metrics)
+        self.last_reward_terms = terms
         self.training_data.append(metrics)
         if self.training_path:
             with self.training_path.open("a", encoding="utf-8") as f:
