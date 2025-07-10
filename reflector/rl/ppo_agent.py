@@ -26,6 +26,7 @@ class PPOAgent:
     gamma: float = 0.99
     clip_epsilon: float = 0.2
     action_gen: Optional[ActionGenerator] = None
+    last_batch: list = field(default_factory=list)
 
     def __post_init__(self) -> None:  # expose weights for backward compatibility
         self.policy = self.actor.weights
@@ -52,6 +53,7 @@ class PPOAgent:
         batch = self.replay_buffer.sample(batch_size)
         if not batch:
             return
+        self.last_batch = batch
 
         penalty_grad: Dict[str, float] = {}
         if self.ewc:
@@ -81,7 +83,7 @@ class PPOAgent:
 
     def consolidate(self) -> None:
         if self.ewc:
-            self.ewc.update_importance(self.value)
+            self.ewc.update_importance(self.value, batch=self.last_batch)
 
     def train_step(self, metrics: Dict[str, float]) -> None:
         state = self.state_builder.build()

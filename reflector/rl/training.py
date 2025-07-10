@@ -24,6 +24,7 @@ class PPOAgent:
     learning_rate: float = 0.01
     action_gen: Optional[ActionGenerator] = None
     policy: Dict[str, float] = field(default_factory=dict)
+    last_batch: list = field(default_factory=list)
 
     def select_action(self, state: Dict[str, float]) -> tuple[int, float]:
         z = sum(state.get(k, 0.0) * self.policy.get(k, 0.0) for k in state)
@@ -41,6 +42,7 @@ class PPOAgent:
         batch = self.replay_buffer.sample(batch_size=4)
         if not batch:
             return
+        self.last_batch = batch
         for s, a, r, _ns, _done, _lp in batch:
             z = sum(s.get(k, 0.0) * self.policy.get(k, 0.0) for k in s)
             p = 1.0 / (1.0 + math.exp(-z))
@@ -61,7 +63,7 @@ class PPOAgent:
 
     def consolidate(self) -> None:
         if self.ewc:
-            self.ewc.update_importance(self.policy)
+            self.ewc.update_importance(self.policy, batch=self.last_batch)
 
     def propose_patch(self, context: str, max_tokens: int = 64) -> str:
         """Return a code patch proposal generated from ``context``."""
