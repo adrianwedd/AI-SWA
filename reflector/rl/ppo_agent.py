@@ -96,8 +96,19 @@ class PPOAgent:
     def train(self, metrics: Dict[str, float]) -> None:
         self.train_step(metrics)
 
-    def propose_patch(self, context: str, max_tokens: int = 64) -> str:
+    def propose_patch(
+        self,
+        context: str,
+        max_tokens: int = 64,
+        num_actions: int = 3,
+        max_len: int = 200,
+    ) -> str:
+        """Return best ranked patch proposal for ``context``."""
         if not self.action_gen:
             return ""
-        patches = self.action_gen.propose(context, max_tokens=max_tokens)
+        patches = self.action_gen.propose(
+            context, max_tokens=max_tokens, num_actions=num_actions
+        )
+        patches = self.action_gen.filter_actions(patches, max_len=max_len)
+        patches = self.action_gen.rank_actions(patches)
         return patches[0] if patches else ""
