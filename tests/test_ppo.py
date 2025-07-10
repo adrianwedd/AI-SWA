@@ -32,3 +32,18 @@ def test_ppo_agent_training_step(tmp_path):
     agent.train(metrics)
     assert len(buffer) == 0
     assert agent.value  # weights updated
+
+
+def test_ppo_consolidation_updates_fisher(tmp_path):
+    metrics_file = tmp_path / "m.json"
+    metrics_file.write_text('{"reward": 2}')
+    provider = MetricsProvider(metrics_file)
+    builder = StateBuilder(provider)
+    buffer = ReplayBuffer(capacity=4)
+    ewc = EWC()
+    agent = PPOAgent(state_builder=builder, replay_buffer=buffer, ewc=ewc)
+    metrics = provider.collect()
+    agent.train(metrics)
+    agent.consolidate()
+    assert ewc.opt_params == agent.value
+    assert ewc.fisher

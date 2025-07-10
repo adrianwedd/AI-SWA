@@ -98,3 +98,7 @@ class RLAgent:
         """Increase authority when ``performance_gain`` exceeds ``threshold``."""
         if performance_gain > threshold:
             self.authority = min(1.0, self.authority + performance_gain)
+
+    def consolidate(self) -> None:
+        """Hook for weight consolidation. No-op for base class."""
+        return None
