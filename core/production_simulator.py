@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Dict, List, Optional, Any
 import json
 import random
+from copy import deepcopy
 
 from .observability import MetricsProvider
 
@@ -84,6 +85,32 @@ class ProductionSimulator:
         self.workload: List[Dict[str, Any]] = self._load_workload()
         self._cursor = 0
         self._metrics: Dict[str, Any] = {"events_processed": 0}
+
+    # ------------------------------------------------------------------
+    def snapshot(self) -> Dict[str, Any]:
+        """Return a snapshot of the simulator state."""
+        return {
+            "cursor": self._cursor,
+            "metrics": deepcopy(self._metrics),
+            "services": {n: s.requests_handled for n, s in self.services.items()},
+            "databases": {n: d.active_connections for n, d in self.databases.items()},
+            "load_balancers": {n: lb._index for n, lb in self.load_balancers.items()},
+        }
+
+    # ------------------------------------------------------------------
+    def restore(self, state: Dict[str, Any]) -> None:
+        """Restore simulator state from ``state``."""
+        self._cursor = state.get("cursor", 0)
+        self._metrics = deepcopy(state.get("metrics", {"events_processed": 0}))
+        for name, count in state.get("services", {}).items():
+            if name in self.services:
+                self.services[name].requests_handled = count
+        for name, count in state.get("databases", {}).items():
+            if name in self.databases:
+                self.databases[name].active_connections = count
+        for name, idx in state.get("load_balancers", {}).items():
+            if name in self.load_balancers:
+                self.load_balancers[name]._index = idx
 
     # ------------------------------------------------------------------
     def _load_workload(self) -> List[Dict[str, Any]]:

@@ -8,6 +8,7 @@ from .epo import (
     EvolutionaryPolicyOptimizer,
     SimulationEnvironment,
     TwoSpeedEngine,
+    Scheduler,
 )
 
 __all__ = [
@@ -23,5 +24,6 @@ __all__ = [
     "Gene",
     "EvolutionaryPolicyOptimizer",
     "SimulationEnvironment",
+    "Scheduler",
     "TwoSpeedEngine",
 ]
