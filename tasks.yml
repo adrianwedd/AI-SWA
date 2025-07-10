@@ -230,7 +230,7 @@
   description: Implement Experience Replay Buffer for PPO agent
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
