@@ -40,15 +40,31 @@ class PPOAgent:
         batch = self.replay_buffer.sample(batch_size)
         if not batch:
             return
+
+        penalty_grad = {}
+        if self.ewc:
+            for name in self.value.keys():
+                penalty_grad[name] = (
+                    2
+                    * self.ewc.lambda_
+                    * self.ewc.fisher.get(name, 0.0)
+                    * (self.value.get(name, 0.0) - self.ewc.opt_params.get(name, 0.0))
+                )
+
         for state, action, reward, next_state, done in batch:
             target = reward + self.gamma * self.value_estimate(next_state) * (1 - int(done))
             td_error = target - self.value_estimate(state)
             for k, v in state.items():
-                self.value[k] = self.value.get(k, 0.0) + 0.01 * td_error * v
-        if self.ewc:
-            _ = self.ewc.compute_penalty(self.value)
-            self.ewc.update_importance(self.value)
+                update = 0.01 * td_error * v
+                if self.ewc:
+                    update -= penalty_grad.get(k, 0.0)
+                self.value[k] = self.value.get(k, 0.0) + update
+
         self.replay_buffer.buffer.clear()
+
+    def consolidate(self) -> None:
+        if self.ewc:
+            self.ewc.update_importance(self.value)
 
     # Integration with RLTrainer
     def train(self, metrics: Dict[str, float]) -> None:

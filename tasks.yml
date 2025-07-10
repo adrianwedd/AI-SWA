@@ -241,7 +241,7 @@
   dependencies:
   - 61
   priority: 3
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []

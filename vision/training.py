@@ -30,5 +30,10 @@ class RLTrainer:
         for _ in range(episodes):
             metrics = self.metrics_provider.collect()
             reward = self.agent.train(metrics)
+            if hasattr(self.agent, "consolidate"):
+                try:
+                    self.agent.consolidate()
+                except Exception:  # pragma: no cover - safeguard
+                    pass
             REWARD_GAUGE.set(reward)
             LENGTH_GAUGE.set(len(metrics))

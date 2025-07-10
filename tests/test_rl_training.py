@@ -26,3 +26,23 @@ def test_rl_training_persists_data(tmp_path):
     assert train_file.exists()
     data = train_file.read_text().strip()
     assert json.loads(data) == {"coverage": 99}
+
+
+def test_rl_trainer_consolidates(tmp_path):
+    metrics_file = tmp_path / "metrics.json"
+    metrics_file.write_text('{"coverage": 42}')
+
+    provider = MetricsProvider(metrics_file)
+
+    class DummyAgent(RLAgent):
+        def __init__(self):
+            super().__init__()
+            self.calls = 0
+
+        def consolidate(self):
+            self.calls += 1
+
+    agent = DummyAgent()
+    trainer = RLTrainer(agent=agent, metrics_provider=provider)
+    trainer.run(episodes=2)
+    assert agent.calls == 2
