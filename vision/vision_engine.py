@@ -5,6 +5,8 @@ from pathlib import Path
 from typing import List, Dict, Optional
 import json
 
+from core.code_llm import CodeLLM
+
 from core.task import Task
 
 
@@ -61,12 +63,14 @@ class RLAgent:
         self,
         history_path: Optional[Path] = None,
         training_path: Optional[Path] = None,
+        code_model: Optional[CodeLLM] = None,
     ) -> None:
         self.history: List[Dict[str, List[int]]] = []
         self.training_data: List[Dict[str, float]] = []
         self.history_path = Path(history_path) if history_path else None
         self.training_path = Path(training_path) if training_path else None
         self.authority: float = 0.0
+        self.code_model = code_model
 
     def suggest(self, tasks: List[Task]) -> List[Task]:
         """Return refined ordering. Currently identity function."""
@@ -102,3 +106,17 @@ class RLAgent:
     def consolidate(self) -> None:
         """Hook for weight consolidation. No-op for base class."""
         return None
+
+    # --------------------------------------------------------------
+    def generate_code_actions(
+        self, context: str, max_tokens: int = 64, num_return_sequences: int = 1
+    ) -> List[str]:
+        """Return code actions from the associated ``CodeLLM`` if available."""
+
+        if not self.code_model:
+            return []
+        return self.code_model.generate_actions(
+            context,
+            max_tokens=max_tokens,
+            num_return_sequences=num_return_sequences,
+        )
