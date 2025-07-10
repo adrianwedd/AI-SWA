@@ -297,7 +297,7 @@
   dependencies:
   - 66
   priority: 3
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -308,7 +308,7 @@
   dependencies:
   - 67
   priority: 3
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
