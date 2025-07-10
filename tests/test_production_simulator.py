@@ -19,3 +19,19 @@ def test_simulator_step(tmp_path):
     assert result["state"] == {"service": "api", "database": "db"}
     assert result["metrics"]["events_processed"] == 1
     assert result["metrics"]["api_handled"] == 1
+
+
+def test_simulator_reproducibility(tmp_path):
+    workload = tmp_path / "workload.json"
+    workload.write_text('[{"service": "api"}, {"service": "worker"}]')
+    sim1 = ProductionSimulator(workload_path=workload, seed=42)
+    sim1.add_service(Service(name="api", capacity=1))
+    sim1.add_service(Service(name="worker", capacity=1))
+
+    sim2 = ProductionSimulator(workload_path=workload, seed=42)
+    sim2.add_service(Service(name="api", capacity=1))
+    sim2.add_service(Service(name="worker", capacity=1))
+
+    out1 = [sim1.step({})["state"] for _ in range(2)]
+    out2 = [sim2.step({})["state"] for _ in range(2)]
+    assert out1 == out2
