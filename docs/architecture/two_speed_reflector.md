@@ -18,3 +18,19 @@ The Reflector core employs a two-speed learning approach. A fast PPO based inner
 3. **State Rollback** – `SimulationEnvironment.evaluate()` now snapshots simulator state before evaluating each candidate gene and restores it afterwards so every candidate starts from identical conditions.
 
 This coordination ensures consistent evaluation and simplifies integrating additional background tasks in future revisions.
+
+## Gene Structure
+
+Each outer-loop iteration manipulates a **gene** representing key PPO hyperparameters:
+
+- `architecture` – tuple of hidden layer sizes for the policy network.
+- `learning_rate` – shared learning rate for actor and critic updates.
+- `clip_epsilon` – clipping range for PPO updates.
+- `gamma` – discount factor applied to rewards.
+
+### Introducing New Gene Configurations
+
+`EvolutionaryPolicyOptimizer` generates new candidates by calling
+`Gene.mutate()` and `Gene.crossover()`. After evaluation the winning gene can
+be persisted with `Gene.to_json()` and reloaded via `Gene.from_json()` on the
+next run, allowing evolution to resume from the most successful configuration.

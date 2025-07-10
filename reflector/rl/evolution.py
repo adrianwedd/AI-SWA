@@ -58,6 +58,28 @@ class HyperParams:
             "sample_strategy": self.sample_strategy,
         }
 
+    def to_json(self, path: Path) -> None:
+        """Serialize parameters to ``path`` as JSON."""
+        with path.open("w", encoding="utf-8") as f:
+            json.dump(self.to_dict(), f)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> HyperParams:
+        return cls(
+            buffer_capacity=data["buffer_capacity"],
+            sample_strategy=data.get("sample_strategy", "uniform"),
+            actor_lr=data["actor_lr"],
+            critic_lr=data["critic_lr"],
+            gamma=data["gamma"],
+            clip_epsilon=data["clip_epsilon"],
+        )
+
+    @classmethod
+    def from_json(cls, path: Path) -> HyperParams:
+        with path.open("r", encoding="utf-8") as f:
+            data = json.load(f)
+        return cls.from_dict(data)
+
 
 @dataclass
 class EvolutionEnvironment:
