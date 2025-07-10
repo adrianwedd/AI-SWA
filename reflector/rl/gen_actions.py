@@ -27,3 +27,15 @@ class ActionGenerator:
             context, max_tokens=max_tokens, num_return_sequences=num_actions
         )
 
+    # ------------------------------------------------------------------
+    @staticmethod
+    def filter_actions(actions: List[str], max_len: int = 200) -> List[str]:
+        """Return actions shorter than ``max_len`` characters."""
+        return [a for a in actions if len(a) <= max_len]
+
+    # ------------------------------------------------------------------
+    @staticmethod
+    def rank_actions(actions: List[str]) -> List[str]:
+        """Return ``actions`` ordered by length ascending."""
+        return sorted(actions, key=len)
+
