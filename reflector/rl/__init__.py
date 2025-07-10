@@ -7,6 +7,7 @@ from .models.critic_network import CriticNetwork
 from .ewc import EWC
 from .gen_actions import ActionGenerator
 from .reward import calculate_reward, reward_terms, DEFAULT_WEIGHTS
+from .evolution import HyperParams, EvolutionEnvironment, HyperParamEvolution
 
 __all__ = [
     "ReplayBuffer",
@@ -18,4 +19,7 @@ __all__ = [
     "calculate_reward",
     "reward_terms",
     "DEFAULT_WEIGHTS",
+    "HyperParams",
+    "EvolutionEnvironment",
+    "HyperParamEvolution",
 ]
