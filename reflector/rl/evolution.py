@@ -20,6 +20,7 @@ class HyperParams:
     """PPO hyperparameters subject to evolution."""
 
     buffer_capacity: int = 8
+    sample_strategy: str = "uniform"
     actor_lr: float = 0.01
     critic_lr: float = 0.01
     gamma: float = 0.99
@@ -33,6 +34,7 @@ class HyperParams:
             critic_lr=max(1e-5, self.critic_lr * random.uniform(0.8, 1.2)),
             gamma=min(0.999, max(0.5, self.gamma + random.uniform(-0.05, 0.05))),
             clip_epsilon=min(1.0, max(0.05, self.clip_epsilon + random.uniform(-0.05, 0.05))),
+            sample_strategy=self.sample_strategy,
         )
 
     def crossover(self, other: HyperParams) -> HyperParams:
@@ -43,6 +45,7 @@ class HyperParams:
             critic_lr=random.choice([self.critic_lr, other.critic_lr]),
             gamma=random.choice([self.gamma, other.gamma]),
             clip_epsilon=random.choice([self.clip_epsilon, other.clip_epsilon]),
+            sample_strategy=random.choice([self.sample_strategy, other.sample_strategy]),
         )
 
     def to_dict(self) -> dict:
@@ -52,6 +55,7 @@ class HyperParams:
             "critic_lr": self.critic_lr,
             "gamma": self.gamma,
             "clip_epsilon": self.clip_epsilon,
+            "sample_strategy": self.sample_strategy,
         }
 
 
@@ -63,7 +67,9 @@ class EvolutionEnvironment:
     episodes: int = 3
 
     def build_agent(self, params: HyperParams) -> PPOAgent:
-        buffer = ReplayBuffer(capacity=params.buffer_capacity)
+        buffer = ReplayBuffer(
+            capacity=params.buffer_capacity, strategy=params.sample_strategy
+        )
         builder = StateBuilder(self.metrics_provider)
         actor = ActorNetwork(learning_rate=params.actor_lr)
         critic = CriticNetwork(learning_rate=params.critic_lr)

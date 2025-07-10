@@ -10,6 +10,13 @@ def test_replay_buffer_add_and_sample():
     assert len(buf) == 2
     assert len(buf.sample(1)) == 1
 
+    fifo = ReplayBuffer(capacity=3, strategy="fifo")
+    fifo.add((1, 2))
+    fifo.add((2, 3))
+    fifo.add((3, 4))
+    fifo.add((4, 5))
+    assert fifo.sample(2) == [(3, 4), (4, 5)]
+
 
 def test_state_builder_numeric_filter(tmp_path):
     metrics_file = tmp_path / "m.json"

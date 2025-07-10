@@ -16,6 +16,13 @@ def test_replay_buffer_add_and_sample():
     assert len(sample) == 1
     assert sample[0] in [(2, 3), (3, 4)]
 
+    fifo = ReplayBuffer(capacity=3, strategy="fifo")
+    fifo.add((1, 2))
+    fifo.add((2, 3))
+    fifo.add((3, 4))
+    fifo.add((4, 5))
+    assert fifo.sample(2) == [(3, 4), (4, 5)]
+
 
 def test_ppo_agent_updates_policy_and_clears_buffer(tmp_path):
     random.seed(0)

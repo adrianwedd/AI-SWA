@@ -45,3 +45,16 @@ def test_environment_builds_agent_with_gene_params(tmp_path):
     assert agent.learning_rate == gene.learning_rate
     assert agent.clip_epsilon == gene.clip_epsilon
     assert agent.gamma == gene.gamma
+
+
+def test_environment_custom_buffer_and_strategy(tmp_path):
+    metrics_file = tmp_path / "m.json"
+    metrics_file.write_text('{"reward": 1}')
+    provider = MetricsProvider(metrics_file)
+    env = SimulationEnvironment(
+        metrics_provider=provider, episodes=1, buffer_capacity=5, sample_strategy="fifo"
+    )
+    gene = Gene()
+    agent = env.build_agent(gene)
+    assert agent.replay_buffer.capacity == 5
+    assert agent.replay_buffer.strategy == "fifo"
