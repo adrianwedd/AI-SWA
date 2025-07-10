@@ -1,7 +1,9 @@
 """Reinforcement learning helpers for the Reflector."""
 
 from .experience import ReplayBuffer
-from .training import PPOAgent
+from .ppo_agent import PPOAgent
+from .models.actor_network import ActorNetwork
+from .models.critic_network import CriticNetwork
 from .ewc import EWC
 from .gen_actions import ActionGenerator
 from .reward import calculate_reward, reward_terms, DEFAULT_WEIGHTS
@@ -9,6 +11,8 @@ from .reward import calculate_reward, reward_terms, DEFAULT_WEIGHTS
 __all__ = [
     "ReplayBuffer",
     "PPOAgent",
+    "ActorNetwork",
+    "CriticNetwork",
     "EWC",
     "ActionGenerator",
     "calculate_reward",

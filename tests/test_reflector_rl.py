@@ -29,6 +29,7 @@ def test_ppo_agent_updates_policy_and_clears_buffer(tmp_path):
     agent.train_step(metrics)
     assert len(buf) == 0
     assert agent.policy
+    assert agent.value
 
 
 def _train(agent: PPOAgent, metrics: Dict[str, float], steps: int = 5) -> None:
