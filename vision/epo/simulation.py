@@ -17,11 +17,14 @@ class SimulationEnvironment:
 
     metrics_provider: MetricsProvider
     episodes: int = 3
+    buffer_capacity: Optional[int] = None
+    sample_strategy: str = "uniform"
     simulator: Optional[ProductionSimulator] = None
 
     def build_agent(self, gene: Gene) -> PPOAgent:
         """Instantiate a PPO agent using ``gene`` hyperparameters."""
-        buffer = ReplayBuffer(capacity=gene.hidden_dim)
+        capacity = self.buffer_capacity or gene.hidden_dim
+        buffer = ReplayBuffer(capacity=capacity, strategy=self.sample_strategy)
         builder = StateBuilder(self.metrics_provider)
         return PPOAgent(
             state_builder=builder,
