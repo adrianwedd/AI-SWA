@@ -12,6 +12,8 @@ def start_broker(tmp_path, port=8001):
     env = os.environ.copy()
     env["DB_PATH"] = str(tmp_path / "api.db")
     env["METRICS_PORT"] = "0"
+    env["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
+    env["WORKER_TOKEN"] = "workertoken"
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
     proc = subprocess.Popen(
         [
@@ -41,6 +43,7 @@ def run_worker(base_url):
     env = os.environ.copy()
     env["BROKER_URL"] = base_url
     env["METRICS_PORT"] = "0"
+    env["WORKER_TOKEN"] = "workertoken"
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
     result = subprocess.run(
         [sys.executable, "-m", "worker.main"],
@@ -76,6 +79,7 @@ def test_worker_success_result(tmp_path):
             f"{base_url}/tasks",
             json={"description": "demo", "command": "echo hi"},
             timeout=5,
+            headers={"Authorization": "Bearer admintoken"},
         )
         task_id = resp.json()["id"]
         result = run_worker(base_url)
@@ -99,6 +103,7 @@ def test_worker_failure_result(tmp_path):
             f"{base_url}/tasks",
             json={"description": "fail", "command": cmd},
             timeout=5,
+            headers={"Authorization": "Bearer admintoken"},
         )
         task_id = resp.json()["id"]
         result = run_worker(base_url)

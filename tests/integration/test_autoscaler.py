@@ -13,6 +13,8 @@ def start_broker(tmp_path: Path, port: int, metrics_port: int):
     env = os.environ.copy()
     env["DB_PATH"] = str(tmp_path / "api.db")
     env["BROKER_METRICS_PORT"] = str(metrics_port)
+    env["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
+    env["WORKER_TOKEN"] = "workertoken"
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
     proc = subprocess.Popen(
         [
@@ -45,6 +47,7 @@ def run_autoscaler(base_url: str, metrics_port: int):
     env["AUTOSCALER_LOOPS"] = "5"
     env["AUTOSCALER_INTERVAL"] = "0.5"
     env["WORKER_METRICS_PORT"] = "0"
+    env["WORKER_TOKEN"] = "workertoken"
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
     result = subprocess.run(
         [sys.executable, "-m", "worker.autoscaler"],
@@ -81,6 +84,7 @@ def test_autoscaler_processes_queue(tmp_path):
                 f"{base}/tasks",
                 json={"description": "demo", "command": "echo hi"},
                 timeout=5,
+                headers={"Authorization": "Bearer admintoken"},
             )
         assert queue_length(metrics_port) == 2
         run_autoscaler(base, metrics_port)

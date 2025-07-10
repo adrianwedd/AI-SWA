@@ -213,6 +213,8 @@ def test_broker_container(tmp_path):
             "8001:8000",
             "-e",
             f"DB_PATH={tmp_path/'api.db'}",
+            "-e",
+            "API_TOKENS=admintoken:admin:admin",
             image,
         ],
         stdout=subprocess.PIPE,
@@ -228,9 +230,16 @@ def test_broker_container(tmp_path):
             except requests.RequestException:
                 time.sleep(0.5)
 
-        resp = requests.post("http://localhost:8001/tasks", json={"description": "demo"})
+        resp = requests.post(
+            "http://localhost:8001/tasks",
+            json={"description": "demo"},
+            headers={"Authorization": "Bearer admintoken"},
+        )
         assert resp.status_code == 200
-        resp = requests.get("http://localhost:8001/tasks")
+        resp = requests.get(
+            "http://localhost:8001/tasks",
+            headers={"Authorization": "Bearer admintoken"},
+        )
         assert any(t["description"] == "demo" for t in resp.json())
     finally:
         proc.terminate()

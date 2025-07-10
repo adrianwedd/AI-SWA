@@ -13,6 +13,8 @@ def start_broker(tmp_path, port=8003, metrics_port=0):
     env = os.environ.copy()
     env["DB_PATH"] = str(tmp_path / "api.db")
     env["BROKER_METRICS_PORT"] = str(metrics_port)
+    env["API_TOKENS"] = "admintoken:admin:admin,workertoken:worker:worker"
+    env["WORKER_TOKEN"] = "workertoken"
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
     proc = subprocess.Popen(
         [
@@ -43,6 +45,7 @@ def run_worker(base_url, concurrency):
     env["BROKER_URL"] = base_url
     env["WORKER_METRICS_PORT"] = "0"
     env["WORKER_CONCURRENCY"] = str(concurrency)
+    env["WORKER_TOKEN"] = "workertoken"
     env["PYTHONPATH"] = str(Path(__file__).resolve().parents[1])
     return subprocess.run(
         [sys.executable, "-m", "worker.main"],
@@ -73,6 +76,7 @@ def test_tasks_run_in_parallel(tmp_path):
                 f"{base_url}/tasks",
                 json={"description": "sleep", "command": cmd},
                 timeout=5,
+                headers={"Authorization": "Bearer admintoken"},
             )
             ids.append(resp.json()["id"])
 

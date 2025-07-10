@@ -42,7 +42,12 @@ logger = logging.getLogger(__name__)
 def fetch_next_task():
     """Return the next task from the broker or ``None`` if the queue is empty."""
     api_key = config["security"]["api_key"]
-    headers = {"X-API-Key": api_key} if api_key else {}
+    token = config["security"].get("worker_token")
+    headers = {}
+    if api_key:
+        headers["X-API-Key"] = api_key
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
     resp = requests.get(f"{BROKER_URL}/tasks/next", headers=headers)
     resp.raise_for_status()
     return resp.json()
@@ -56,7 +61,12 @@ async def process_task(runner: AsyncRunner, task: dict, sem: asyncio.Semaphore):
         result = await runner.run(command)
     logger.info("Executed command for task %s", task["id"])
     api_key = config["security"]["api_key"]
-    headers = {"X-API-Key": api_key} if api_key else {}
+    token = config["security"].get("worker_token")
+    headers = {}
+    if api_key:
+        headers["X-API-Key"] = api_key
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
     requests.post(
         f"{BROKER_URL}/tasks/{task['id']}/result",
         json={
