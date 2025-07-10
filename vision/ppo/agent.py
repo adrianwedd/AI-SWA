@@ -23,6 +23,7 @@ class PPOAgent:
     clip_epsilon: float = 0.2
     policy: Dict[str, float] = field(default_factory=dict)
     value: Dict[str, float] = field(default_factory=dict)
+    last_batch: list = field(default_factory=list)
 
     def select_action(self, state: Dict[str, float]) -> tuple[int, float]:
         """Return an action and its log probability under the current policy."""
@@ -50,6 +51,7 @@ class PPOAgent:
         batch = self.replay_buffer.sample(batch_size)
         if not batch:
             return
+        self.last_batch = batch
 
         penalty_grad = {}
         if self.ewc:
@@ -90,7 +92,7 @@ class PPOAgent:
 
     def consolidate(self) -> None:
         if self.ewc:
-            self.ewc.update_importance(self.value)
+            self.ewc.update_importance(self.value, batch=self.last_batch)
 
     # Integration with RLTrainer
     def train(self, metrics: Dict[str, float]) -> None:
