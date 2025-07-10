@@ -1362,7 +1362,7 @@
     - The simulation reproduces known production incidents.
     - The RL agent can use the same state-action-reward model.
   priority: 2
-  status: in_progress
+  status: done
   epic: Reflector Core
 
 - id: 195
