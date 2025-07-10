@@ -34,3 +34,10 @@ Each outer-loop iteration manipulates a **gene** representing key PPO hyperparam
 `Gene.mutate()` and `Gene.crossover()`. After evaluation the winning gene can
 be persisted with `Gene.to_json()` and reloaded via `Gene.from_json()` on the
 next run, allowing evolution to resume from the most successful configuration.
+
+## Validation
+
+The `tests/test_two_speed_vs_ppo.py` suite runs a minimal evolution cycle and
+asserts that the evolved gene yields a higher reward than the initial PPO
+configuration. This confirms the hand-off between loops and demonstrates an
+immediate benefit over PPO-only training.
