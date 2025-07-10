@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, Optional
 import math
 import random
 
 from .experience import ReplayBuffer
+from .ewc import EWC
 
 
 @dataclass
@@ -13,6 +14,7 @@ class PPOAgent:
     """Minimal PPO agent storing experiences in a replay buffer."""
 
     replay_buffer: ReplayBuffer
+    ewc: Optional[EWC] = None
     gamma: float = 0.99
     learning_rate: float = 0.01
     policy: Dict[str, float] = field(default_factory=dict)
@@ -36,5 +38,18 @@ class PPOAgent:
             advantage = r - p
             for k, v in s.items():
                 grad = (1 - p) * v if a == 1 else -p * v
-                self.policy[k] = self.policy.get(k, 0.0) + self.learning_rate * advantage * grad
+                update = self.learning_rate * advantage * grad
+                if self.ewc:
+                    penalty = (
+                        2
+                        * self.ewc.lambda_
+                        * self.ewc.fisher.get(k, 0.0)
+                        * (self.policy.get(k, 0.0) - self.ewc.opt_params.get(k, 0.0))
+                    )
+                    update -= self.learning_rate * penalty
+                self.policy[k] = self.policy.get(k, 0.0) + update
         self.replay_buffer.buffer.clear()
+
+    def consolidate(self) -> None:
+        if self.ewc:
+            self.ewc.update_importance(self.policy)
