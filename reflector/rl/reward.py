@@ -4,12 +4,28 @@ from __future__ import annotations
 
 from typing import Dict, Tuple
 
+from core.config import load_config
+
 # Default weights for each reward component
 DEFAULT_WEIGHTS = {
     "correctness": 1.0,
     "performance": 0.5,
     "style": 0.2,
 }
+
+
+def get_weights() -> Dict[str, float]:
+    """Return reward weights from configuration or defaults."""
+    cfg = load_config()
+    conf = cfg.get("reward", {}) if isinstance(cfg, dict) else {}
+    weights = DEFAULT_WEIGHTS.copy()
+    for key in list(weights):
+        if key in conf:
+            try:
+                weights[key] = float(conf[key])
+            except Exception:
+                pass
+    return weights
 
 
 def reward_terms(metrics: Dict[str, float]) -> Dict[str, float]:
@@ -62,8 +78,8 @@ def calculate_reward(
 ) -> Tuple[float, Dict[str, float]]:
     """Return weighted reward and component terms."""
     terms = reward_terms(metrics)
-    w = weights or DEFAULT_WEIGHTS
+    w = weights or get_weights()
     reward = sum(w.get(k, 0.0) * v for k, v in terms.items())
     return reward, terms
 
-__all__ = ["reward_terms", "calculate_reward", "DEFAULT_WEIGHTS"]
+__all__ = ["reward_terms", "calculate_reward", "DEFAULT_WEIGHTS", "get_weights"]

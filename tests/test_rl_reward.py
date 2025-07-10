@@ -13,3 +13,12 @@ def test_weighted_reward():
     metrics = {"success": 1, "runtime": 1, "style_score": 1}
     reward, _ = calculate_reward(metrics, weights={"correctness": 1, "performance": 1, "style": 1})
     assert reward == 1 - 1 + 1
+
+
+def test_configured_weights(tmp_path, monkeypatch):
+    cfg = tmp_path / "config.yaml"
+    cfg.write_text("""reward:\n  correctness: 2\n  performance: 0.1\n  style: 0\n""")
+    monkeypatch.setenv("CONFIG_FILE", str(cfg))
+    metrics = {"success": 1, "runtime": 2, "style_score": 1}
+    reward, _ = calculate_reward(metrics)
+    assert reward == 2 * 1 + 0.1 * -2 + 0
