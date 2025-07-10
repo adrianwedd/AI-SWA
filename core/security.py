@@ -41,8 +41,7 @@ def verify_token(authorization: str | None = Header(None)) -> User:
     """Validate ``Authorization`` header and return the requesting user."""
     tokens = _parse_tokens()
     if not tokens:
-        # No tokens configured -> allow anonymous access for tests
-        return User(username="anonymous", role="admin")
+        raise HTTPException(status_code=401, detail="Token authentication required")
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(status_code=401, detail="Missing or invalid token")
     token = authorization.split(" ", 1)[1]
