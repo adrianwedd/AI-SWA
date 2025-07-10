@@ -2,5 +2,6 @@
 
 from .experience import ReplayBuffer
 from .training import PPOAgent
+from .ewc import EWC
 
-__all__ = ["ReplayBuffer", "PPOAgent"]
+__all__ = ["ReplayBuffer", "PPOAgent", "EWC"]
