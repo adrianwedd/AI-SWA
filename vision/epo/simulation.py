@@ -20,7 +20,13 @@ class SimulationEnvironment:
         """Instantiate a PPO agent using ``gene`` hyperparameters."""
         buffer = ReplayBuffer(capacity=gene.hidden_dim)
         builder = StateBuilder(self.metrics_provider)
-        return PPOAgent(state_builder=builder, replay_buffer=buffer, gamma=0.99)
+        return PPOAgent(
+            state_builder=builder,
+            replay_buffer=buffer,
+            gamma=gene.gamma,
+            learning_rate=gene.learning_rate,
+            clip_epsilon=gene.clip_epsilon,
+        )
 
     def evaluate(self, gene: Gene) -> float:
         """Return cumulative reward for agent defined by ``gene``."""
