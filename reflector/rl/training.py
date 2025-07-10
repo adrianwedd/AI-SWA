@@ -5,6 +5,7 @@ from typing import Dict, Optional
 
 from ..state_builder import StateBuilder
 from core.reward import calculate_reward
+from .gen_actions import ActionGenerator
 import math
 import random
 
@@ -21,6 +22,7 @@ class PPOAgent:
     ewc: Optional[EWC] = None
     gamma: float = 0.99
     learning_rate: float = 0.01
+    action_gen: Optional[ActionGenerator] = None
     policy: Dict[str, float] = field(default_factory=dict)
 
     def select_action(self, state: Dict[str, float]) -> tuple[int, float]:
@@ -60,3 +62,10 @@ class PPOAgent:
     def consolidate(self) -> None:
         if self.ewc:
             self.ewc.update_importance(self.policy)
+
+    def propose_patch(self, context: str, max_tokens: int = 64) -> str:
+        """Return a code patch proposal generated from ``context``."""
+        if not self.action_gen:
+            return ""
+        patches = self.action_gen.propose(context, max_tokens=max_tokens)
+        return patches[0] if patches else ""

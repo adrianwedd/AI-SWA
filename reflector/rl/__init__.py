@@ -3,5 +3,6 @@
 from .experience import ReplayBuffer
 from .training import PPOAgent
 from .ewc import EWC
+from .gen_actions import ActionGenerator
 
-__all__ = ["ReplayBuffer", "PPOAgent", "EWC"]
+__all__ = ["ReplayBuffer", "PPOAgent", "EWC", "ActionGenerator"]
