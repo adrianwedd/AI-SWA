@@ -9,7 +9,11 @@ from typing import Tuple
 
 @dataclass
 class Gene:
-    """Hyperparameters and architecture for a PPO agent."""
+    """Set of PPO hyperparameters evolved by the outer loop.
+
+    A gene encodes the architecture of the policy network along with key
+    training parameters that influence learning dynamics.
+    """
 
     architecture: Tuple[int, ...] = (64,)
     learning_rate: float = 0.001
