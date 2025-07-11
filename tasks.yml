@@ -1080,7 +1080,7 @@
   description: Lock down dependencies and ensure CI/CD pipeline is stable
   dependencies: []
   priority: 1
-  status: pending
+  status: done
   area: build
   actionable_steps:
     - Create a requirements.lock file with exact versions using pip-tools
@@ -1096,7 +1096,7 @@
   dependencies:
     - 147
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps:
     - Review recent workflow runs for errors
@@ -1110,7 +1110,7 @@
   dependencies:
     - 148
   priority: 2
-  status: pending
+  status: done
   area: ci
   actionable_steps:
     - Update code or tests to address identified failures
