@@ -20,6 +20,20 @@ from core.planner import Planner
 from core.task import Task
 
 
+def pytest_configure(config):
+    config.addinivalue_line(
+        "markers", "integration: mark test that requires external services"
+    )
+
+
+def pytest_collection_modifyitems(config, items):
+    if config.getoption("--run-integration"):
+        return
+    skip_integration = pytest.mark.skip(reason="integration test skipped")
+    for item in items:
+        if "integration" in item.keywords:
+            item.add_marker(skip_integration)
+
 @pytest.fixture(scope="session", autouse=True)
 def add_project_root_to_sys_path():
     yield
@@ -64,3 +78,12 @@ def executor():
 def planner():
     """Return a new :class:`~core.planner.Planner`."""
     return Planner()
+
+
+def pytest_addoption(parser):
+    parser.addoption(
+        "--run-integration",
+        action="store_true",
+        default=False,
+        help="run tests marked as integration",
+    )

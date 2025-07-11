@@ -1,20 +1,20 @@
-PyYAML==6.0.2
-pytest==8.4.1
-jsonschema==4.24.0
-radon==5.1.0  # code complexity metrics
-wily==1.25.0  # git-based code analytics
-pylint==3.3.7  # static code analysis
-bandit==1.7.8  # security scanning
-fastapi==0.116.0
-uvicorn==0.35.0
-requests==2.32.4
-httpx==0.27.0
-opentelemetry-sdk==1.34.1  # telemetry core
-opentelemetry-exporter-prometheus==0.55b1  # prometheus exporter
+PyYAML==6.0.2                       # YAML configuration files
+pytest==8.4.1                       # test runner
+jsonschema==4.24.0                  # validate tasks.yml schemas
+radon==5.1.0                        # code complexity metrics
+wily==1.25.0                        # git-based code analytics
+pylint==3.3.7                       # static code analysis
+bandit==1.7.8                       # security scanning
+fastapi==0.116.0                    # web framework
+uvicorn==0.35.0                     # ASGI server
+requests==2.32.4                    # synchronous HTTP client
+httpx==0.27.0                       # async HTTP client for tests
+opentelemetry-sdk==1.34.1           # telemetry core
+opentelemetry-exporter-prometheus==0.55b1  # Prometheus exporter
 opentelemetry-instrumentation-fastapi==0.55b1  # auto-instrument FastAPI
-grafanalib==0.7.1  # grafana dashboards as code
+grafanalib==0.7.1                   # Grafana dashboards as code
 opentelemetry-exporter-otlp-proto-grpc==1.34.1  # OTLP exporter
-protobuf>=5.0,<6.0
-ariadne==0.26.2
-sentry-sdk==2.32.0
-pika==1.3.2
+protobuf>=5.0,<6.0                  # protocol buffers for gRPC
+ariadne==0.26.2                     # GraphQL server library
+sentry-sdk==2.32.0                  # error reporting
+pika==1.3.2                         # RabbitMQ client
