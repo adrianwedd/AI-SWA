@@ -78,3 +78,19 @@ def test_ewc_reduces_catastrophic_forgetting(tmp_path):
     forgetting_with = abs(weight_b_ewc - weight_a_ewc)
 
     assert forgetting_with < forgetting_without
+
+
+def test_train_step_samples_recent_experiences(tmp_path):
+    random.seed(0)
+    metrics_file = tmp_path / "m.json"
+    metrics_file.write_text('{"reward": 1}')
+    provider = MetricsProvider(metrics_file)
+    builder = StateBuilder(provider)
+    buf = ReplayBuffer(capacity=8)
+    agent = PPOAgent(replay_buffer=buf, state_builder=builder)
+    metrics = provider.collect()
+    for _ in range(6):
+        agent.train_step(metrics)
+    # last_batch should contain at most 4 transitions sampled from the buffer
+    assert agent.last_batch
+    assert len(agent.last_batch) <= 4

@@ -9,7 +9,7 @@ from .gen_actions import ActionGenerator
 import math
 import random
 
-from .experience import ReplayBuffer
+from .replay_buffer import ReplayBuffer
 from .ewc import EWC
 
 

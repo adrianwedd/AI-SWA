@@ -5,7 +5,7 @@ from typing import Dict, Optional
 import math
 import random
 
-from .experience import ReplayBuffer
+from .replay_buffer import ReplayBuffer
 from .ewc import EWC
 from ..state_builder import StateBuilder
 from .models.actor_network import ActorNetwork
