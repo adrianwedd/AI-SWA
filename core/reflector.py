@@ -13,6 +13,7 @@ from .self_auditor import SelfAuditor
 from .observability import MetricsProvider
 from .log_utils import configure_logging
 from .code_llm import CodeLLM
+from reflector import ReplayBuffer, PPOAgent, StateBuilder
 
 
 class Reflector:
@@ -25,6 +26,7 @@ class Reflector:
         analysis_paths: Optional[List[Path]] = None,
         metrics_provider: Optional["MetricsProvider"] = None,
         code_model: Optional[CodeLLM] = None,
+        rl_agent: Optional[PPOAgent] = None,
     ) -> None:
         configure_logging()
         self.tasks_path = Path(tasks_path)
@@ -33,6 +35,16 @@ class Reflector:
         self.self_auditor = SelfAuditor(complexity_threshold=complexity_threshold)
         self.metrics_provider = metrics_provider
         self.code_model = code_model
+        if rl_agent is not None:
+            self.rl_agent = rl_agent
+        elif metrics_provider is not None:
+            builder = StateBuilder(metrics_provider)
+            self.rl_agent = PPOAgent(
+                replay_buffer=ReplayBuffer(capacity=8),
+                state_builder=builder,
+            )
+        else:
+            self.rl_agent = None
         self.logger = logging.getLogger(__name__)
 
     # ------------------------------------------------------------------
@@ -43,6 +55,10 @@ class Reflector:
 
         if tasks is None:
             tasks = self._load_tasks()
+
+        if self.rl_agent and self.metrics_provider:
+            metrics = self.metrics_provider.collect()
+            self.rl_agent.train_step(metrics)
 
         analysis_results = self.analyze()
         decisions = self.decide(analysis_results, tasks)
@@ -146,13 +162,21 @@ class Reflector:
     def _suggest_code_actions(self, tasks: List[Dict], max_tokens: int = 64) -> None:
         """Attach code action suggestions to each task using ``self.code_model``."""
 
-        if not self.code_model:
+        if not self.code_model and not self.rl_agent:
             return
         for task in tasks:
             context = task.get("description", "")
-            actions = self.code_model.generate_actions(
-                context, max_tokens=max_tokens, num_return_sequences=1
-            )
+            actions: List[str] = []
+            if self.rl_agent:
+                patch = self.rl_agent.propose_patch(
+                    context, max_tokens=max_tokens, num_actions=1
+                )
+                if patch:
+                    actions = [patch]
+            if not actions and self.code_model:
+                actions = self.code_model.generate_actions(
+                    context, max_tokens=max_tokens, num_return_sequences=1
+                )
             if actions:
                 meta = task.setdefault("metadata", {})
                 meta["code_actions"] = actions
