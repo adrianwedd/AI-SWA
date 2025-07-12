@@ -1,7 +1,8 @@
 from pathlib import Path
 
 from core.task import Task
-from vision.vision_engine import VisionEngine, RLAgent, wsjf_score
+from vision.vision_engine import VisionEngine, RLAgent
+from vision.wsjf import wsjf_score
 
 
 def _task(id, ubv, tc, rr, size):

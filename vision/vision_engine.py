@@ -10,19 +10,7 @@ from reflector.rl.reward import calculate_reward
 from core.code_llm import CodeLLM
 
 from core.task import Task
-
-
-def wsjf_score(task: Task) -> float:
-    """Return Weighted Shortest Job First score for ``task``."""
-    cod = (
-        getattr(task, "user_business_value", 0)
-        + getattr(task, "time_criticality", 0)
-        + getattr(task, "risk_reduction", 0)
-    )
-    job_size = getattr(task, "job_size", 1)
-    if job_size == 0:
-        job_size = 1
-    return cod / job_size
+from .wsjf import wsjf_score
 
 
 @dataclass

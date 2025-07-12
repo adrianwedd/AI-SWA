@@ -1134,7 +1134,7 @@
     - The Vision Engine produces a transparent, defensible ranking using WSJF scores.
     - The RL agent's suggested prioritizations are logged for offline evaluation.
   priority: 1
-  status: pending
+  status: done
   epic: Vision Engine & Prioritization
 
 - id: 151
