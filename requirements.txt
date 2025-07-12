@@ -19,3 +19,4 @@ protobuf>=5.0,<6.0                  # protocol buffers for gRPC
 ariadne==0.26.2                     # GraphQL server library
 sentry-sdk==2.32.0                  # error reporting
 pika==1.3.2                         # RabbitMQ client
+python-afl==0.7.3
