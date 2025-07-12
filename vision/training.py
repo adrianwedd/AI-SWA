@@ -7,7 +7,7 @@ from typing import Optional, Dict
 
 from pathlib import Path
 
-from prometheus_client import Gauge, start_http_server
+from prometheus_client import Gauge, Counter, Summary, start_http_server
 
 from core.observability import MetricsProvider
 from .vision_engine import RLAgent
@@ -15,7 +15,16 @@ from .epo import TwoSpeedEngine, Scheduler
 from .ppo import StateBuilder
 
 REWARD_GAUGE = Gauge("rl_training_reward", "Reward for the last episode")
+REWARD_SUMMARY = Summary(
+    "rl_training_reward_summary", "Distribution of episode rewards"
+)
 LENGTH_GAUGE = Gauge("rl_training_episode_length", "Steps in the last episode")
+LENGTH_SUMMARY = Summary(
+    "rl_training_episode_length_summary", "Distribution of episode lengths"
+)
+EPISODES_COUNTER = Counter(
+    "rl_training_episodes_total", "Total number of training episodes"
+)
 CORRECTNESS_GAUGE = Gauge(
     "rl_training_correctness", "Correctness component of the reward"
 )
@@ -54,7 +63,10 @@ class RLTrainer:
                 except Exception:  # pragma: no cover - safeguard
                     pass
             REWARD_GAUGE.set(reward)
+            REWARD_SUMMARY.observe(reward)
             LENGTH_GAUGE.set(len(state))
+            LENGTH_SUMMARY.observe(len(state))
+            EPISODES_COUNTER.inc()
             terms = getattr(self.agent, "last_reward_terms", {})
             CORRECTNESS_GAUGE.set(terms.get("correctness", 0.0))
             PERFORMANCE_GAUGE.set(terms.get("performance", 0.0))
