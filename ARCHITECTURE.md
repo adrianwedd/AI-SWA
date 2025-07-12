@@ -342,6 +342,13 @@ The ``RLAgent`` tracks an ``authority`` value from ``0.0`` to ``1.0``. The
 ``VisionEngine`` applies the agent's ordering to the top fraction of tasks
 equal to this authority. The value only increases when observed
 
+### Intent Mapper
+Receives prioritized epics from the Vision Engine and breaks them into
+executable tasks. Each epic is decomposed into a sequence of tasks with
+explicit dependencies and a default priority. The mapper records the
+originating epic so downstream components can trace the lineage of each
+task. This keeps the backlog synchronized with higher-level goals.
+
 ### Production Simulation Environment
 The Reflector Core uses a **ProductionSimulator** to mirror the behavior of the
 live system. The simulator models key services, databases, and load balancers
