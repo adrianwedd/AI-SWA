@@ -56,14 +56,17 @@ class PPOAgent:
         self.last_batch = batch
 
         penalty_grad: Dict[str, float] = {}
+        actor_penalty: Dict[str, float] = {}
         if self.ewc:
-            for name in self.value.keys():
+            params = {**self.policy, **self.value}
+            for name in params.keys():
                 penalty_grad[name] = (
                     2
                     * self.ewc.lambda_
                     * self.ewc.fisher.get(name, 0.0)
-                    * (self.value.get(name, 0.0) - self.ewc.opt_params.get(name, 0.0))
+                    * (params.get(name, 0.0) - self.ewc.opt_params.get(name, 0.0))
                 )
+                actor_penalty[name] = penalty_grad[name] * 0.1
 
         for state, action, reward, next_state, done, old_log_prob in batch:
             v_next = self.critic.value(next_state)
@@ -71,7 +74,14 @@ class PPOAgent:
             target = reward + self.gamma * v_next * (1 - int(done))
             advantage = target - v_curr
 
-            self.actor.update(state, action, advantage, old_log_prob, self.clip_epsilon)
+            self.actor.update(
+                state,
+                action,
+                advantage,
+                old_log_prob,
+                self.clip_epsilon,
+                actor_penalty,
+            )
 
             for k, v in state.items():
                 update = self.critic.learning_rate * (target - v_curr) * v
@@ -84,7 +94,8 @@ class PPOAgent:
 
     def consolidate(self) -> None:
         if self.ewc:
-            self.ewc.update_importance(self.value, batch=self.last_batch)
+            params = {**self.policy, **self.value}
+            self.ewc.update_importance(params, batch=self.last_batch)
 
     def train_step(self, metrics: Dict[str, float]) -> None:
         state = self.state_builder.build()

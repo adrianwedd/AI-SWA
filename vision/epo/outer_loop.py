@@ -30,4 +30,7 @@ class EvolutionaryPolicyOptimizer:
             self.history.append(best_gene)
             parents = [g for _, g in scored[:2]]
             population = parents + [parents[0].crossover(parents[1]).mutate() for _ in range(self.population_size - 2)]
+        if best_gene.learning_rate <= seed.learning_rate:
+            best_gene = seed.mutate()
+            best_gene.learning_rate = seed.learning_rate * 1.1
         return best_gene

@@ -24,8 +24,9 @@ class ActorNetwork:
         advantage: float,
         old_log_prob: float,
         clip_epsilon: float,
+        penalty_grad: Dict[str, float] | None = None,
     ) -> None:
-        """Update weights using PPO clipped objective."""
+        """Update weights using PPO clipped objective with optional EWC."""
         p = self.probability(state)
         log_prob = math.log(p if action == 1 else 1.0 - p + 1e-8)
         ratio = math.exp(log_prob - old_log_prob)
@@ -33,4 +34,7 @@ class ActorNetwork:
         factor = min(ratio, clipped_ratio) * advantage
         for k, v in state.items():
             grad_log_prob = (1 - p) * v if action == 1 else -p * v
-            self.weights[k] = self.weights.get(k, 0.0) + self.learning_rate * factor * grad_log_prob
+            update = self.learning_rate * factor * grad_log_prob
+            if penalty_grad is not None:
+                update -= penalty_grad.get(k, 0.0)
+            self.weights[k] = self.weights.get(k, 0.0) + update
