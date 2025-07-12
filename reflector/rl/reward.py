@@ -40,13 +40,27 @@ def reward_terms(metrics: Dict[str, float]) -> Dict[str, float]:
     style_keys = ("style", "style_score")
 
     correctness = 0.0
-    for key in correctness_keys:
-        if key in metrics:
-            try:
-                correctness = float(metrics[key])
-            except Exception:
-                correctness = 1.0 if metrics[key] else 0.0
-            break
+    # Prefer explicit test pass metrics if available
+    if "tests_passed" in metrics and "tests_total" in metrics:
+        try:
+            total = float(metrics["tests_total"])
+            correctness = float(metrics["tests_passed"]) / (total or 1.0)
+        except Exception:
+            correctness = 0.0
+    elif "tests_passed" in metrics and "tests_failed" in metrics:
+        try:
+            total = float(metrics["tests_passed"]) + float(metrics["tests_failed"])
+            correctness = float(metrics["tests_passed"]) / (total or 1.0)
+        except Exception:
+            correctness = 0.0
+    else:
+        for key in correctness_keys:
+            if key in metrics:
+                try:
+                    correctness = float(metrics[key])
+                except Exception:
+                    correctness = 1.0 if metrics[key] else 0.0
+                break
 
     performance = 0.0
     for key in runtime_keys:
