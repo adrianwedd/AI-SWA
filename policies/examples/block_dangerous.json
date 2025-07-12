@@ -1,0 +1,3 @@
+{
+  "blocked_actions": ["delete_production_database", "exfiltrate_data"]
+}
