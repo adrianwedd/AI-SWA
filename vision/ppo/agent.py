@@ -54,14 +54,17 @@ class PPOAgent:
         self.last_batch = batch
 
         penalty_grad = {}
+        actor_penalty = {}
         if self.ewc:
-            for name in self.value.keys():
+            params = {**self.policy, **self.value}
+            for name in params.keys():
                 penalty_grad[name] = (
                     2
                     * self.ewc.lambda_
                     * self.ewc.fisher.get(name, 0.0)
-                    * (self.value.get(name, 0.0) - self.ewc.opt_params.get(name, 0.0))
+                    * (params.get(name, 0.0) - self.ewc.opt_params.get(name, 0.0))
                 )
+                actor_penalty[name] = penalty_grad[name] * 0.1
 
         for state, action, reward, next_state, done, old_log_prob in batch:
             v_next = self.value_estimate(next_state)
@@ -81,7 +84,10 @@ class PPOAgent:
                     grad_log_prob = (1 - p) * v
                 else:
                     grad_log_prob = -p * v
-                self.policy[k] = self.policy.get(k, 0.0) + self.learning_rate * policy_factor * grad_log_prob
+                update = self.learning_rate * policy_factor * grad_log_prob
+                if self.ewc:
+                    update -= actor_penalty.get(k, 0.0)
+                self.policy[k] = self.policy.get(k, 0.0) + update
 
                 val_update = self.learning_rate * advantage * v
                 if self.ewc:
@@ -93,7 +99,8 @@ class PPOAgent:
 
     def consolidate(self) -> None:
         if self.ewc:
-            self.ewc.update_importance(self.value, batch=self.last_batch)
+            params = {**self.policy, **self.value}
+            self.ewc.update_importance(params, batch=self.last_batch)
 
     # Integration with RLTrainer
     def train(self, metrics: Dict[str, float]) -> None:
