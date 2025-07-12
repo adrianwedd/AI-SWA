@@ -77,6 +77,7 @@ class PPOAgent:
                 update = self.critic.learning_rate * (target - v_curr) * v
                 if self.ewc:
                     update -= penalty_grad.get(k, 0.0)
+                    update *= 0.5
                 self.value[k] = self.value.get(k, 0.0) + update
 
         self.replay_buffer.buffer.clear()

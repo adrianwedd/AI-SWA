@@ -13,6 +13,7 @@ from core.observability import MetricsProvider
 from .vision_engine import RLAgent
 from .epo import TwoSpeedEngine, Scheduler
 from .ppo import StateBuilder
+from .replay_buffer import ReplayBuffer
 
 REWARD_GAUGE = Gauge("rl_training_reward", "Reward for the last episode")
 REWARD_SUMMARY = Summary(
@@ -40,6 +41,7 @@ class RLTrainer:
 
     agent: RLAgent
     metrics_provider: MetricsProvider
+    replay_buffer: Optional[ReplayBuffer] = None
     logs_path: Optional[Path] = None
     metrics_port: int = 0
     _server_started: bool = field(default=False, init=False, repr=False)
@@ -57,6 +59,8 @@ class RLTrainer:
         for _ in range(episodes):
             state: Dict[str, float] = self._state_builder.build()
             reward = self.agent.train(state)
+            if self.replay_buffer is not None:
+                self.replay_buffer.add((state, reward))
             if hasattr(self.agent, "consolidate"):
                 try:
                     self.agent.consolidate()

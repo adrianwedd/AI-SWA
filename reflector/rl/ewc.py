@@ -10,7 +10,7 @@ import math
 class EWC:
     """Minimal Elastic Weight Consolidation regularizer."""
 
-    lambda_: float = 0.4
+    lambda_: float = 10.0
     fisher: Dict[str, float] = field(default_factory=dict)
     opt_params: Dict[str, float] = field(default_factory=dict)
 
@@ -56,5 +56,5 @@ class EWC:
         else:
             fisher = {name: value ** 2 for name, value in params.items()}
         for name, value in fisher.items():
-            self.fisher[name] = self.fisher.get(name, 0.0) + value
+            self.fisher[name] = self.fisher.get(name, 0.0) + value * 10
         self.opt_params = params.copy()
