@@ -22,3 +22,11 @@ def test_configured_weights(tmp_path, monkeypatch):
     metrics = {"success": 1, "runtime": 2, "style_score": 1}
     reward, _ = calculate_reward(metrics)
     assert reward == 2 * 1 + 0.1 * -2 + 0
+
+
+def test_test_success_with_runtime():
+    metrics = {"tests_passed": 9, "tests_failed": 1, "runtime": 2}
+    reward, terms = calculate_reward(metrics, weights={"correctness": 1, "performance": 1})
+    assert terms["correctness"] == 0.9
+    assert terms["performance"] == -2
+    assert reward == 0.9 - 2
