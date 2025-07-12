@@ -30,17 +30,29 @@ class EthicalSentinel:
             self.logger.addHandler(logging.NullHandler())
 
     def load_policies(self) -> None:
-        """Load blocked actions from the policy file."""
+        """Load blocked actions from ``policy_path``."""
         if not self.policy_path.exists():
             self.blocked_actions = set()
             return
-        with self.policy_path.open() as f:
-            data = json.load(f)
+
+        paths = [self.policy_path]
+        if self.policy_path.is_dir():
+            paths = sorted(self.policy_path.glob("*.json"))
+
+        blocked: set[str] = set()
+        schema = None
         if self.policy_schema_path.exists():
             with self.policy_schema_path.open() as f:
                 schema = json.load(f)
-            validate(data, schema)
-        self.blocked_actions = set(data.get("blocked_actions", []))
+
+        for path in paths:
+            with path.open() as f:
+                data = json.load(f)
+            if schema:
+                validate(data, schema)
+            blocked.update(data.get("blocked_actions", []))
+
+        self.blocked_actions = blocked
 
     def allows(self, action: str) -> bool:
         """Return True if ``action`` is permitted."""
