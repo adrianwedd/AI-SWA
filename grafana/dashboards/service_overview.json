@@ -1,0 +1,23 @@
+{
+  "title": "Service Overview",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "CPU Usage",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "process_cpu_seconds_total", "legendFormat": "{{instance}}"}
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Memory Usage",
+      "datasource": "Prometheus",
+      "targets": [
+        {"expr": "process_resident_memory_bytes", "legendFormat": "{{instance}}"}
+      ]
+    }
+  ],
+  "schemaVersion": 36,
+  "version": 1
+}
