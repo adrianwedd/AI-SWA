@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+      - name: Install github_changelog_generator
+        run: gem install github_changelog_generator
+      - name: Generate changelog
+        env:
+          CHANGELOG_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          github_changelog_generator \
+            --user $(echo ${{ github.repository }} | cut -d/ -f1) \
+            --project $(echo ${{ github.repository }} | cut -d/ -f2) \
+            --no-unreleased -o CHANGELOG.md
+      - name: Commit changelog
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add CHANGELOG.md
+          if ! git diff --cached --quiet; then
+            git commit -m "chore(release): update changelog for ${{ github.event.inputs.version }}"
+            git push
+          fi
+      - name: Tag release
+        run: |
+          git tag ${{ github.event.inputs.version }}
+          git push origin ${{ github.event.inputs.version }}
+      - name: Build services
+        run: docker compose -f docker-compose.yml build
+      - name: Package source
+        run: tar czf ai-swa-${{ github.event.inputs.version }}.tar.gz .
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          files: ai-swa-${{ github.event.inputs.version }}.tar.gz
