@@ -190,9 +190,27 @@ class EvolutionStrategyOptimizer:
         return best
 
 
+@dataclass
+class PeriodicHyperParamMutation:
+    """Periodically mutate PPO hyperparameters using an optimizer."""
+
+    optimizer: EvolutionStrategyOptimizer
+    period: int = 10
+    params: HyperParams = field(default_factory=HyperParams)
+    _step: int = field(default=0, init=False, repr=False)
+
+    def step(self) -> HyperParams:
+        """Mutate hyperparameters every ``period`` calls."""
+        self._step += 1
+        if self._step % self.period == 0:
+            self.params = self.optimizer.evolve(self.params)
+        return self.params
+
+
 __all__ = [
     "HyperParams",
     "EvolutionEnvironment",
     "HyperParamEvolution",
     "EvolutionStrategyOptimizer",
+    "PeriodicHyperParamMutation",
 ]
