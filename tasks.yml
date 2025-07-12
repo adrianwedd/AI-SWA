@@ -1204,7 +1204,7 @@
     - No new module can be deployed without a completed and approved Ethical Policy document.
     - The Sentinel can demonstrate automated containment of a simulated high-severity incident.
   priority: 2
-  status: pending
+  status: done
   epic: Governance
 
 - id: 155
