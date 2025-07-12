@@ -3,6 +3,7 @@ import json
 from core.observability import MetricsProvider
 from vision.vision_engine import RLAgent
 from vision.training import RLTrainer
+from vision.replay_buffer import ReplayBuffer
 
 
 def test_rl_trainer_runs(tmp_path):
@@ -60,3 +61,17 @@ def test_rl_trainer_consolidates(tmp_path):
     trainer = RLTrainer(agent=agent, metrics_provider=provider)
     trainer.run(episodes=2)
     assert agent.calls == 2
+
+
+def test_rl_trainer_records_replay_buffer(tmp_path):
+    metrics_file = tmp_path / "m.json"
+    metrics_file.write_text('{"coverage": 50}')
+    provider = MetricsProvider(metrics_file)
+    agent = RLAgent()
+    buffer = ReplayBuffer(capacity=4)
+    trainer = RLTrainer(agent=agent, metrics_provider=provider, replay_buffer=buffer)
+    trainer.run(episodes=2)
+    assert len(buffer) == 2
+    state, reward = buffer.sample(1)[0]
+    assert isinstance(state, dict)
+    assert isinstance(reward, float)
