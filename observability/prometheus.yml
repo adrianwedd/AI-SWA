@@ -8,3 +8,11 @@ scrape_configs:
       insecure_skip_verify: true
     static_configs:
       - targets: ['otel-collector:8889']
+  - job_name: 'ai-swa-services'
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'broker:9000'
+          - 'worker:9001'
+          - 'orchestrator:8000'
+          - 'io-service:9100'
