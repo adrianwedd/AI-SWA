@@ -28,6 +28,17 @@ Each outer-loop iteration manipulates a **gene** representing key PPO hyperparam
 - `clip_epsilon` – clipping range for PPO updates.
 - `gamma` – discount factor applied to rewards.
 
+## Mutation Parameters
+
+`Gene.mutate()` applies bounded random changes to the hyperparameters:
+
+- **Layer sizes** – each entry in `architecture` may change by ±8 but remains
+  within the range of 1–256.
+- **Learning rate** – scaled by a factor in [0.8, 1.2] with a lower bound of
+  `1e-5`.
+- **Clip epsilon** – adjusted by ±0.05 and clipped to the 0.01–1.0 range.
+- **Gamma** – adjusted by ±0.05 and clipped to the 0.5–0.999 range.
+
 ### Introducing New Gene Configurations
 
 `EvolutionaryPolicyOptimizer` generates new candidates by calling
