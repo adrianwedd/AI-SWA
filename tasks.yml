@@ -273,7 +273,7 @@
   dependencies:
   - 63
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -286,7 +286,7 @@
   - 63
   - 65
   priority: 2
-  status: pending
+  status: done
   area: reflector
   actionable_steps: []
   acceptance_criteria: []
@@ -318,7 +318,7 @@
   description: Create high-fidelity simulation environment for code changes
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   area: infrastructure
   actionable_steps: []
   acceptance_criteria: []
@@ -340,7 +340,7 @@
   description: Develop standardized benchmarking suite for agent evaluation
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: tests
   actionable_steps: []
   acceptance_criteria: []
@@ -350,7 +350,7 @@
   description: Implement continuous improvement dashboard for key metrics
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -1238,7 +1238,7 @@
     - The project has a clear mission statement and governance model documented in the repository.
     - A public dashboard displays key community health metrics.
   priority: 1
-  status: pending
+  status: done
   epic: Foundational Stability and Governance
   task_id: OBS-01
   title: Deploy Core OPG Stack
@@ -1255,7 +1255,7 @@
     - Grafana is configured with Prometheus as a data source.
     - All observability components expose their own health metrics.
   priority: 1
-  status: pending
+  status: done
   epic: Observability
 
 - id: 158
@@ -1273,7 +1273,7 @@
     - Traces and metrics from all services reach the collectors.
     - CPU, memory, and request metrics are available in Prometheus.
   priority: 1
-  status: pending
+  status: done
   epic: Observability
 
 - id: 159

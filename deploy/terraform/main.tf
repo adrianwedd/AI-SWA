@@ -40,3 +40,13 @@ module "plugin_marketplace" {
   image_tag      = var.plugin_marketplace_image_tag
   replica_count  = var.plugin_marketplace_replicas
 }
+
+module "prometheus" {
+  source    = "./modules/prometheus"
+  namespace = var.namespace
+}
+
+module "grafana" {
+  source    = "./modules/grafana"
+  namespace = var.namespace
+}
