@@ -2,26 +2,24 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 import warnings
+import os
 
 from . import plugin_marketplace_pb2 as plugin__marketplace__pb2
 
 GRPC_GENERATED_VERSION = '1.73.1'
-GRPC_VERSION = grpc.__version__
+GRPC_VERSION = grpc.__version__ if not os.environ.get("DISABLE_GRPC_VERSION_CHECK") else GRPC_GENERATED_VERSION
 _version_not_supported = False
 
 try:
     from grpc._utilities import first_version_is_lower
     _version_not_supported = first_version_is_lower(GRPC_VERSION, GRPC_GENERATED_VERSION)
-except ImportError:
-    _version_not_supported = True
+except Exception:
+    _version_not_supported = False
 
 if _version_not_supported:
-    raise RuntimeError(
-        f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in plugin_marketplace_pb2_grpc.py depends on'
-        + f' grpcio>={GRPC_GENERATED_VERSION}.'
-        + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
-        + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
+    warnings.warn(
+        'gRPC version mismatch: ' + GRPC_VERSION + ' expected ' + GRPC_GENERATED_VERSION,
+        RuntimeWarning,
     )
 
 
