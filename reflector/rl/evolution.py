@@ -6,7 +6,7 @@ import random
 from pathlib import Path
 from typing import List
 
-from .experience import ReplayBuffer
+from .replay_buffer import ReplayBuffer
 from .ppo_agent import PPOAgent
 from .models.actor_network import ActorNetwork
 from .models.critic_network import CriticNetwork

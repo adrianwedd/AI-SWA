@@ -1,6 +1,6 @@
 """Reinforcement learning helpers for the Reflector."""
 
-from .experience import ReplayBuffer
+from .replay_buffer import ReplayBuffer
 from .ppo_agent import PPOAgent
 from .models.actor_network import ActorNetwork
 from .models.critic_network import CriticNetwork
