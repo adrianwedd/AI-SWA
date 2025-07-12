@@ -109,6 +109,7 @@ services:
       context: .
       dockerfile: plugin_marketplace/Dockerfile
     environment:
+      NODE_ENV: production
       JAEGER_ENDPOINT: http://jaeger:4317
       OTEL_EXPORTER_OTLP_ENDPOINT: https://otel-collector:4317
       OTEL_EXPORTER_OTLP_CERTIFICATE: /certs/ca.crt

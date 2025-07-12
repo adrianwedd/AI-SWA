@@ -9,6 +9,7 @@ from pathlib import Path
 import grpc
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 import signal
 from config import load_config, reload_config
 
@@ -32,6 +33,9 @@ PLUGIN_DIR = os.getenv("PLUGIN_DIR", "plugin_repo")
 GRPC_PORT = os.getenv("GRPC_PORT", "50052")
 
 app = FastAPI()
+_static_dir = Path(__file__).resolve().parent / "static"
+if _static_dir.exists():
+    app.mount("/", StaticFiles(directory=_static_dir, html=True), name="static")
 _grpc_server: grpc.aio.Server | None = None
 _metrics_server = None
 config = load_config()

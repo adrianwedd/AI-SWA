@@ -7,3 +7,5 @@ tests/test.db
 services/node/node_modules/
 
 dist/
+plugin_marketplace/web/node_modules/
+plugin_marketplace/web/dist/
