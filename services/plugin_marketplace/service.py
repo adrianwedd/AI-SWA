@@ -14,9 +14,11 @@ from config import load_config, reload_config
 
 try:
     from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from opentelemetry.instrumentation.grpc import GrpcInstrumentorServer
     from core.telemetry import setup_telemetry
 except Exception:  # pragma: no cover - optional dependency
     FastAPIInstrumentor = None
+    GrpcInstrumentorServer = None
     setup_telemetry = None
 
 from . import metrics as mp_metrics
@@ -42,6 +44,8 @@ if setup_telemetry:
     )
 if FastAPIInstrumentor:
     FastAPIInstrumentor.instrument_app(app)
+if GrpcInstrumentorServer:
+    GrpcInstrumentorServer().instrument()
 
 def _reload_config(signum, frame) -> None:
     global config

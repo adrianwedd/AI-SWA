@@ -9,7 +9,23 @@ import httpx
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
+try:
+    from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+    from core.telemetry import setup_telemetry
+except Exception:  # pragma: no cover - optional dependency
+    FastAPIInstrumentor = None
+    setup_telemetry = None
+
 app = FastAPI()
+
+if setup_telemetry:
+    setup_telemetry(
+        service_name="api_gateway",
+        metrics_port=int(os.getenv("METRICS_PORT", "0")),
+        jaeger_endpoint=os.getenv("JAEGER_ENDPOINT"),
+    )
+if FastAPIInstrumentor:
+    FastAPIInstrumentor.instrument_app(app)
 
 BROKER_URL = os.getenv("BROKER_URL", "http://broker:8000")
 ORCH_URL = os.getenv("ORCH_URL", "http://orchestrator-api:8002")
