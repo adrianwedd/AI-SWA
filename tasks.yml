@@ -436,7 +436,7 @@
   dependencies:
   - 82
   priority: 3
-  status: pending
+  status: done
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
