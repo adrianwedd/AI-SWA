@@ -404,7 +404,7 @@
   - 73
   - 75
   priority: 3
-  status: pending
+  status: done
   area: plugins
   actionable_steps: []
   acceptance_criteria: []

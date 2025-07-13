@@ -233,6 +233,8 @@ python plugins/cli.py \
   upload plugins/example_plugin
 ```
 
+For reference implementations see [docs/plugins/reference_plugins.md](docs/plugins/reference_plugins.md).
+
 ### Security CI Pipeline
 
 The CI workflow performs automated security checks on every push:
