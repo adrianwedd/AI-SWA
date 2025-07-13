@@ -23,3 +23,10 @@ The training scripts expose Prometheus metrics `rl_training_reward` and
 
 Generate the dashboard JSON and commit `grafana/dashboards/rl_training.json` to
 visualize these values in Grafana.
+
+## Code Quality Dashboard
+
+`code_quality.json` tracks code complexity, maintainability index and test results.
+These metrics can be exported to Prometheus by your CI pipeline or
+quality tools. Commit the JSON file to publish updates through the
+Grafana workflow.

@@ -9,6 +9,7 @@ from grafana.observer_dashboard import OBSERVER_DASHBOARD
 from grafana.rl_training_dashboard import RL_TRAINING_DASHBOARD
 from grafana.rl_metrics_dashboard import RL_METRICS_DASHBOARD
 from grafana.plugin_analytics_dashboard import PLUGIN_ANALYTICS_DASHBOARD
+from grafana.code_quality_dashboard import CODE_QUALITY_DASHBOARD
 
 
 def write_dashboard(obj, path: Path) -> None:
@@ -25,6 +26,7 @@ def main() -> None:
     write_dashboard(RL_TRAINING_DASHBOARD, OUTPUT_DIR / "rl_training.json")
     write_dashboard(RL_METRICS_DASHBOARD, OUTPUT_DIR / "rl_metrics.json")
     write_dashboard(PLUGIN_ANALYTICS_DASHBOARD, OUTPUT_DIR / "plugin_analytics.json")
+    write_dashboard(CODE_QUALITY_DASHBOARD, OUTPUT_DIR / "code_quality.json")
     print("Dashboards updated")
 
 

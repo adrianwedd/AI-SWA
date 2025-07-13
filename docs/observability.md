@@ -1,9 +1,10 @@
 # Observability Setup
 
-SelfArchitectAI services expose Prometheus metrics for local debugging. Two Grafana dashboards are provided and the stack now includes an OpenTelemetry Collector that receives OTLP data from each service and exports it for Prometheus scraping over TLS.
+SelfArchitectAI services expose Prometheus metrics for local debugging. Three Grafana dashboards are provided and the stack now includes an OpenTelemetry Collector that receives OTLP data from each service and exports it for Prometheus scraping over TLS.
 
 - **improvement-dashboard.json** – tracks task throughput.
 - **observer-dashboard.json** – monitors worker CPU, memory and aggregate task metrics.
+- **code_quality.json** – visualizes code complexity, maintainability and test coverage trends.
 
 ## Usage
 
