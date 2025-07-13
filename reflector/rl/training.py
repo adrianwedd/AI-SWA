@@ -22,6 +22,7 @@ class PPOAgent:
     ewc: Optional[EWC] = None
     gamma: float = 0.99
     learning_rate: float = 0.01
+    update_batch_size: int = 4
     action_gen: Optional[ActionGenerator] = None
     policy: Dict[str, float] = field(default_factory=dict)
     last_batch: list = field(default_factory=list)
@@ -39,7 +40,7 @@ class PPOAgent:
         reward, _terms = calculate_reward(metrics)
         action, log_prob = self.select_action(state)
         self.replay_buffer.add((state, action, reward, state, True, log_prob))
-        batch = self.replay_buffer.sample(batch_size=4)
+        batch = self.replay_buffer.sample(batch_size=self.update_batch_size)
         if not batch:
             return
         self.last_batch = batch

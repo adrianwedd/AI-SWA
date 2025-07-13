@@ -25,6 +25,7 @@ class PPOAgent:
     ewc: Optional[EWC] = None
     gamma: float = 0.99
     clip_epsilon: float = 0.2
+    update_batch_size: int = 4
     action_gen: Optional[ActionGenerator] = None
     last_batch: list = field(default_factory=list)
 
@@ -49,7 +50,10 @@ class PPOAgent:
     ) -> None:
         self.replay_buffer.add((state, action, reward, next_state, done, log_prob))
 
-    def update(self, batch_size: int = 4) -> None:
+    def update(self, batch_size: Optional[int] = None) -> None:
+        """Update policy and value networks."""
+        if batch_size is None:
+            batch_size = self.update_batch_size
         batch = self.replay_buffer.sample(batch_size)
         if not batch:
             return
