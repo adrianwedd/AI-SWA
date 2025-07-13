@@ -1,6 +1,6 @@
 """High-level coordinator for planner, executor and auditor."""
 
-from typing import List
+from typing import List, Callable, Any
 from .sentinel import EthicalSentinel
 try:
     from opentelemetry import metrics, trace
@@ -42,6 +42,18 @@ class Orchestrator:
             self._runs = None
             self._tasks_executed = None
         self._tracer = trace.get_tracer(__name__) if trace else None
+
+    # ------------------------------------------------------------------
+    def _run_step(self, name: str, func: Callable[..., Any], *args, **kwargs):
+        """Run a step with uniform logging and error handling."""
+        self.logger.info("Orchestrator: Step '%s' starting.", name)
+        try:
+            result = func(*args, **kwargs)
+        except Exception:
+            self.logger.exception("Orchestrator: Step '%s' failed.", name)
+            raise
+        self.logger.info("Orchestrator: Step '%s' finished.", name)
+        return result
 
     # ------------------------------------------------------------------
     def _task_to_dict(self, task: Task) -> dict:
@@ -139,14 +151,16 @@ class Orchestrator:
         self.logger.info("Orchestrator: Task '%s' completed.", getattr(task, "id", "N/A"))
         if self._tasks_executed:
             self._tasks_executed.add(1)
-        self._audit_and_extend(tasks, tasks_file)
+        self._run_step("audit_and_extend", self._audit_and_extend, tasks, tasks_file)
 
     def run(self, tasks_file: str = "tasks.yml") -> None:
         """Run the orchestration loop."""
         attrs = {"tasks.file": tasks_file}
         with self._tracer.start_as_current_span("orchestrator.run", attributes=attrs):
-            tasks: List[Task] = self._load_tasks(tasks_file)
-            tasks = self._reflect(tasks, tasks_file)
+            tasks: List[Task] = self._run_step(
+                "load_tasks", self._load_tasks, tasks_file
+            )
+            tasks = self._run_step("reflect", self._reflect, tasks, tasks_file)
 
             while True:
                 next_task = self.planner.plan(tasks)
@@ -158,7 +172,9 @@ class Orchestrator:
                     "Orchestrator: Task '%s' selected for execution.",
                     getattr(next_task, "id", "N/A"),
                 )
-                self._execute_task(next_task, tasks, tasks_file)
+                self._run_step(
+                    "execute_task", self._execute_task, next_task, tasks, tasks_file
+                )
                 self._runs.add(1)
 
             self.logger.info("Orchestrator: Run finished.")
