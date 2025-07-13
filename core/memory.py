@@ -25,6 +25,7 @@ TASK_SCHEMA = {
                 "type": "string",
                 "enum": ["pending", "in_progress", "done"],
             },
+            "cost": {"type": "integer", "minimum": 1},
             "command": {"type": ["string", "null"]},
             "task_id": {"type": "string"},
             "title": {"type": "string"},

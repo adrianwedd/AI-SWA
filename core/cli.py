@@ -63,6 +63,12 @@ def build_parser() -> argparse.ArgumentParser:
         default="orchestrator.pid",
         help="File to store orchestrator PID",
     )
+    start.add_argument("--budget", type=int, help="Planner budget")
+    start.add_argument(
+        "--warning-threshold",
+        type=float,
+        help="Budget warning threshold",
+    )
 
     stop = subparsers.add_parser("stop", help="Stop orchestrator started with start")
     stop.add_argument(
@@ -102,6 +108,8 @@ def build_parser() -> argparse.ArgumentParser:
     run = subparsers.add_parser("_run")
     run.add_argument("--config", default="config.yaml")
     run.add_argument("-v", "--verbose", action="count", default=0)
+    run.add_argument("--budget", type=int, default=None)
+    run.add_argument("--warning-threshold", type=float, default=None)
 
     return parser
 
@@ -117,7 +125,9 @@ def _check_config(path: Path) -> bool:
     return True
 
 
-def _run_orchestrator(config: Path) -> int:
+def _run_orchestrator(
+    config: Path, budget: int | None = None, warning_threshold: float | None = None
+) -> int:
     if not _check_config(config):
         return 1
     cfg = load_config()
@@ -129,7 +139,7 @@ def _run_orchestrator(config: Path) -> int:
         logging.error("Error accessing memory: %s", exc)
         return 1
 
-    planner = Planner()
+    planner = Planner(budget=budget, warning_threshold=warning_threshold)
     executor = Executor()
     reflector = Reflector()
     auditor = SelfAuditor()
@@ -154,6 +164,10 @@ def main(argv=None) -> int:
             return 1
         cmd = [sys.executable, "-m", "ai_swa.orchestrator", "_run", "--config", str(config)]
         cmd += ["-v"] * args.verbose
+        if args.budget is not None:
+            cmd += ["--budget", str(args.budget)]
+        if args.warning_threshold is not None:
+            cmd += ["--warning-threshold", str(args.warning_threshold)]
         proc = subprocess.Popen(cmd)
         Path(args.pid_file).write_text(str(proc.pid))
         logging.info("Orchestrator started with PID %s", proc.pid)
@@ -206,7 +220,9 @@ def main(argv=None) -> int:
         return 0
 
     if args.command == "_run":
-        return _run_orchestrator(Path(args.config))
+        return _run_orchestrator(
+            Path(args.config), budget=args.budget, warning_threshold=args.warning_threshold
+        )
 
     parser.print_help()
     return 1

@@ -126,8 +126,11 @@ class Planner:
             return None
 
         task = select_highest_priority(ready)
+        cost = getattr(task, "cost", 1)
+        if will_exceed_budget(self.budget, self.cost_used, cost):
+            return None
         self.cost_used, self._warned = increment_cost_and_warn(
-            self.cost_used, self.budget, self.warning_threshold, self._warned
+            self.cost_used, self.budget, self.warning_threshold, self._warned, cost
         )
         return task
 ```

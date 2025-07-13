@@ -11,6 +11,7 @@ class Task:
     dependencies: List[int]
     priority: int
     status: str
+    cost: int = 1
     component: Optional[str] = None
     command: Optional[str] = None
     # Optional extended metadata
