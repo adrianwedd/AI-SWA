@@ -155,15 +155,37 @@ class Memory:
                 base.metadata = meta
             return base
 
+        def dedup_key(task: Task) -> str:
+            """Return a string key for identifying duplicates."""
+            if getattr(task, "task_id", None):
+                return f"task_id:{task.task_id.lower()}"
+            if getattr(task, "title", None):
+                return f"title:{task.title.lower()}"
+            desc = task.description.lower()
+            parts = desc.split()
+            if desc.startswith("refactor") and len(parts) > 1 and parts[1].endswith(".py"):
+                return f"refactor:{parts[1]}"
+            return f"desc:{desc}"
+
         selected: dict[str, tuple[Task, int]] = {}
         id_map: dict[int, str] = {}
 
         def add_task(task: Task, score_key: str) -> None:
             score = critique_map.get(task.id, {}).get(score_key, 0)
-            desc_key = task.description.lower()
-            # Prefer deduplication by id when available
+            key = dedup_key(task)
             if task.id in id_map:
-                key = id_map[task.id]
+                k = id_map[task.id]
+                existing_task, existing_score = selected[k]
+                if score >= existing_score:
+                    merged = merge(task, existing_task)
+                    selected[k] = (merged, score)
+                else:
+                    merged = merge(existing_task, task)
+                    selected[k] = (merged, existing_score)
+                if k != key:
+                    selected.pop(key, None)
+                    id_map[task.id] = k
+            elif key in selected:
                 existing_task, existing_score = selected[key]
                 if score >= existing_score:
                     merged = merge(task, existing_task)
@@ -171,22 +193,10 @@ class Memory:
                 else:
                     merged = merge(existing_task, task)
                     selected[key] = (merged, existing_score)
-                if key != desc_key:
-                    # update mapping if description changed
-                    selected.pop(desc_key, None)
-                    id_map[task.id] = key
-            elif desc_key in selected:
-                existing_task, existing_score = selected[desc_key]
-                if score >= existing_score:
-                    merged = merge(task, existing_task)
-                    selected[desc_key] = (merged, score)
-                else:
-                    merged = merge(existing_task, task)
-                    selected[desc_key] = (merged, existing_score)
-                id_map.setdefault(task.id, desc_key)
+                id_map.setdefault(task.id, key)
             else:
-                selected[desc_key] = (task, score)
-                id_map[task.id] = desc_key
+                selected[key] = (task, score)
+                id_map[task.id] = key
 
         for task in existing:
             add_task(task, "existing")

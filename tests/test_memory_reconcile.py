@@ -29,3 +29,15 @@ def test_reconcile_merges_by_description(tmp_path):
     assert merged.priority == 3
     assert set(merged.dependencies) == {1, 2}
 
+
+def test_reconcile_merges_by_title(tmp_path):
+    mem = Memory(Path(tmp_path / "state.json"))
+    old = Task(id=1, title="dup", description="a", dependencies=[1], priority=1, status="pending")
+    new = Task(id=2, title="dup", description="b", dependencies=[2], priority=2, status="pending")
+    result = mem.reconcile_tasks([old], [new], {1: {"existing": 1}, 2: {"new": 5}})
+    assert len(result) == 1
+    merged = result[0]
+    assert merged.title == "dup"
+    assert set(merged.dependencies) == {1, 2}
+    assert merged.description == "b"
+
