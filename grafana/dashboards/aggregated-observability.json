@@ -1,0 +1,1113 @@
+{
+  "__inputs": [],
+  "annotations": {
+    "list": []
+  },
+  "description": "",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "hideControls": false,
+  "id": null,
+  "links": [],
+  "panels": [],
+  "refresh": "10s",
+  "rows": [
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 1,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 4,
+          "targets": [
+            {
+              "expr": "tasks_executed_total",
+              "query": "tasks_executed_total",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "tasks",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Tasks Executed",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 2,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 4,
+          "targets": [
+            {
+              "expr": "orchestrator_runs_total",
+              "query": "orchestrator_runs_total",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "runs",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Orchestrator Runs",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 3,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 4,
+          "targets": [
+            {
+              "expr": "plugin_downloads_total",
+              "query": "plugin_downloads_total",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "downloads",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Plugin Downloads",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        }
+      ],
+      "showTitle": false,
+      "title": "New row",
+      "repeat": null
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 4,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 4,
+          "targets": [
+            {
+              "expr": "rate(rl_training_reward_summary_sum[1m]) / rate(rl_training_reward_summary_count[1m])",
+              "query": "rate(rl_training_reward_summary_sum[1m]) / rate(rl_training_reward_summary_count[1m])",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "avg reward",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Episode Reward Average",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 5,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 4,
+          "targets": [
+            {
+              "expr": "rate(rl_training_episode_length_summary_sum[1m]) / rate(rl_training_episode_length_summary_count[1m])",
+              "query": "rate(rl_training_episode_length_summary_sum[1m]) / rate(rl_training_episode_length_summary_count[1m])",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "avg length",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Episode Length Average",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 6,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 4,
+          "targets": [
+            {
+              "expr": "rl_training_episodes_total",
+              "query": "rl_training_episodes_total",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "episodes",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Episodes Processed",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        }
+      ],
+      "showTitle": false,
+      "title": "New row",
+      "repeat": null
+    },
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 7,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 6,
+          "targets": [
+            {
+              "expr": "process_cpu_seconds_total",
+              "query": "process_cpu_seconds_total",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "cpu",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Worker CPU Usage",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        },
+        {
+          "cacheTimeout": null,
+          "datasource": "Prometheus",
+          "description": null,
+          "editable": true,
+          "error": false,
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "mode": "absolute",
+                "steps": []
+              },
+              "unit": ""
+            }
+          },
+          "height": null,
+          "gridPos": null,
+          "hideTimeOverride": false,
+          "id": 8,
+          "interval": null,
+          "links": [],
+          "maxDataPoints": 100,
+          "minSpan": null,
+          "repeat": null,
+          "repeatDirection": null,
+          "maxPerRow": null,
+          "span": 6,
+          "targets": [
+            {
+              "expr": "process_resident_memory_bytes",
+              "query": "process_resident_memory_bytes",
+              "target": "",
+              "format": "time_series",
+              "hide": false,
+              "interval": "",
+              "intervalFactor": 2,
+              "legendFormat": "mem",
+              "metric": "",
+              "refId": "",
+              "step": 10,
+              "instant": false,
+              "datasource": null
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Worker Memory",
+          "transparent": false,
+          "transformations": [],
+          "aliasColors": {},
+          "bars": false,
+          "fill": 1,
+          "grid": {
+            "threshold1": null,
+            "threshold1Color": "rgba(216, 200, 27, 0.27)",
+            "threshold2": null,
+            "threshold2Color": "rgba(234, 112, 112, 0.22)"
+          },
+          "isNew": true,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false,
+            "alignAsTable": false,
+            "hideEmpty": false,
+            "hideZero": false,
+            "rightSide": false,
+            "sideWidth": null,
+            "sort": null,
+            "sortDesc": false
+          },
+          "lines": true,
+          "linewidth": 2,
+          "nullPointMode": "connected",
+          "options": {
+            "dataLinks": [],
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pointradius": 5,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "stack": false,
+          "steppedLine": false,
+          "tooltip": {
+            "msResolution": true,
+            "shared": true,
+            "sort": 0,
+            "value_type": "cumulative"
+          },
+          "thresholds": [],
+          "type": "graph",
+          "xaxis": {
+            "mode": "time",
+            "name": null,
+            "values": [],
+            "show": true
+          },
+          "yaxes": [
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            },
+            {
+              "decimals": null,
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": 0
+          }
+        }
+      ],
+      "showTitle": false,
+      "title": "New row",
+      "repeat": null
+    }
+  ],
+  "schemaVersion": 12,
+  "sharedCrosshair": false,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "title": "Aggregated Observability Metrics",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ],
+    "nowDelay": null,
+    "hidden": false
+  },
+  "timezone": "utc",
+  "version": 0,
+  "uid": null
+}
