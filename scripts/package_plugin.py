@@ -1,7 +1,10 @@
 import argparse
 import json
+import logging
 from pathlib import Path
 import zipfile
+
+from core.log_utils import configure_logging
 
 
 def create_plugin_archive(plugin_dir: Path) -> Path:
@@ -27,8 +30,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Package a plugin directory")
     parser.add_argument("plugin_dir", help="Path to plugin directory")
     args = parser.parse_args()
+    configure_logging()
     path = create_plugin_archive(Path(args.plugin_dir))
-    print(f"Created archive at {path}")
+    logging.info("Created archive at %s", path)
 
 
 if __name__ == "__main__":

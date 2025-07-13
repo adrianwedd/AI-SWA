@@ -20,4 +20,9 @@ DASHBOARD = Dashboard(
 
 if __name__ == "__main__":
     import json
-    print(json.dumps(DASHBOARD.to_json_data(), indent=2))
+    import logging
+
+    from core.log_utils import configure_logging
+
+    configure_logging()
+    logging.info(json.dumps(DASHBOARD.to_json_data(), indent=2))

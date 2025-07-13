@@ -1,12 +1,15 @@
 import argparse
-import subprocess
 import json
+import logging
+import subprocess
 from pathlib import Path
 
 from core.plugins import load_manifest
 from scripts.package_plugin import create_plugin_archive
 from services.plugin_marketplace import pipeline
 import requests
+
+from core.log_utils import configure_logging
 
 
 def _request(args: argparse.Namespace, method: str, path: str, **kwargs) -> requests.Response:
@@ -22,14 +25,14 @@ def _request(args: argparse.Namespace, method: str, path: str, **kwargs) -> requ
 
 def _cmd_validate(args: argparse.Namespace) -> None:
     manifest = load_manifest(Path(args.plugin) / "manifest.json")
-    print(f"Manifest for '{manifest.id}' version {manifest.version} is valid")
+    logging.info("Manifest for '%s' version %s is valid", manifest.id, manifest.version)
 
 
 def _cmd_package(args: argparse.Namespace) -> None:
     # Validate manifest before packaging
     load_manifest(Path(args.plugin) / "manifest.json")
     archive = create_plugin_archive(Path(args.plugin))
-    print(f"Created archive at {archive}")
+    logging.info("Created archive at %s", archive)
 
 
 def _cmd_sign(args: argparse.Namespace) -> None:
@@ -47,7 +50,7 @@ def _cmd_sign(args: argparse.Namespace) -> None:
     ]
     result = subprocess.run(cmd, check=True, capture_output=True, text=True, env=env)
     sig_path.write_text(result.stdout)
-    print(f"Signature written to {sig_path}")
+    logging.info("Signature written to %s", sig_path)
 
 
 def _cmd_upload(args: argparse.Namespace) -> None:
@@ -64,7 +67,7 @@ def _cmd_upload(args: argparse.Namespace) -> None:
         resp = _request(args, "PUT", f"/plugins/{manifest.id}", files=files, data=data)
     if resp.status_code != 200:
         raise SystemExit(f"Error: {resp.status_code} {resp.text}")
-    print("Plugin published to marketplace")
+    logging.info("Plugin published to marketplace")
 
 
 def _cmd_update(args: argparse.Namespace) -> None:
@@ -81,14 +84,14 @@ def _cmd_update(args: argparse.Namespace) -> None:
         resp = _request(args, "PUT", f"/plugins/{manifest.id}", files=files, data=data)
     if resp.status_code != 200:
         raise SystemExit(f"Error: {resp.status_code} {resp.text}")
-    print("Plugin updated in marketplace")
+    logging.info("Plugin updated in marketplace")
 
 
 def _cmd_remove(args: argparse.Namespace) -> None:
     resp = _request(args, "DELETE", f"/plugins/{args.plugin_id}")
     if resp.status_code != 200:
         raise SystemExit(f"Error: {resp.status_code} {resp.text}")
-    print("Plugin removed from marketplace")
+    logging.info("Plugin removed from marketplace")
 
 
 def _cmd_review(args: argparse.Namespace) -> None:
@@ -100,7 +103,7 @@ def _cmd_review(args: argparse.Namespace) -> None:
     )
     if resp.status_code != 200:
         raise SystemExit(f"Error: {resp.status_code} {resp.text}")
-    print("Review submitted")
+    logging.info("Review submitted")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -153,6 +156,7 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> None:
     parser = build_parser()
     args = parser.parse_args()
+    configure_logging()
     args.func(args)
 
 

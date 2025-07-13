@@ -37,6 +37,12 @@ CODE_QUALITY_DASHBOARD = Dashboard(
 
 if __name__ == "__main__":
     import json
+    import logging
     from grafanalib._gen import DashboardEncoder
 
-    print(json.dumps(CODE_QUALITY_DASHBOARD.to_json_data(), indent=2, cls=DashboardEncoder))
+    from core.log_utils import configure_logging
+
+    configure_logging()
+    logging.info(
+        json.dumps(CODE_QUALITY_DASHBOARD.to_json_data(), indent=2, cls=DashboardEncoder)
+    )

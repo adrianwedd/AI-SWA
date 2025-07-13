@@ -205,11 +205,11 @@ def main(argv=None) -> int:
             return 0
         if subcmd == "agents":
             for agent in _active_agent_ids():
-                print(agent)
+                logging.info("Active agent: %s", agent)
             return 0
         if subcmd == "queue":
             length = _queue_length(args.tasks)
-            print(length)
+            logging.info("Queue length: %s", length)
             return 0
 
     if args.command == "list":
