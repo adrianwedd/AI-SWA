@@ -480,7 +480,7 @@
     and CrewAI
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: docs
   actionable_steps: []
   acceptance_criteria: []
