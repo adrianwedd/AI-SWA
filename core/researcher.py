@@ -5,7 +5,11 @@ import math
 import re
 from collections import Counter
 from pathlib import Path
-from typing import List, Tuple
+from typing import Iterable, List, Tuple
+
+import yaml
+
+from .memory import Memory
 
 from .log_utils import configure_logging
 
@@ -50,28 +54,63 @@ class _VectorStore:
 
 
 class Researcher:
-    """Provide semantic search over local research documents."""
+    """Provide semantic search over documentation and tasks."""
 
-    def __init__(self, docs_path: Path | str = "research") -> None:
+    def __init__(
+        self,
+        docs_path: Path | str | Iterable[str | Path] = "research",
+        tasks_files: Iterable[str | Path] | None = None,
+    ) -> None:
         configure_logging()
         self.logger = logging.getLogger(__name__)
-        self.docs_path = Path(docs_path)
+        if isinstance(docs_path, (str, Path)):
+            self.docs_paths = [Path(docs_path)]
+        else:
+            self.docs_paths = [Path(p) for p in docs_path]
+        self.tasks_files = [Path(p) for p in (tasks_files or [])]
         self.store = _VectorStore()
         self._index_documents()
+        if self.tasks_files:
+            self._index_tasks()
 
     # ------------------------------------------------------------------
     def _index_documents(self) -> None:
-        if not self.docs_path.exists():
-            self.logger.warning("Docs path %s not found", self.docs_path)
-            return
-        for p in self.docs_path.glob("*.md"):
-            try:
-                text = p.read_text(encoding="utf-8")
-            except Exception as exc:  # pragma: no cover - file errors
-                self.logger.warning("Failed to read %s: %s", p, exc)
+        count = 0
+        for path in self.docs_paths:
+            if not path.exists():
+                self.logger.warning("Docs path %s not found", path)
                 continue
-            self.store.add_document(p.name, text)
-        self.logger.info("Indexed %d documents", len(self.store.docs))
+            for p in path.rglob("*.md"):
+                try:
+                    text = p.read_text(encoding="utf-8")
+                except Exception as exc:  # pragma: no cover - file errors
+                    self.logger.warning("Failed to read %s: %s", p, exc)
+                    continue
+                self.store.add_document(str(p.relative_to(path)), text)
+                count += 1
+        self.logger.info("Indexed %d documents", count)
+
+    # ------------------------------------------------------------------
+    def _index_tasks(self) -> None:
+        count = 0
+        mem = Memory(Path(".tmp_index.json"))
+        for file in self.tasks_files:
+            if not file.exists():
+                self.logger.warning("Task file %s not found", file)
+                continue
+            try:
+                tasks = mem.load_tasks(str(file))
+            except Exception as exc:  # pragma: no cover - file errors
+                self.logger.warning("Failed to read %s: %s", file, exc)
+                continue
+            for t in tasks:
+                parts = []
+                if t.title:
+                    parts.append(t.title)
+                parts.append(t.description)
+                self.store.add_document(f"{file.name}:{t.id}", " ".join(parts))
+                count += 1
+        self.logger.info("Indexed %d tasks", count)
 
     # ------------------------------------------------------------------
     def search(self, query: str, top_k: int = 5) -> List[Tuple[str, float]]:
