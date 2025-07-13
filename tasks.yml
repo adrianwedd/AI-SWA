@@ -425,7 +425,7 @@
   description: Introduce Rust modules via PyO3 for performance-critical code
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
@@ -1152,7 +1152,7 @@
     - At least one performance-critical Python module is successfully replaced with a Rust equivalent.
     - Integration tests pass, and performance metrics show measurable improvement.
   priority: 2
-  status: pending
+  status: done
   epic: Architecture Evolution
 
 - id: 152
