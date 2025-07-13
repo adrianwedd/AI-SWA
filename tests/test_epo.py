@@ -1,5 +1,10 @@
 from vision.epo import Gene, EvolutionaryPolicyOptimizer, SimulationEnvironment, TwoSpeedEngine
 from core.observability import MetricsProvider
+from core.production_simulator import (
+    ProductionSimulator,
+    Service,
+    SimulationMetricsProvider,
+)
 
 
 def test_gene_mutation_and_crossover():
@@ -58,3 +63,27 @@ def test_environment_custom_buffer_and_strategy(tmp_path):
     agent = env.build_agent(gene)
     assert agent.replay_buffer.capacity == 5
     assert agent.replay_buffer.strategy == "fifo"
+
+
+class CountingSimulator(ProductionSimulator):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.steps = 0
+
+    def step(self, action):
+        self.steps += 1
+        return super().step(action)
+
+
+def test_environment_evaluate_uses_simulator_step(tmp_path):
+    workload = tmp_path / "workload.json"
+    workload.write_text('[{"service": "api"}]')
+    sim = CountingSimulator(workload_path=workload)
+    sim.add_service(Service(name="api", capacity=1))
+    provider = SimulationMetricsProvider(sim)
+    env = SimulationEnvironment(
+        metrics_provider=provider, simulator=sim, episodes=1
+    )
+    gene = Gene()
+    env.evaluate(gene)
+    assert sim.steps >= 1

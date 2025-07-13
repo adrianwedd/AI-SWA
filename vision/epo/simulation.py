@@ -55,7 +55,11 @@ class SimulationEnvironment:
         agent = self.build_agent(gene)
         total = 0.0
         for _ in range(self.episodes):
-            metrics = self.metrics_provider.collect()
+            if self.simulator:
+                step = self.simulator.step({})
+                metrics = step.get("metrics", {})
+            else:
+                metrics = self.metrics_provider.collect()
             agent.train(metrics)
             reward, _terms = calculate_reward(metrics)
             total += reward
