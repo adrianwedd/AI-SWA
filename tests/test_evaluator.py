@@ -13,3 +13,15 @@ def test_critique_scoring(tmp_path):
     assert "1" in data
 
 
+def test_patch_scoring(tmp_path):
+    log = tmp_path / "c.yml"
+    patch_log = tmp_path / "p.yml"
+    ev = Evaluator(log, patch_log=patch_log)
+    patch = """diff --git a/file.py b/file.py\n+print('debug')\n"""
+    result = ev.critique_patch(patch)
+    assert result["score"] < 10
+    ev.score_patches([patch])
+    data = yaml.safe_load(patch_log.read_text())
+    assert "1" in data
+
+
