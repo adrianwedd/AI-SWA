@@ -43,3 +43,12 @@ class TestHyperHeuristicAgent(unittest.TestCase):
         self.assertIn("baseline", data)
         log_file.unlink()
 
+    def test_training_updates_weights(self):
+        agent = RLHyperHeuristicAgent(exploration=0)
+        metrics = {"gain": 0.5, "success": 1}
+        start = agent.heuristic_weights["wsjf"]
+        reward = agent.train(metrics)
+        self.assertGreaterEqual(reward, 0.0)
+        self.assertAlmostEqual(agent.heuristic_weights["wsjf"], start + 0.05)
+        self.assertEqual(agent.training_data[0], metrics)
+
