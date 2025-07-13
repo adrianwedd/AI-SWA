@@ -131,3 +131,26 @@ class TestVisionEngine(unittest.TestCase):
         self.assertEqual(len(agent.history), 1)
         self.assertEqual(agent.history[0]["suggestion"], [2, 1])
 
+    def test_rl_partial_authority_no_history(self):
+        class ReverseAgent(RLAgent):
+            def suggest(self, tasks):
+                return list(reversed(tasks))
+
+        agent = ReverseAgent()
+        agent.authority = 0.6
+        ve = VisionEngine(rl_agent=agent, shadow_mode=False)
+        t1 = self._task(1, 1, 1, 1, 1)
+        t2 = self._task(2, 1, 1, 1, 1)
+        ordered = ve.prioritize([t1, t2])
+        self.assertEqual([t.id for t in ordered], [2, 1])
+        self.assertEqual(agent.history, [])
+
+    def test_rl_update_authority_threshold_and_cap(self):
+        agent = RLAgent()
+        agent.update_authority(0.05)  # equal to threshold
+        self.assertEqual(agent.authority, 0.0)
+        agent.update_authority(0.9)
+        self.assertAlmostEqual(agent.authority, 0.9)
+        agent.update_authority(0.5)
+        self.assertEqual(agent.authority, 1.0)
+

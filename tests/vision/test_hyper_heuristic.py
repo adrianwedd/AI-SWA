@@ -1,6 +1,7 @@
 import unittest
 from pathlib import Path
 import json
+from unittest.mock import patch
 
 from core.task import Task
 from vision import VisionEngine, RLHyperHeuristicAgent
@@ -51,4 +52,12 @@ class TestHyperHeuristicAgent(unittest.TestCase):
         self.assertGreaterEqual(reward, 0.0)
         self.assertAlmostEqual(agent.heuristic_weights["wsjf"], start + 0.05)
         self.assertEqual(agent.training_data[0], metrics)
+
+    def test_exploration_noise_changes_order(self):
+        agent = RLHyperHeuristicAgent(exploration=1.0)
+        t1 = self._task(1, 5, 5, 0, 10)
+        t2 = self._task(2, 5, 5, 0, 10)
+        with patch("vision.hyper_heuristic.random.random", side_effect=[0.1, 0.9]):
+            ordered = agent.suggest([t1, t2])
+        self.assertEqual([t.id for t in ordered], [2, 1])
 
