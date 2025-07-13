@@ -5,7 +5,7 @@ import subprocess
 import shlex
 from pathlib import Path
 
-from core.config import load_config
+from config import load_config
 from core.tool_runner import ToolRunner
 from core.plugins import load_manifest
 
