@@ -20,3 +20,7 @@ SelfArchitectAI tracks CHAOSS metrics such as Time to First Response and Contrib
 ## Growing Authority
 
 As the reinforcement learning systems demonstrate reliable performance improvements, project maintainers may gradually increase the RL agent's authority in automating tasks. Major changes will always be announced and open for community feedback before deployment.
+
+## Early Adopter Program
+
+Developers interested in shaping AI-SWA can join the [early adopter outreach program](early_adopter_program.md). This initiative coordinates Reddit and newsletter outreach and provides a direct feedback channel for early users.
