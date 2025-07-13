@@ -13,10 +13,21 @@ def _compose(args, cwd, **kwargs):
     return subprocess.run(COMPOSE_CMD + args, cwd=cwd, check=True, **kwargs)
 
 
+def _docker_ready() -> bool:
+    docker = shutil.which("docker")
+    if not docker:
+        return False
+    try:
+        subprocess.run([docker, "info"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return True
+    except Exception:
+        return False
+
+
 @pytest.fixture(scope="module")
 def compose_stack():
-    if shutil.which("docker") is None:
-        pytest.skip("Docker not installed")
+    if not _docker_ready():
+        pytest.skip("Docker not available")
     root = Path(__file__).resolve().parents[2]
     _compose(["up", "-d", "--build", "broker", "worker", "orchestrator"], cwd=root)
     base_url = "http://localhost:8000"
