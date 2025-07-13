@@ -611,7 +611,7 @@
   epic: Foundational Stability and Governance
   dependencies: []
   priority: 1
-  status: pending
+  status: done
   actionable_steps:
     - Implement API key and bearer token verification middleware in broker/main.py.
     - Add role-based access control decorators for all endpoints.
