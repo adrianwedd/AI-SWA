@@ -491,10 +491,14 @@
   dependencies:
   - 90
   priority: 3
-  status: pending
+  status: done
   area: community
-  actionable_steps: []
-  acceptance_criteria: []
+  actionable_steps:
+  - Create docs/community/early_adopter_program.md outlining outreach channels
+  - Link the program from docs/community/README.md
+  acceptance_criteria:
+  - Early adopter guide is present in the repository
+  - README references the early adopter program
   assigned_to: null
   epic: Legacy
 - id: 96
