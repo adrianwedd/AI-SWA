@@ -32,11 +32,14 @@ jobs:
         run: |
           python - <<'EOF'
 import json, sys
+from core.log_utils import configure_logging
+configure_logging()
 with open('pip-audit.json') as f:
     data = json.load(f)
 count = sum(len(d.get('vulns', [])) for d in data.get('dependencies', []))
 if count:
-    print(f"{count} vulnerabilities found")
+    import logging
+    logging.error("%d vulnerabilities found", count)
     sys.exit(1)
 EOF
       - name: Upload pip-audit report
@@ -88,11 +91,14 @@ EOF
         run: |
           python - <<'EOF'
 import json, sys
+from core.log_utils import configure_logging
+configure_logging()
 with open('bandit.json') as f:
     data = json.load(f)
 highs = [r for r in data.get('results', []) if r.get('issue_severity') == 'HIGH']
 if highs:
-    print(f"{len(highs)} high-severity issues found")
+    import logging
+    logging.error("%d high-severity issues found", len(highs))
     sys.exit(1)
 EOF
       - name: Upload Bandit report
