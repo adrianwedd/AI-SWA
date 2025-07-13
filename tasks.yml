@@ -1598,6 +1598,7 @@
   actionable_steps:
     - Implement safeguards and monitoring for automated actions.
     - Roll out authority incrementally based on shadow mode results.
+    - Gate automated actions behind success thresholds observed in shadow runs.
   dependencies: [165, 175]
   acceptance_criteria:
     - Agent actions can be enabled with human override.
