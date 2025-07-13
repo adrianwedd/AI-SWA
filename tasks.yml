@@ -994,7 +994,7 @@
   dependencies:
   - 136
   priority: 3
-  status: pending
+  status: done
   area: review
   actionable_steps:
   - Run orchestrator with a policy blocking a sample task
