@@ -3,8 +3,8 @@ from core.planner import Planner
 from core.task import Task
 
 
-def make_task(id: str, priority: int = 1):
-    return Task(id=id, description="", dependencies=[], priority=priority, status="pending")
+def make_task(id: str, priority: int = 1, cost: int = 1):
+    return Task(id=id, description="", dependencies=[], priority=priority, status="pending", cost=cost)
 
 
 def test_budget_warning(caplog):
@@ -24,3 +24,14 @@ def test_budget_exhaustion():
     tasks = [make_task("t1"), make_task("t2")]
     assert planner.plan(tasks).id == "t1"
     assert planner.plan(tasks) is None
+
+
+def test_refuse_over_budget_task():
+    planner = Planner(budget=3)
+    tasks = [
+        make_task("t1", cost=2),
+        make_task("t2", cost=2),
+    ]
+    assert planner.plan(tasks).id == "t1"
+    assert planner.plan(tasks) is None
+

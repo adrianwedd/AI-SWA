@@ -18,6 +18,7 @@ from .planner_utils import (
     is_budget_exhausted,
     should_warn_about_budget,
     increment_cost_and_warn,
+    will_exceed_budget,
 )
 
 logger = logging.getLogger(__name__)
@@ -62,11 +63,18 @@ class Planner:
             return None
 
         selected = select_highest_priority(ready_tasks)
+        cost = getattr(selected, "cost", 1)
+        if will_exceed_budget(self.budget, self.cost_used, cost):
+            logger.warning(
+                "Task %s exceeds remaining budget", getattr(selected, "id", "N/A")
+            )
+            return None
         self.cost_used, self._warned = increment_cost_and_warn(
             self.cost_used,
             self.budget,
             self.warning_threshold,
             self._warned,
+            increment=cost,
         )
         return selected
 

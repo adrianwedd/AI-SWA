@@ -59,6 +59,7 @@ def task_factory():
             "dependencies": [],
             "priority": 1,
             "status": "pending",
+            "cost": 1,
         }
         defaults.update(overrides)
         return Task(**defaults)

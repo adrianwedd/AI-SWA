@@ -82,10 +82,11 @@ def increment_cost_and_warn(
     budget: Optional[int],
     warning_threshold: float,
     warned: bool,
+    increment: int = 1,
 ) -> tuple[int, bool]:
-    """Increment ``cost_used`` and emit a warning if nearing ``budget``."""
+    """Increment ``cost_used`` by ``increment`` and warn if nearing ``budget``."""
 
-    cost_used += 1
+    cost_used += increment
     if should_warn_about_budget(budget, cost_used, warning_threshold, warned):
         logger.warning(
             "Planner budget at %d%%",
@@ -93,3 +94,9 @@ def increment_cost_and_warn(
         )
         warned = True
     return cost_used, warned
+
+
+def will_exceed_budget(budget: Optional[int], cost_used: int, cost: int) -> bool:
+    """Return ``True`` if ``cost`` would exceed remaining ``budget``."""
+
+    return bool(budget and cost_used + cost > budget)
