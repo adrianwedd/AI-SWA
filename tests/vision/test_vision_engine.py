@@ -115,3 +115,19 @@ class TestVisionEngine(unittest.TestCase):
         agent.update_authority(0.95)
         self.assertLessEqual(agent.authority, 1.0)
 
+
+    def test_rl_no_authority_records_history(self):
+        class ReverseAgent(RLAgent):
+            def suggest(self, tasks):
+                return list(reversed(tasks))
+
+        agent = ReverseAgent()
+        ve = VisionEngine(rl_agent=agent, shadow_mode=False)
+        agent.authority = 0.0
+        t1 = self._task(1, 2, 1, 0, 1)
+        t2 = self._task(2, 1, 0, 0, 1)
+        ordered = ve.prioritize([t1, t2])
+        self.assertEqual([t.id for t in ordered], [1, 2])
+        self.assertEqual(len(agent.history), 1)
+        self.assertEqual(agent.history[0]["suggestion"], [2, 1])
+

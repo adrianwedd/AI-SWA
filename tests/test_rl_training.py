@@ -1,4 +1,5 @@
 import json
+from reflector.rl.reward import calculate_reward
 
 from core.observability import MetricsProvider
 from vision.vision_engine import RLAgent
@@ -75,3 +76,15 @@ def test_rl_trainer_records_replay_buffer(tmp_path):
     state, reward = buffer.sample(1)[0]
     assert isinstance(state, dict)
     assert isinstance(reward, float)
+
+def test_rl_agent_train_logs_and_terms(tmp_path):
+    log_file = tmp_path / "log.json"
+    agent = RLAgent(training_path=log_file)
+    metrics = {"success": 1, "runtime": 5}
+    expected_reward, terms = calculate_reward(metrics)
+    reward = agent.train(metrics)
+    assert reward == expected_reward
+    assert agent.last_reward_terms == terms
+    assert agent.training_data[0] == metrics
+    assert json.loads(log_file.read_text().strip()) == metrics
+
