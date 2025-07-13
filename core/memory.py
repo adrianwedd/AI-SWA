@@ -123,14 +123,74 @@ class Memory:
         incoming: List[Task],
         critique_map: dict,
     ) -> List[Task]:
-        """Merge tasks preferring versions with higher critique scores."""
-        selected: dict[int, tuple[Task, int]] = {}
+        """Merge tasks while removing duplicates.
+
+        Tasks with the same ``id`` or identical ``description`` are considered
+        duplicates. If both versions exist, the variant with the higher critique
+        score is kept. Missing fields from the lower scored task are merged into
+        the retained one.
+        """
+
+        def merge(base: Task, other: Task) -> Task:
+            base.dependencies = list(set(base.dependencies) | set(other.dependencies))
+            base.priority = max(base.priority, other.priority)
+            optional = [
+                "component",
+                "command",
+                "task_id",
+                "title",
+                "area",
+                "actionable_steps",
+                "acceptance_criteria",
+                "assigned_to",
+                "epic",
+            ]
+            for field in optional:
+                if getattr(base, field) is None and getattr(other, field) is not None:
+                    setattr(base, field, getattr(other, field))
+            if other.metadata:
+                meta = base.metadata or {}
+                meta.update(other.metadata)
+                base.metadata = meta
+            return base
+
+        selected: dict[str, tuple[Task, int]] = {}
+        id_map: dict[int, str] = {}
+
+        def add_task(task: Task, score_key: str) -> None:
+            score = critique_map.get(task.id, {}).get(score_key, 0)
+            desc_key = task.description.lower()
+            # Prefer deduplication by id when available
+            if task.id in id_map:
+                key = id_map[task.id]
+                existing_task, existing_score = selected[key]
+                if score >= existing_score:
+                    merged = merge(task, existing_task)
+                    selected[key] = (merged, score)
+                else:
+                    merged = merge(existing_task, task)
+                    selected[key] = (merged, existing_score)
+                if key != desc_key:
+                    # update mapping if description changed
+                    selected.pop(desc_key, None)
+                    id_map[task.id] = key
+            elif desc_key in selected:
+                existing_task, existing_score = selected[desc_key]
+                if score >= existing_score:
+                    merged = merge(task, existing_task)
+                    selected[desc_key] = (merged, score)
+                else:
+                    merged = merge(existing_task, task)
+                    selected[desc_key] = (merged, existing_score)
+                id_map.setdefault(task.id, desc_key)
+            else:
+                selected[desc_key] = (task, score)
+                id_map[task.id] = desc_key
+
         for task in existing:
-            score = critique_map.get(task.id, {}).get("existing", 0)
-            selected[task.id] = (task, score)
+            add_task(task, "existing")
+
         for task in incoming:
-            new_score = critique_map.get(task.id, {}).get("new", 0)
-            current_score = selected.get(task.id, (None, -1))[1]
-            if task.id not in selected or new_score >= current_score:
-                selected[task.id] = (task, new_score)
+            add_task(task, "new")
+
         return [t for t, _ in selected.values()]
