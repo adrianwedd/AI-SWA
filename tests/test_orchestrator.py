@@ -370,6 +370,26 @@ class TestOrchestrator(unittest.TestCase):
         self.assertEqual(task.status, "pending")
         self.assertEqual(self.mock_memory.save_tasks.call_count, 3)
 
+    def test_task_is_retried_after_failure(self):
+        task = Task(id="retry", description="", component="core", dependencies=[], priority=1, status="pending")
+        self.mock_memory.load_tasks.return_value = [task]
+        self.mock_reflector.run_cycle.return_value = [task]
+        # Planner returns the same task twice before halting
+        self.mock_planner.plan.side_effect = [task, task, None]
+        # Executor fails first then succeeds
+        self.mock_executor.execute.side_effect = [RuntimeError("boom"), None]
+        self.orchestrator.logger = MagicMock()
+
+        with patch('builtins.print'):
+            self.orchestrator.run("tasks.yml")
+
+        # Executor should have been called twice due to retry
+        self.assertEqual(self.mock_executor.execute.call_count, 2)
+        # Final task status should be done after successful retry
+        self.assertEqual(task.status, "done")
+        # Save called after reflection, each status update, and retry
+        self.assertEqual(self.mock_memory.save_tasks.call_count, 5)
+
     def test_reflect_failure_logs_and_skips_execution(self):
         task = Task(id="t1", description="", component="core", dependencies=[], priority=1, status="pending")
         self.mock_memory.load_tasks.return_value = [task]
