@@ -3,12 +3,19 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 import json
+import logging
+from pathlib import Path
 import yaml
 
 from core.self_auditor import SelfAuditor
-from core.production_simulator import ProductionSimulator, Service, Database, LoadBalancer
+from core.production_simulator import (
+    ProductionSimulator,
+    Service,
+    Database,
+    LoadBalancer,
+)
+from core.log_utils import configure_logging
 
 
 def collect_refactor_files(tasks_path: Path) -> list[Path]:
@@ -45,6 +52,8 @@ def main() -> None:
     parser.add_argument("--steps", type=int, default=1)
     args = parser.parse_args()
 
+    configure_logging()
+
     refactor_files = collect_refactor_files(args.tasks)
     if refactor_files:
         metrics = analyze_files(refactor_files)
@@ -56,7 +65,9 @@ def main() -> None:
 
     sim_metrics = run_simulation(args.workload, args.steps)
 
-    print(json.dumps({"code_metrics": metrics, "simulation_metrics": sim_metrics}, indent=2))
+    logging.info(
+        json.dumps({"code_metrics": metrics, "simulation_metrics": sim_metrics}, indent=2)
+    )
 
 
 if __name__ == "__main__":  # pragma: no cover

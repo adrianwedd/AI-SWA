@@ -140,7 +140,7 @@ def test_cli_status_agents(tmp_path):
         "agents",
     ], tmp_path, env)
     assert result.returncode == 0
-    assert "SWA-CORE-01" in result.stdout
+    assert "SWA-CORE-01" in result.stderr
 
 
 def test_cli_status_queue(tmp_path):
@@ -174,4 +174,4 @@ def test_cli_status_queue(tmp_path):
         str(tasks_file),
     ], tmp_path, env)
     assert result.returncode == 0
-    assert result.stdout.strip() == "1"
+    assert "Queue length: 1" in result.stderr

@@ -1,6 +1,9 @@
 import argparse
+import logging
 import subprocess
 import time
+
+from core.log_utils import configure_logging
 
 
 def benchmark(num_tasks: int = 5, command: str = "echo hi") -> float:
@@ -11,13 +14,14 @@ def benchmark(num_tasks: int = 5, command: str = "echo hi") -> float:
     return num_tasks / duration
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="Benchmark worker throughput")
     parser.add_argument("--tasks", type=int, default=5)
     parser.add_argument("--command", default="echo hi")
     args = parser.parse_args()
+    configure_logging()
     tps = benchmark(args.tasks, args.command)
-    print(f"Baseline throughput: {tps:.2f} tasks/sec")
+    logging.info("Baseline throughput: %.2f tasks/sec", tps)
 
 
 if __name__ == "__main__":

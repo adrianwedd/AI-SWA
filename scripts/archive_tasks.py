@@ -7,8 +7,11 @@ or whenever tasks accumulate.
 """
 
 import argparse
+import logging
 from pathlib import Path
 import yaml
+
+from core.log_utils import configure_logging
 
 
 def load_tasks_with_header(path: str):
@@ -54,8 +57,9 @@ def main():
         "--archive", default="tasks_archive.yml", help="Archive file path"
     )
     args = parser.parse_args()
+    configure_logging()
     count = archive_tasks(args.tasks, args.archive)
-    print(f"Archived {count} tasks.")
+    logging.info("Archived %s tasks.", count)
 
 
 if __name__ == "__main__":

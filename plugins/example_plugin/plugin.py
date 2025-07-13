@@ -1,4 +1,10 @@
 """Example plugin used for tests and documentation."""
 
-def run():
-    print("Example plugin executed")
+import logging
+
+from core.log_utils import configure_logging
+
+
+def run() -> None:
+    configure_logging()
+    logging.info("Example plugin executed")

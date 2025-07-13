@@ -1,8 +1,11 @@
 """CLI for the Creative Synthesizer."""
 
 import argparse
+import logging
 from pathlib import Path
 from core.creative_synthesizer import CreativeSynthesizer
+
+from core.log_utils import configure_logging
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -16,13 +19,14 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv=None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    configure_logging()
     synth = CreativeSynthesizer()
     try:
         path = synth.generate(args.name, args.type, directory=args.output)
     except ValueError as exc:
         parser.error(str(exc))
         return 1
-    print(path)
+    logging.info(str(path))
     return 0
 
 
