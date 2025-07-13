@@ -21,6 +21,7 @@ class PPOAgent:
     gamma: float = 0.99
     learning_rate: float = 0.01
     clip_epsilon: float = 0.2
+    update_batch_size: int = 4
     policy: Dict[str, float] = field(default_factory=dict)
     value: Dict[str, float] = field(default_factory=dict)
     last_batch: list = field(default_factory=list)
@@ -47,7 +48,10 @@ class PPOAgent:
     def value_estimate(self, state: Dict[str, float]) -> float:
         return sum(state.get(k, 0.0) * self.value.get(k, 0.0) for k in state.keys())
 
-    def update(self, batch_size: int = 4) -> None:
+    def update(self, batch_size: Optional[int] = None) -> None:
+        """Update policy/value using sampled experiences."""
+        if batch_size is None:
+            batch_size = self.update_batch_size
         batch = self.replay_buffer.sample(batch_size)
         if not batch:
             return
