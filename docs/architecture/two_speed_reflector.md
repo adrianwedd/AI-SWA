@@ -52,3 +52,41 @@ The `tests/test_two_speed_vs_ppo.py` suite runs a minimal evolution cycle and
 asserts that the evolved gene yields a higher reward than the initial PPO
 configuration. This confirms the hand-off between loops and demonstrates an
 immediate benefit over PPO-only training.
+
+### Example Sweep
+
+The snippet below runs a short evolutionary sweep using the optimizer in
+`vision/epo`:
+
+```python
+from vision.epo import EvolutionaryPolicyOptimizer, Gene, SimulationEnvironment
+from vision.epo.simulation import MetricsProvider
+from pathlib import Path
+
+Path("tmp_metrics.json").write_text('{"reward": 1}')
+provider = MetricsProvider(Path("tmp_metrics.json"))
+
+env = SimulationEnvironment(metrics_provider=provider, episodes=1)
+optimizer = EvolutionaryPolicyOptimizer(environment=env, generations=5)
+seed = Gene()
+print("Seed gene:", seed)
+best = optimizer.evolve(seed)
+print("Best gene:", best)
+print("History length:", len(optimizer.history))
+print(
+    "Gene architectures in history:",
+    [g.architecture for g in optimizer.history],
+)
+```
+
+Running it produces output similar to:
+
+```
+Seed gene: Gene(architecture=(64,), learning_rate=0.001, clip_epsilon=0.2, gamma=0.99)
+Best gene: Gene(architecture=(64,), learning_rate=0.0011, clip_epsilon=0.18388090453334655, gamma=0.999)
+History length: 5
+Gene architectures in history: [(64,), (64,), (64,), (64,), (64,)]
+```
+
+This demonstrates an evolutionary sweep that mutates and evaluates candidate
+genes over five generations, returning the best-performing configuration.
