@@ -190,7 +190,18 @@ def test_result_requires_auth(tmp_path):
     os.environ.pop("API_TOKENS")
 
 
-@pytest.mark.skipif(shutil.which("docker") is None, reason="Docker not installed")
+def _docker_ready() -> bool:
+    docker = shutil.which("docker")
+    if not docker:
+        return False
+    try:
+        subprocess.run([docker, "info"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return True
+    except Exception:
+        return False
+
+
+@pytest.mark.skipif(not _docker_ready(), reason="Docker not available")
 def test_broker_container(tmp_path):
     root = Path(__file__).resolve().parents[1]
     image = "broker-test"
