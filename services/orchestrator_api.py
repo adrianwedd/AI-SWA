@@ -11,7 +11,7 @@ from typing import Optional
 from fastapi import FastAPI, HTTPException, Depends
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
-from core.config import load_config, reload_config
+from config import load_config, reload_config
 from core.security import verify_api_key, require_role, User
 from core.telemetry import setup_telemetry
 

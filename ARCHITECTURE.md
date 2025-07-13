@@ -277,7 +277,7 @@ flowchart TD
     ApplyEnv --> Ready[Return merged config]
 ```
 
-Configuration is loaded with `core.config.load_config()` which merges
+Configuration is loaded with `config.load_config()` which merges
 `config.yaml` with any environment overrides. See the
 [README Configuration](README.md#configuration) section for the list of
 available variables.

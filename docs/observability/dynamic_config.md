@@ -1,6 +1,6 @@
 # Dynamic Configuration Reload
 
-SelfArchitectAI services watch `config.yaml` for changes using `core.config.reload_config()`.
+SelfArchitectAI services watch `config.yaml` for changes using `config.reload_config()`.
 Send a `SIGHUP` signal to any service to trigger a reload without restarting.
 
 ## Usage

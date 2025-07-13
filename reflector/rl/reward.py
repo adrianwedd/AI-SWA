@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Dict, Tuple
 
-from core.config import load_config
+from config import load_config
 
 # Default weights for each reward component
 DEFAULT_WEIGHTS = {
