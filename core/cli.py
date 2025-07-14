@@ -42,7 +42,10 @@ def _queue_length(tasks_file: str) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     """Return argument parser for the CLI."""
-    parser = argparse.ArgumentParser(description="SelfArchitectAI orchestration CLI")
+    parser = argparse.ArgumentParser(
+        description="SelfArchitectAI orchestration CLI",
+        prog="python -m ai_swa.orchestrator",
+    )
     parser.add_argument(
         "--config",
         default="config.yaml",
