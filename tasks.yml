@@ -804,7 +804,7 @@
   dependencies:
   - 125
   priority: 3
-  status: pending
+  status: done
   area: review
   actionable_steps:
   - Check broker and worker expose /metrics
