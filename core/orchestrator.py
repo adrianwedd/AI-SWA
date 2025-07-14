@@ -1,6 +1,7 @@
 """High-level coordinator for planner, executor and auditor."""
 
 from typing import List, Callable, Any
+from dataclasses import asdict
 from .sentinel import EthicalSentinel
 try:
     from opentelemetry import metrics, trace
@@ -57,7 +58,18 @@ class Orchestrator:
 
     # ------------------------------------------------------------------
     def _task_to_dict(self, task: Task) -> dict:
-        return {f: getattr(task, f) for f in Task.__dataclass_fields__ if hasattr(task, f)}
+        """Serialize a :class:`Task` to a plain dictionary including metadata."""
+        data = {
+            f: getattr(task, f)
+            for f in Task.__dataclass_fields__
+            if f != "metadata" and hasattr(task, f)
+        }
+        meta = getattr(task, "metadata", None)
+        if meta:
+            data.update(meta)
+        else:
+            data["metadata"] = None
+        return data
 
     # ------------------------------------------------------------------
     def _load_tasks(self, tasks_file: str) -> List[Task]:
@@ -70,8 +82,18 @@ class Orchestrator:
 
     # ------------------------------------------------------------------
     def _items_to_tasks(self, items: list) -> List[Task]:
+        """Convert list of dictionaries to :class:`Task` objects preserving extras."""
         fields = set(Task.__dataclass_fields__.keys())
-        return [Task(**{k: v for k, v in item.items() if k in fields}) for item in items]
+        tasks = []
+        for item in items:
+            base = {k: v for k, v in item.items() if k in fields}
+            extra = {k: v for k, v in item.items() if k not in fields}
+            if extra:
+                meta = base.get("metadata", {}) or {}
+                meta.update(extra)
+                base["metadata"] = meta
+            tasks.append(Task(**base))
+        return tasks
 
     # ------------------------------------------------------------------
     def _convert_reflection(self, reflected) -> List[Task]:
