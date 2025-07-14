@@ -3,6 +3,10 @@
 The repository ships a ready to use [Dev Container](https://code.visualstudio.com/docs/devcontainers/containers) definition.
 It provides a consistent environment with Python 3.12 and the required extensions installed.
 
+This container is especially useful when Docker is not available for running the
+full `docker-compose` workflow. Opening the repository in the Dev Container lets
+you install dependencies and run tests without needing a local Docker daemon.
+
 ## Quick start
 
 1. Install the **Dev Containers** extension for VS Code.

@@ -96,6 +96,13 @@ Planner decides what to build next. The Executor writes files and configures CI/
    health checks.
    If you want to enable the optional Rust optimizations, run `maturin develop`
    inside the `rust_ext` directory before starting the compose stack.
+   
+   **Note:** Docker must be available for this step. In restricted environments
+   where the Docker daemon cannot start (such as some online sandboxes), the
+   compose stack will fail to run. You can still execute unit tests by
+   installing dependencies directly or by using the [VS Code Dev
+   Container](docs/deployment/devcontainer.md), but the full workflow with all
+   services will be skipped.
 8. **Run End-to-End Tests**
    ```bash
    pytest tests/e2e/ --maxfail=1 --disable-warnings -q
