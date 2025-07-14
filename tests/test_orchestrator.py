@@ -425,6 +425,21 @@ class TestOrchestrator(unittest.TestCase):
             with self.assertRaises(KeyError):
                 self.orchestrator.run("tasks.yml")
 
+    def test_items_to_tasks_and_back_preserves_metadata(self):
+        item = {
+            "id": 1,
+            "description": "demo",
+            "dependencies": [],
+            "priority": 1,
+            "status": "pending",
+            "extra": "field",
+        }
+        tasks = self.orchestrator._items_to_tasks([item])
+        self.assertEqual(tasks[0].metadata, {"extra": "field"})
+        out = self.orchestrator._task_to_dict(tasks[0])
+        self.assertIn("extra", out)
+        self.assertEqual(out["extra"], "field")
+
 
 if __name__ == '__main__':
     unittest.main()
