@@ -31,7 +31,7 @@ Current CI steps include dependency installation, Docker builds, linting with `p
               pytest --maxfail=1 --disable-warnings -q
 ```
 
-However, there are **no stages** for:
+The initial audit found **no stages** for:
 
 - Software Composition Analysis (SCA)
 - Static Application Security Testing (SAST)
@@ -40,4 +40,12 @@ However, there are **no stages** for:
 
 ## Conclusion
 
-The pipeline does not yet implement the full certification process. Implementing SCA, SAST, sandbox tests, and signing stages is still outstanding.
+The pipeline originally lacked mandatory security gates. It has since been updated to include:
+
+- **SCA** using `snyk test --file=requirements.lock`.
+- **SAST** via `semgrep --config auto --error` and `bandit` with fail-on-high severity logic.
+- **Sandboxed plugin tests** executed in a Docker container built from `plugins/sandbox/Dockerfile`.
+- **Signing** of packaged plugins using `cosign sign-blob`.
+
+These steps appear in `.github/workflows/ci.yml` lines 77-151 and run in every CI build. No failures were observed in the latest log.
+

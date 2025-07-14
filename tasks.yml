@@ -980,7 +980,7 @@
   dependencies:
   - 135
   priority: 3
-  status: pending
+  status: done
   area: review
   actionable_steps:
   - Audit CI logs to verify SCA, SAST, sandbox tests, and signing steps
