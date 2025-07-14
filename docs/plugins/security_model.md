@@ -18,3 +18,27 @@ read-only filesystem to further isolate third-party code.
 If the policy file does not permit a plugin ID or its permissions, execution
 fails before any code is run. When `PLUGIN_SIGNING_KEY` is set, manifests must
 also include a valid signature.
+
+## Execution Policies
+
+Execution policies specify which plugins are allowed to run and what permissions they may request. The optional `plugins/policy.json` file maps plugin IDs to a list of permitted permissions as defined in `plugins/policy_schema.json`.
+
+```json
+{
+  "plugins": {
+    "techdebt": {"permissions": ["read_files"]},
+    "example": {"permissions": ["read_files"]}
+  }
+}
+```
+
+When a policy file is configured via `PLUGIN_POLICY_FILE`, any plugin not listed or requesting additional permissions is rejected before execution.
+
+## Sandbox Levels
+
+Plugins run with one of two isolation levels:
+
+1. **Default Sandbox** – Executes `plugin.py` with `python -I` using `ToolRunner`. Only the Python interpreter is available and the plugin directory is isolated from the rest of the repository.
+2. **Container Sandbox** – When Docker is available, `run_plugin_container()` builds the sandbox image and runs the plugin with `--network none` and a read-only mount. Temporary write access is granted only at `/tmp`.
+
+The container level provides stronger isolation and is used in CI and production environments.
