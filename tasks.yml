@@ -2154,3 +2154,69 @@
   acceptance_criteria:
     - Orchestrator runs without AttributeError from self_auditor.
   epic: Testing Improvements
+- id: 220
+  title: Update README success criteria
+  description: Reflect multi-commit workflow and CI gating in the README success section.
+  area: docs
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Modify README to describe current success metrics based on CI and tasks.
+    - Remove reference to single-commit history.
+  acceptance_criteria:
+    - README no longer states that main has one commit.
+    - Updated criteria mention passing CI and completed tasks.
+  epic: Governance
+- id: 221
+  title: Reprioritize and archive stale tasks
+  description: Review long-pending tasks and either close, update, or archive them to reduce backlog entropy.
+  area: process
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Identify tasks pending for over three months.
+    - Decide whether to archive or reprioritize each.
+  acceptance_criteria:
+    - Backlog contains only active and relevant tasks.
+  epic: Governance
+- id: 222
+  title: Clarify cross-language roadmap
+  description: Provide a concise roadmap for Node and Rust components to prevent uncontrolled scope expansion.
+  area: microservices
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Summarize current Node and Rust usage in docs.
+    - Outline criteria for adding new services in other languages.
+  acceptance_criteria:
+    - A roadmap document exists in docs/architecture or README.
+  epic: Architecture Evolution
+- id: 223
+  title: Automate Ethical Sentinel policy refresh
+  description: Ensure policies are loaded dynamically and tested to stay current.
+  area: governance
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Add policy reload logic to the sentinel.
+    - Write tests confirming updates take effect without restart.
+  acceptance_criteria:
+    - Policies can be updated on disk and loaded at runtime.
+  epic: Governance
+- id: 224
+  title: Document evolution loop outcomes
+  description: Regularly summarize results from RL and evolutionary components.
+  area: reflector
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Create periodic report template for RL experiments.
+    - Publish results after each cycle in docs/reports.
+  acceptance_criteria:
+    - At least one report is added summarizing recent evolution loop results.
+  epic: Reflector Core
