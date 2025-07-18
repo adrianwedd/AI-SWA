@@ -966,7 +966,7 @@
   dependencies:
   - 134
   priority: 3
-  status: pending
+  status: done
   area: review
   actionable_steps:
   - Analyze RL vs WSJF integration test results
@@ -2220,3 +2220,265 @@
   acceptance_criteria:
     - At least one report is added summarizing recent evolution loop results.
   epic: Reflector Core
+- id: 225
+  title: Detect architecture drift automatically
+  description: Implement a script comparing ARCHITECTURE.md to current modules and flag mismatches.
+  area: process
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Parse module structure and compare to documented components.
+    - Output diff report in docs/reports/architecture_drift.md.
+  acceptance_criteria:
+    - CI fails when undocumented modules are introduced.
+  epic: Governance
+- id: 226
+  title: Automate backlog triage
+  description: Create a script to identify stale tasks and suggest archiving.
+  area: process
+  dependencies: [221]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Scan tasks.yml for items pending over 90 days.
+    - Generate a report with archive recommendations.
+  acceptance_criteria:
+    - Report created in docs/reports/backlog_triage.md.
+  epic: Governance
+- id: 227
+  title: Document Node and Rust service guidelines
+  description: Provide best practices for cross-language microservices and FFI.
+  area: microservices
+  dependencies: [222]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Draft docs/architecture/cross_language_guidelines.md.
+    - Outline data contract and build tooling expectations.
+  acceptance_criteria:
+    - Guidelines document referenced from README.
+  epic: Architecture Evolution
+- id: 228
+  title: Test policy hot-reload feature
+  description: Add unit tests covering runtime policy updates in Ethical Sentinel.
+  area: governance
+  dependencies: [223]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Write tests simulating policy file changes.
+    - Verify sentinel reloads without restart.
+  acceptance_criteria:
+    - Tests pass demonstrating dynamic policy refresh.
+  epic: Governance
+- id: 229
+  title: Aggregate RL experiment results
+  description: Build a utility to collate metrics from multiple training runs.
+  area: reflector
+  dependencies: [224]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Collect reward and loss metrics into CSV files.
+    - Generate summary graphs with matplotlib.
+  acceptance_criteria:
+    - docs/reports/rl_experiment_summary.md includes plots of recent runs.
+  epic: Reflector Core
+- id: 230
+  title: Provide service templates for Python, Node, and Rust
+  description: Offer starter repositories showcasing standard configuration and CI.
+  area: microservices
+  dependencies: [227]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Create example repos under examples/ directory.
+    - Include Dockerfiles and build scripts for each language.
+  acceptance_criteria:
+    - Developers can clone templates to start new services quickly.
+  epic: Developer Experience
+- id: 231
+  title: Score plugins based on security checks
+  description: Extend plugin certification to produce a numeric security score.
+  area: security
+  dependencies: [203]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Combine results from SAST and SCA scans.
+    - Output score in plugin metadata for marketplace display.
+  acceptance_criteria:
+    - Marketplace shows security score for each plugin.
+  epic: Ecosystem
+- id: 232
+  title: Add local OpenTelemetry collector for tests
+  description: Provide docker-compose service to capture telemetry during test runs.
+  area: observability
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Add docker-compose.otel.yml with collector setup.
+    - Update tests to start and stop the collector.
+  acceptance_criteria:
+    - Telemetry tests do not fail when external endpoint is unavailable.
+  epic: Observability
+- id: 233
+  title: Document training dataset retention policy
+  description: Specify how long RL training logs and datasets are kept.
+  area: governance
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Draft policy in docs/governance/dataset_retention.md.
+    - Reference the policy from CONTRIBUTING.md.
+  acceptance_criteria:
+    - Policy approved and merged with project docs.
+  epic: Governance
+- id: 234
+  title: Snapshot tasks for release notes
+  description: Write a script exporting completed tasks to markdown for each release.
+  area: process
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Parse tasks_archive.yml and format summaries by epic.
+    - Output docs/reports/release_tasks_<version>.md.
+  acceptance_criteria:
+    - Release notes include a section generated from the script.
+  epic: Process
+- id: 235
+  title: Implement SelfAuditor pre-commit checks
+  description: Add pre-commit hooks running Ruff and basic metrics to prevent low quality commits.
+  area: quality
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Configure .pre-commit-config.yaml with Ruff and formatting hooks.
+    - Document setup instructions in CONTRIBUTING.md.
+  acceptance_criteria:
+    - Pre-commit hooks run automatically and reject lint errors.
+  epic: Code Quality
+- id: 236
+  title: Add SelfAuditor CI job
+  description: Run the SelfAuditor in CI to generate refactoring tasks when complexity thresholds are breached.
+  area: quality
+  dependencies: [235]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Create a CI workflow invoking self_auditor.py on pull requests.
+    - Append generated tasks to tasks.yml if thresholds are exceeded.
+  acceptance_criteria:
+    - CI job posts structured refactoring tasks on failure.
+  epic: Code Quality
+- id: 237
+  title: Build Developer Knowledge Map
+  description: Analyze commit history to map code ownership and bus factor risk.
+  area: developer_experience
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Parse git logs to attribute files to primary contributors.
+    - Compute knowledge concentration scores per module.
+    - Generate docs/reports/knowledge_map.md with risk highlights.
+  acceptance_criteria:
+    - Bus factor report lists modules with single maintainer risk.
+  epic: Developer Experience
+- id: 238
+  title: Suggest cross-training assignments
+  description: Use the knowledge map to recommend reviewers for high-risk modules.
+  area: developer_experience
+  dependencies: [237]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Add script analyzing knowledge_map.md for underexposed developers.
+    - Output reviewer suggestions in docs/reports/cross_training.md.
+  acceptance_criteria:
+    - Report lists at least one cross-training recommendation per high-risk module.
+  epic: Developer Experience
+- id: 239
+  title: Auto-suggest documentation updates on PRs
+  description: Post AI-generated doc suggestions when critical modules change.
+  area: documentation
+  dependencies: [235]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Integrate DocuWriter.ai or similar tool in CI.
+    - Comment on pull requests with generated docstrings for modified files.
+  acceptance_criteria:
+    - PRs touching high-risk files include automated documentation suggestions.
+  epic: Documentation Improvements
+- id: 240
+  title: Prototype RL compiler optimization environment
+  description: Use CompilerGym and RLlib to train an agent optimizing a benchmark service.
+  area: research
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Create a CompilerGym environment wrapping the build system.
+    - Train a PPO agent using instruction count reward.
+  acceptance_criteria:
+    - Report shows performance improvement over -O3 baseline.
+  epic: Automated Performance Engineering
+- id: 241
+  title: Add staging evaluation for compiler agent
+  description: Deploy optimized binaries to a staging environment for final reward calculation.
+  area: research
+  dependencies: [240]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Provision staging environment with performance test harness.
+    - Update training loop to use final reward from staging tests.
+  acceptance_criteria:
+    - Training pipeline logs speedup metrics from staging runs.
+  epic: Automated Performance Engineering
+- id: 242
+  title: Implement production SLI feedback loop
+  description: Use production latency metrics as reinforcement signal for compiler optimization agent.
+  area: research
+  dependencies: [241, 158]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Enable canary deployments of optimized binaries.
+    - Collect p95 latency for canary vs baseline traffic.
+    - Feed computed reward back into the training process.
+  acceptance_criteria:
+    - Agent training incorporates production SLI improvements.
+  epic: Automated Performance Engineering
+- id: 243
+  title: Develop context-aware policy engine
+  description: Expand the Ethical Sentinel to evaluate policies using action context and history.
+  area: governance
+  dependencies: [204]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Add contextual fields (actor, data sensitivity, recent behavior) to policy checks.
+    - Update unit tests for new policy evaluation logic.
+  acceptance_criteria:
+    - Sentinel allows or blocks actions based on contextual rules.
+  epic: Governance
+- id: 244
+  title: Implement Sentinel logging service
+  description: Record all policy evaluations and interventions in an immutable audit log.
+  area: governance
+  dependencies: [243]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Create logging module writing JSON lines to logs/sentinel_audit.log.
+    - Ensure log entries include policy ID, result, and timestamp.
+  acceptance_criteria:
+    - Audit log captures every policy check and intervention.
+  epic: Governance
