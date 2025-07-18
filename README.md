@@ -83,8 +83,9 @@ Planner decides what to build next. The Executor writes files and configures CI/
    The `orchestrator-api` service exposes equivalent REST endpoints
    (`/start`, `/stop`, `/status`) when running under Docker Compose.
 5. **Explore the Blueprint** – Open `ARCHITECTURE.md` to see components and dependency rationales.
-6. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
-7. **Run with Docker Compose**
+6. **Read Cross-Language Guidelines** – See [cross_language_guidelines.md](docs/architecture/cross_language_guidelines.md) for how Python, Rust and Node services interact.
+7. **Watch It Evolve** – Each execution may introduce new tasks or propose refactors. Review and merge the generated commit.
+8. **Run with Docker Compose**
    ```bash
    docker-compose up --build
    ```
@@ -103,7 +104,7 @@ Planner decides what to build next. The Executor writes files and configures CI/
    installing dependencies directly or by using the [VS Code Dev
    Container](docs/deployment/devcontainer.md), but the full workflow with all
    services will be skipped.
-8. **Run End-to-End Tests**
+9. **Run End-to-End Tests**
    ```bash
    pytest tests/e2e/ --maxfail=1 --disable-warnings -q
    ```

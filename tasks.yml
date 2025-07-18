@@ -2187,7 +2187,7 @@
   area: microservices
   dependencies: []
   priority: 2
-  status: pending
+  status: done
   actionable_steps:
     - Summarize current Node and Rust usage in docs.
     - Outline criteria for adding new services in other languages.
@@ -2252,7 +2252,7 @@
   area: microservices
   dependencies: [222]
   priority: 2
-  status: pending
+  status: done
   actionable_steps:
     - Draft docs/architecture/cross_language_guidelines.md.
     - Outline data contract and build tooling expectations.
