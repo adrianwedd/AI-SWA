@@ -2220,3 +2220,133 @@
   acceptance_criteria:
     - At least one report is added summarizing recent evolution loop results.
   epic: Reflector Core
+- id: 225
+  title: Detect architecture drift automatically
+  description: Implement a script comparing ARCHITECTURE.md to current modules and flag mismatches.
+  area: process
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Parse module structure and compare to documented components.
+    - Output diff report in docs/reports/architecture_drift.md.
+  acceptance_criteria:
+    - CI fails when undocumented modules are introduced.
+  epic: Governance
+- id: 226
+  title: Automate backlog triage
+  description: Create a script to identify stale tasks and suggest archiving.
+  area: process
+  dependencies: [221]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Scan tasks.yml for items pending over 90 days.
+    - Generate a report with archive recommendations.
+  acceptance_criteria:
+    - Report created in docs/reports/backlog_triage.md.
+  epic: Governance
+- id: 227
+  title: Document Node and Rust service guidelines
+  description: Provide best practices for cross-language microservices and FFI.
+  area: microservices
+  dependencies: [222]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Draft docs/architecture/cross_language_guidelines.md.
+    - Outline data contract and build tooling expectations.
+  acceptance_criteria:
+    - Guidelines document referenced from README.
+  epic: Architecture Evolution
+- id: 228
+  title: Test policy hot-reload feature
+  description: Add unit tests covering runtime policy updates in Ethical Sentinel.
+  area: governance
+  dependencies: [223]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Write tests simulating policy file changes.
+    - Verify sentinel reloads without restart.
+  acceptance_criteria:
+    - Tests pass demonstrating dynamic policy refresh.
+  epic: Governance
+- id: 229
+  title: Aggregate RL experiment results
+  description: Build a utility to collate metrics from multiple training runs.
+  area: reflector
+  dependencies: [224]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Collect reward and loss metrics into CSV files.
+    - Generate summary graphs with matplotlib.
+  acceptance_criteria:
+    - docs/reports/rl_experiment_summary.md includes plots of recent runs.
+  epic: Reflector Core
+- id: 230
+  title: Provide service templates for Python, Node, and Rust
+  description: Offer starter repositories showcasing standard configuration and CI.
+  area: microservices
+  dependencies: [227]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Create example repos under examples/ directory.
+    - Include Dockerfiles and build scripts for each language.
+  acceptance_criteria:
+    - Developers can clone templates to start new services quickly.
+  epic: Developer Experience
+- id: 231
+  title: Score plugins based on security checks
+  description: Extend plugin certification to produce a numeric security score.
+  area: security
+  dependencies: [203]
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Combine results from SAST and SCA scans.
+    - Output score in plugin metadata for marketplace display.
+  acceptance_criteria:
+    - Marketplace shows security score for each plugin.
+  epic: Ecosystem
+- id: 232
+  title: Add local OpenTelemetry collector for tests
+  description: Provide docker-compose service to capture telemetry during test runs.
+  area: observability
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Add docker-compose.otel.yml with collector setup.
+    - Update tests to start and stop the collector.
+  acceptance_criteria:
+    - Telemetry tests do not fail when external endpoint is unavailable.
+  epic: Observability
+- id: 233
+  title: Document training dataset retention policy
+  description: Specify how long RL training logs and datasets are kept.
+  area: governance
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Draft policy in docs/governance/dataset_retention.md.
+    - Reference the policy from CONTRIBUTING.md.
+  acceptance_criteria:
+    - Policy approved and merged with project docs.
+  epic: Governance
+- id: 234
+  title: Snapshot tasks for release notes
+  description: Write a script exporting completed tasks to markdown for each release.
+  area: process
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Parse tasks_archive.yml and format summaries by epic.
+    - Output docs/reports/release_tasks_<version>.md.
+  acceptance_criteria:
+    - Release notes include a section generated from the script.
+  epic: Process
