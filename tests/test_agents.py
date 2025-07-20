@@ -35,9 +35,10 @@ def test_docs_agent_generates_report(tmp_path):
     sample = tmp_path / "sample.py"
     sample.write_text("def foo():\n    pass\n")
     agent = DocsAgent(targets=[str(tmp_path)], report_dir=tmp_path)
-    reports = agent.run()
+    reports, coverage = agent.run()
     assert (tmp_path / "docstring.log").exists()
     assert reports
+    assert 0.0 <= coverage <= 1.0
 
 
 def test_supervisor_dispatch():

@@ -17,16 +17,27 @@ class DocsAgent:
         self.logger = logging.getLogger(__name__)
 
     # ------------------------------------------------------------------
-    def run_pylint_docstrings(self) -> Path:
-        """Run pylint docstring checks and return log path."""
+    def run_pylint_docstrings(self) -> tuple[Path, float]:
+        """Run pylint docstring checks and return log path and coverage."""
         report = self.report_dir / "docstring.log"
         cmd = ["pylint", "--disable=all", "--enable=missing-docstring", *self.targets]
-        with report.open("w") as fh:
-            subprocess.run(cmd, stdout=fh, stderr=subprocess.STDOUT, check=False)
-        return report
+        proc = subprocess.run(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        out = proc.stdout
+        with report.open("w", encoding="utf-8") as fh:
+            fh.write(out)
+        missing = out.count("missing-module-docstring") + out.count("missing-class-docstring") + out.count("missing-function-docstring")
+        coverage = 1.0 / (missing + 1)
+        return report, coverage
 
     # ------------------------------------------------------------------
-    def run(self) -> list[Path]:
-        """Execute documentation checks."""
+    def run(self) -> tuple[list[Path], float]:
+        """Execute documentation checks and return reports and coverage."""
         self.logger.info("DocsAgent validating comments and docstrings")
-        return [self.run_pylint_docstrings()]
+        report, coverage = self.run_pylint_docstrings()
+        return [report], coverage

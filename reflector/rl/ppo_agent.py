@@ -12,6 +12,7 @@ from .models.actor_network import ActorNetwork
 from .models.critic_network import CriticNetwork
 from .reward import calculate_reward
 from .gen_actions import ActionGenerator
+from core.docs_agent import DocsAgent
 
 
 @dataclass
@@ -27,6 +28,7 @@ class PPOAgent:
     clip_epsilon: float = 0.2
     update_batch_size: int = 4
     action_gen: Optional[ActionGenerator] = None
+    docs_agent: Optional[DocsAgent] = None
     last_batch: list = field(default_factory=list)
 
     def __post_init__(self) -> None:  # expose weights for backward compatibility
@@ -103,7 +105,11 @@ class PPOAgent:
 
     def train_step(self, metrics: Dict[str, float]) -> None:
         state = self.state_builder.build()
-        reward, _terms = calculate_reward(metrics)
+        reward_metrics = metrics.copy()
+        if self.docs_agent:
+            _reports, coverage = self.docs_agent.run()
+            reward_metrics["doc_coverage"] = coverage
+        reward, _terms = calculate_reward(reward_metrics)
         action, log_prob = self.select_action(state)
         self.store_transition(state, action, reward, state, True, log_prob)
         self.update()
