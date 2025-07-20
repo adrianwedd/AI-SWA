@@ -12,6 +12,7 @@ DEFAULT_WEIGHTS = {
     "performance": 0.5,
     "style": 0.2,
     "complexity": 0.2,
+    "doc_coverage": 0.1,
 }
 
 
@@ -43,6 +44,7 @@ def reward_terms(metrics: Dict[str, float]) -> Dict[str, float]:
     runtime_keys = ("runtime", "duration")
     style_keys = ("style", "style_score", "lint_score")
     complexity_keys = ("complexity", "complexity_score")
+    doc_keys = ("doc_coverage", "docs_coverage")
 
     correctness = 0.0
     # Prefer explicit test pass metrics if available
@@ -94,11 +96,21 @@ def reward_terms(metrics: Dict[str, float]) -> Dict[str, float]:
                 complexity = 0.0
             break
 
+    doc_cov = 0.0
+    for key in doc_keys:
+        if key in metrics:
+            try:
+                doc_cov = float(metrics[key])
+            except Exception:
+                doc_cov = 0.0
+            break
+
     return {
         "correctness": correctness,
         "performance": performance,
         "style": style,
         "complexity": complexity,
+        "doc_coverage": doc_cov,
     }
 
 

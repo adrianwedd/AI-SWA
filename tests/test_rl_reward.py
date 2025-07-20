@@ -7,12 +7,14 @@ def test_reward_terms_extraction():
         "runtime": 2.0,
         "style_score": 0.5,
         "complexity_score": 0.3,
+        "doc_coverage": 0.8,
     }
     terms = reward_terms(metrics)
     assert terms["correctness"] == 1.0
     assert terms["performance"] == -2.0
     assert terms["style"] == 0.5
     assert terms["complexity"] == 0.3
+    assert terms["doc_coverage"] == 0.8
 
 
 def test_reward_terms_lint_score():
@@ -27,12 +29,13 @@ def test_weighted_reward():
         "runtime": 1,
         "style_score": 1,
         "complexity_score": 1,
+        "doc_coverage": 1,
     }
     reward, _ = calculate_reward(
         metrics,
-        weights={"correctness": 1, "performance": 1, "style": 1, "complexity": 1},
+        weights={"correctness": 1, "performance": 1, "style": 1, "complexity": 1, "doc_coverage": 1},
     )
-    assert reward == 1 - 1 + 1 + 1
+    assert reward == 1 - 1 + 1 + 1 + 1
 
 
 def test_configured_weights(tmp_path, monkeypatch):
@@ -57,3 +60,9 @@ def test_test_success_with_runtime():
     assert terms["correctness"] == 0.9
     assert terms["performance"] == -2
     assert reward == 0.9 - 2
+
+
+def test_doc_coverage_term():
+    metrics = {"doc_coverage": 0.6}
+    terms = reward_terms(metrics)
+    assert terms["doc_coverage"] == 0.6
