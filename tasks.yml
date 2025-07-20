@@ -2482,3 +2482,56 @@
   acceptance_criteria:
     - Audit log captures every policy check and intervention.
   epic: Governance
+- id: 245
+  title: Build CLI Frontend Wrapper
+  description: Implement a lightweight CLI that forwards user commands to the orchestrator service.
+  area: cli
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Create a Python entrypoint under services/cli that parses arguments.
+    - Forward commands to existing orchestrator APIs via HTTP.
+    - Document usage examples in README.
+  acceptance_criteria:
+    - Running `ai-swa` executes commands against the orchestrator.
+  epic: Usability
+- id: 246
+  title: Create Plugin Tool Registry
+  description: Provide a registry for approved tools requiring user confirmation before execution.
+  area: plugins
+  dependencies: []
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Design registry data structure and approval workflow.
+    - Implement hooks for file and shell operations.
+  acceptance_criteria:
+    - Tools cannot execute without prior registration and confirmation.
+  epic: Plugin System
+- id: 247
+  title: Define Session Message Bus Protocol
+  description: Model agent interactions using Session, Task, and Turn messages inspired by Codex.
+  area: architecture
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Draft protocol specification in docs/session_protocol.md.
+    - Implement basic classes in core/message_bus.py.
+  acceptance_criteria:
+    - Agents exchange JSON messages adhering to the protocol.
+  epic: Core Architecture
+- id: 248
+  title: Add Sandbox Mode Environment Variable
+  description: Enforce offline mode when `CODEX_SANDBOX_NETWORK_DISABLED` is set.
+  area: ci
+  dependencies: []
+  priority: 2
+  status: pending
+  actionable_steps:
+    - Respect env variable in network-related modules.
+    - Document behavior in CONTRIBUTING.md.
+  acceptance_criteria:
+    - Tests pass with the environment variable enabled and network calls mocked.
+  epic: Security
