@@ -27,6 +27,10 @@ class PPOAgent:
     policy: Dict[str, float] = field(default_factory=dict)
     last_batch: list = field(default_factory=list)
 
+    def __post_init__(self) -> None:
+        if hasattr(self.replay_buffer, "load"):
+            self.replay_buffer.load()
+
     def select_action(self, state: Dict[str, float]) -> tuple[int, float]:
         z = sum(state.get(k, 0.0) * self.policy.get(k, 0.0) for k in state)
         p = 1.0 / (1.0 + math.exp(-z))

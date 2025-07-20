@@ -16,3 +16,11 @@ Continuous self-improvement is a key differentiator of AI-SWA. This outline surv
 - Implement a replay buffer and curriculum generator informed by this research.
 - Evaluate agents against historical commits to measure improvement.
 - Provide rollback mechanisms if performance degrades.
+
+## Replay Buffer Usage
+Experience tuples collected during reflection cycles can now be persisted to disk.
+`reflector.rl.replay_buffer.ReplayBuffer` accepts a `path` argument. When
+provided, transitions are saved as JSON each time ``add()`` is called and the
+buffer automatically reloads existing data on initialization. The PPO agent in
+`reflector.rl.training` loads these prior experiences at startup so training can
+resume across runs.
