@@ -11,6 +11,7 @@ DEFAULT_WEIGHTS = {
     "correctness": 1.0,
     "performance": 0.5,
     "style": 0.2,
+    "complexity": 0.2,
 }
 
 
@@ -31,13 +32,17 @@ def get_weights() -> Dict[str, float]:
 def reward_terms(metrics: Dict[str, float]) -> Dict[str, float]:
     """Extract reward components from ``metrics``.
 
+    Components include:
+
     - ``correctness`` derives from ``success`` or ``task_success``.
     - ``performance`` is the negative runtime or duration.
-    - ``style`` uses ``style`` or ``style_score`` metrics.
+    - ``style`` uses ``style``/``style_score`` or ``lint_score`` metrics.
+    - ``complexity`` is taken from ``complexity`` or ``complexity_score``.
     """
     correctness_keys = ("correctness", "success", "task_success")
     runtime_keys = ("runtime", "duration")
-    style_keys = ("style", "style_score")
+    style_keys = ("style", "style_score", "lint_score")
+    complexity_keys = ("complexity", "complexity_score")
 
     correctness = 0.0
     # Prefer explicit test pass metrics if available
@@ -80,10 +85,20 @@ def reward_terms(metrics: Dict[str, float]) -> Dict[str, float]:
                 style = 0.0
             break
 
+    complexity = 0.0
+    for key in complexity_keys:
+        if key in metrics:
+            try:
+                complexity = float(metrics[key])
+            except Exception:
+                complexity = 0.0
+            break
+
     return {
         "correctness": correctness,
         "performance": performance,
         "style": style,
+        "complexity": complexity,
     }
 
 
