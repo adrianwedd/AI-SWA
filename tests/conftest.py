@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -24,6 +25,7 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "integration: mark test that requires external services"
     )
+    config.integration_results = {"total": 0, "passed": 0}
 
 
 def pytest_collection_modifyitems(config, items):
@@ -33,6 +35,32 @@ def pytest_collection_modifyitems(config, items):
     for item in items:
         if "integration" in item.keywords:
             item.add_marker(skip_integration)
+
+
+def pytest_sessionfinish(session, exitstatus):
+    results = getattr(session.config, "integration_results", {"total": 0, "passed": 0})
+    total = results.get("total", 0)
+    passed = results.get("passed", 0)
+    rate = passed / total if total else 1.0
+    metrics_file = Path("metrics.json")
+    try:
+        data = json.loads(metrics_file.read_text()) if metrics_file.exists() else {}
+    except Exception:
+        data = {}
+    data["integration_pass_rate"] = rate
+    with metrics_file.open("w", encoding="utf-8") as fh:
+        json.dump(data, fh)
+
+
+@pytest.hookimpl(hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    rep = outcome.get_result()
+    if rep.when == "call" and "integration" in item.keywords:
+        res = item.config.integration_results
+        res["total"] += 1
+        if rep.passed:
+            res["passed"] += 1
 
 @pytest.fixture(scope="session", autouse=True)
 def add_project_root_to_sys_path():

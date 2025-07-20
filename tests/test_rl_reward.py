@@ -66,3 +66,12 @@ def test_doc_coverage_term():
     metrics = {"doc_coverage": 0.6}
     terms = reward_terms(metrics)
     assert terms["doc_coverage"] == 0.6
+
+
+def test_integration_pass_rate_reward():
+    low = {"integration_pass_rate": 0.2}
+    high = {"integration_pass_rate": 0.8}
+    w = {"integration_pass_rate": 1}
+    r_low, _ = calculate_reward(low, weights=w)
+    r_high, _ = calculate_reward(high, weights=w)
+    assert r_high > r_low
