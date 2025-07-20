@@ -9,3 +9,11 @@ services/node/node_modules/
 dist/
 plugin_marketplace/web/node_modules/
 plugin_marketplace/web/dist/
+
+# local artifacts
+metrics.json
+research/clones/
+sandbox/
+tests/*.db
+tests/*.zip
+*.db
