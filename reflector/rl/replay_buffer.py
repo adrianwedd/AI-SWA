@@ -47,7 +47,8 @@ class ReplayBuffer:
             return
         try:
             with self.path.open("r", encoding="utf-8") as fh:
-                self.buffer = json.load(fh)
+                data = json.load(fh)
+                self.buffer = [tuple(item) for item in data]
         except Exception:  # pragma: no cover - IO errors
             self.buffer = []
 
