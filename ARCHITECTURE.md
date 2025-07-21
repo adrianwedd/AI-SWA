@@ -390,3 +390,18 @@ function. Future revisions will execute plugins inside a sandbox container as
 described in tasks **135** and **143–146**. These tasks outline the automated
 certification pipeline—static analysis, dependency scans, sandboxed tests and
 cryptographic signing—that must be completed before a plugin is allowed to run.
+
+### MCP Server
+
+The `services.mcp_server` module exposes a minimal implementation of the **Model
+Context Protocol (MCP)**. It provides a single `/mcp` endpoint accepting JSON-RPC
+style requests. Two methods are currently supported:
+
+* `tools/list` – Returns all available plugins from the directory specified by
+  the `MCP_PLUGIN_DIR` environment variable. Each entry includes the plugin
+  `id` and its human friendly name.
+* `tools/call` – Executes a plugin by id using `plugins.executor.run_plugin` and
+  returns the captured standard output in the MCP `content` field.
+
+This service allows external MCP clients to enumerate and invoke local AI-SWA
+plugins without direct access to the underlying file system.
