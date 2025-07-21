@@ -2535,3 +2535,34 @@
   acceptance_criteria:
     - Tests pass with the environment variable enabled and network calls mocked.
   epic: Security
+- id: 249
+  title: Add CLI configuration and history support
+  description: Provide configurable display themes and command history persistence for the CLI.
+  area: cli
+  dependencies: [245]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Implement command flags for theme selection and history file path.
+    - Persist executed commands to the history file.
+    - Apply theme colors to CLI output.
+    - Document usage of new flags in README.
+  acceptance_criteria:
+    - CLI saves command history across sessions.
+    - Users can switch themes via command flags.
+  epic: Usability
+- id: 250
+  title: Load CLI defaults from configuration file
+  description: Read default CLI options from `~/.aiswa/config.toml` with flags overriding config values.
+  area: cli
+  dependencies: [249]
+  priority: 3
+  status: pending
+  actionable_steps:
+    - Implement config loader for `~/.aiswa/config.toml`.
+    - Merge command line flags with config file settings.
+    - Add unit tests verifying flag precedence.
+  acceptance_criteria:
+    - CLI uses config file values when present.
+    - Command line flags override configuration defaults.
+  epic: Usability
