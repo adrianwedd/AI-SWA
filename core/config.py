@@ -23,6 +23,8 @@ DEFAULT_CONFIG = {
         "plugin_signing_key_env": "PLUGIN_SIGNING_KEY",
         "plugin_policy_file": "plugins/policy.json",
         "plugin_policy_file_env": "PLUGIN_POLICY_FILE",
+        "tool_registry_file": "plugins/tool_registry.json",
+        "tool_registry_file_env": "TOOL_REGISTRY_FILE",
         "worker_token": None,
         "worker_token_env": "WORKER_TOKEN",
     },
@@ -107,6 +109,8 @@ def load_config(path: str | Path | None = None) -> dict:
         sec["plugin_signing_key"] = os.environ["PLUGIN_SIGNING_KEY"]
     if "PLUGIN_POLICY_FILE" in os.environ:
         sec["plugin_policy_file"] = os.environ["PLUGIN_POLICY_FILE"]
+    if "TOOL_REGISTRY_FILE" in os.environ:
+        sec["tool_registry_file"] = os.environ["TOOL_REGISTRY_FILE"]
     if "WORKER_TOKEN" in os.environ:
         sec["worker_token"] = os.environ["WORKER_TOKEN"]
 
@@ -125,6 +129,9 @@ def load_config(path: str | Path | None = None) -> dict:
     env_name = sec.get("plugin_policy_file_env")
     if env_name and env_name in os.environ:
         sec["plugin_policy_file"] = os.environ[env_name]
+    env_name = sec.get("tool_registry_file_env")
+    if env_name and env_name in os.environ:
+        sec["tool_registry_file"] = os.environ[env_name]
 
     env_name = cfg["sandbox"].get("root_env")
     if env_name and env_name in os.environ:

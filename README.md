@@ -157,6 +157,7 @@ configuration dictionary. The returned object contains sections like
 | `API_TOKENS` | Comma separated tokens mapping to `username:role` | *(unset)* |
 | `PLUGIN_SIGNING_KEY` | HMAC key used to verify plugin manifests | *(unset)* |
 | `PLUGIN_POLICY_FILE` | Path to plugin policy JSON | `plugins/policy.json` |
+| `TOOL_REGISTRY_FILE` | Approved CLI tools registry | `plugins/tool_registry.json` |
 | `SANDBOX_ROOT` | Directory used for isolated plugin execution | `sandbox` |
 | `PLANNER_BUDGET` | Maximum planner steps before warning | `0` |
 | `LOG_CONFIG` | Path to logging configuration file | `logging.conf` |

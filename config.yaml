@@ -17,6 +17,8 @@ security:
   plugin_signing_key_env: PLUGIN_SIGNING_KEY
   worker_token: null
   worker_token_env: WORKER_TOKEN
+  tool_registry_file: plugins/tool_registry.json
+  tool_registry_file_env: TOOL_REGISTRY_FILE
 sandbox:
   root: sandbox
   allowed_commands:
