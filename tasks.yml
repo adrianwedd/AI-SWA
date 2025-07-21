@@ -371,7 +371,7 @@
   dependencies:
   - 73
   priority: 3
-  status: pending
+  status: done
   area: docs
   actionable_steps: []
   acceptance_criteria: []
@@ -415,7 +415,7 @@
   dependencies:
   - 77
   priority: 3
-  status: pending
+  status: done
   area: plugins
   actionable_steps: []
   acceptance_criteria: []
@@ -448,7 +448,7 @@
   - 82
   - 83
   priority: 3
-  status: pending
+  status: done
   area: microservices
   actionable_steps: []
   acceptance_criteria: []
@@ -2488,7 +2488,7 @@
   area: cli
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   actionable_steps:
     - Create a Python entrypoint under services/cli that parses arguments.
     - Forward commands to existing orchestrator APIs via HTTP.

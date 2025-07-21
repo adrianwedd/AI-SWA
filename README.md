@@ -120,6 +120,14 @@ python -m ai_swa.orchestrator status
 python -m ai_swa.orchestrator stop
 ```
 
+The `ai-swa` command provides a thin wrapper around the HTTP API:
+
+```
+ai-swa start
+ai-swa status
+ai-swa stop
+```
+
 ## Configuration
 
 SelfArchitectAI loads settings from `config.yaml` by default. Set the `CONFIG_FILE`
