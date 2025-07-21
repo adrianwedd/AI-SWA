@@ -26,6 +26,7 @@ Research briefs have guided the design of our multi-agent system:
 - **Cross-Language Design** – Explores combining Python, Rust and Node.js for performance and I/O separation【F:research/RB-004_Cross_Language_Design.md†L1-L12】.
 - **Metrics & Observability** – Defines an OpenTelemetry and Prometheus stack for continuous feedback【F:research/RB-005_Metrics_and_Observability.md†L1-L11】.
 - **Plugin Governance** – Outlines automated CI/CD checks for plugin security and compliance【F:docs/research/RB-002_Strategic_Roadmap_Extension.md†L1-L15】.
+- **External Repo Insights** – Summarizes lessons from Gemini CLI and OpenAI Codex to inform our own CLI architecture【F:research/RB-010_External_Repo_Insights.md†L1-L10】.
 These briefs inform new components like the Reflector and Ethical Sentinel which are scheduled in later roadmap phases.
 
 ## Core Workflows
