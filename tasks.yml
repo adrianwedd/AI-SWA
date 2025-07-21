@@ -793,10 +793,10 @@
   status: pending
   area: review
   actionable_steps:
-  - Verify start and stop commands work as documented
-  - Confirm help text matches README examples
+  - Verify start, stop and status commands work as documented
+  - Confirm help text matches README examples and CLI usage section
   acceptance_criteria:
-  - CLI behaves consistently across platforms
+  - CLI behaves consistently across platforms with start, stop and status actions
   assigned_to: null
   epic: Usability
 - id: 130
