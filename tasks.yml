@@ -2502,7 +2502,7 @@
   area: plugins
   dependencies: []
   priority: 3
-  status: pending
+  status: done
   actionable_steps:
     - Design registry data structure and approval workflow.
     - Implement hooks for file and shell operations.
