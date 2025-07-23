@@ -267,6 +267,11 @@ Set `SNYK_TOKEN`, `COSIGN_KEY`, and `COSIGN_PASSWORD` secrets to enable these st
 
 See [docs/plugins/certification_pipeline.md](docs/plugins/certification_pipeline.md) for a diagram and explanation of the full vetting process.
 
+### Claude Code Base Workflow
+
+The repository includes a `Claude Code Base Action` workflow located in `.github/workflows/claude-base.yml`. This job runs Anthropic's base action using a manual trigger to experiment with new prompts. Set the `ANTHROPIC_API_KEY` secret to enable it.
+
+
 ## 📈 Observability
 
 All services expose Prometheus-compatible metrics. The Node I/O service uses
