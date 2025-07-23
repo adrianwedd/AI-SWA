@@ -38,3 +38,6 @@ reward:
   performance: 0.5
   style: 0.2
   complexity: 0.2
+mcp:
+  host: localhost
+  port: 8004

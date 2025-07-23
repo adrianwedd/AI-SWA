@@ -52,6 +52,7 @@ DEFAULT_CONFIG = {
         "performance": 0.5,
         "style": 0.2,
     },
+    "mcp": {"host": "localhost", "port": 8004, "host_env": "MCP_HOST", "port_env": "MCP_PORT"},
 }
 
 CONFIG_PATH = Path(__file__).resolve().parents[1] / "config.yaml"
@@ -74,6 +75,7 @@ def load_config(path: str | Path | None = None) -> dict:
         "tracing": {**DEFAULT_CONFIG["tracing"], **data.get("tracing", {})},
         "logging": {**DEFAULT_CONFIG["logging"], **data.get("logging", {})},
         "reward": {**DEFAULT_CONFIG["reward"], **data.get("reward", {})},
+        "mcp": {**DEFAULT_CONFIG["mcp"], **data.get("mcp", {})},
     }
 
     if "DB_PATH" in os.environ:
@@ -90,6 +92,10 @@ def load_config(path: str | Path | None = None) -> dict:
         cfg["node"]["host"] = os.environ["NODE_HOST"]
     if "NODE_PORT" in os.environ:
         cfg["node"]["port"] = int(os.environ["NODE_PORT"])
+    if "MCP_HOST" in os.environ:
+        cfg["mcp"]["host"] = os.environ["MCP_HOST"]
+    if "MCP_PORT" in os.environ:
+        cfg["mcp"]["port"] = int(os.environ["MCP_PORT"])
     if "METRICS_PORT" in os.environ:
         port = int(os.environ["METRICS_PORT"])
         cfg["broker"]["metrics_port"] = port
@@ -144,6 +150,13 @@ def load_config(path: str | Path | None = None) -> dict:
     env_name = cfg["tracing"].get("endpoint_env")
     if env_name and env_name in os.environ:
         cfg["tracing"]["jaeger_endpoint"] = os.environ[env_name]
+
+    env_name = cfg["mcp"].get("host_env")
+    if env_name and env_name in os.environ:
+        cfg["mcp"]["host"] = os.environ[env_name]
+    env_name = cfg["mcp"].get("port_env")
+    if env_name and env_name in os.environ:
+        cfg["mcp"]["port"] = int(os.environ[env_name])
 
     if "LOG_CONFIG" in os.environ:
         cfg["logging"]["config_file"] = os.environ["LOG_CONFIG"]
