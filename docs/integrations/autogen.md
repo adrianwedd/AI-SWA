@@ -10,7 +10,7 @@ AutoGen enables multi-agent conversations for complex tasks. By wrapping an Auto
 
 1. **Install AutoGen**
    ```bash
-   pip install pyautogen
+   pip install ag2
    ```
 2. **Create a Plugin**
    Write a plugin that constructs an AutoGen `GroupChat` or similar conversation and exposes a `chat` action. See `plugins/examples/autogen_plugin.py` for a reference implementation.
